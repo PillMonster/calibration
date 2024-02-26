@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS calibration;	
+CREATE DATABASE calibration CHARACTER SET utf8;	
+

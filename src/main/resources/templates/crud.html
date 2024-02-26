@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>器具增刪改查</title>
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/crudStyle.css">
+</head>
+<body>
+<div id="header"></div>
+
+<div class="leftDiv">
+
+	<form id="textForm" method="post">
+	 
+		  	<div class="textDiv">器具編號: </div>
+		  	<div><input type="text" class="input-text" id="number" name="number"></div>
+		  	<div class="textDiv">器具名稱: </div>
+		  	<div><input type="text" class="input-text" id="name" name="name"></div>
+		  	<div><button type="submit" class="submit-button">查詢</button></div>
+
+	</form>
+	
+	<br>	
+
+	<form id="checkForm"  onsubmit="return false;" method="post">	
+	
+		<div class="multipleSelectionDiv">
+			<div class="selectBoxDiv" onclick="showCheckboxes('monthCheckBoxesDiv')">
+				<select class="customSelect">
+					<option>校驗月份</option>
+				</select>
+				<div class="overSelectDiv"></div>
+			</div>
+
+			<div id="monthCheckBoxesDiv">
+				<label><input type="checkbox" id="monthSelectAll" value="全選" onchange="toggleCheckboxes('month', 'monthSelectAll'); submitForm();">全選</label><br>
+				<label><input type="checkbox" name="month" value="1" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>1</label><br>
+				<label><input type="checkbox" name="month" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">2</label><br>
+				<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">3</label><br>
+				<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">4</label><br>
+			</div>
+		</div>
+		
+		<br>
+		
+		<div class="multipleSelectionDiv">
+			<div class="selectBoxDiv" onclick="showCheckboxes('cycleCheckBoxesDiv')">
+				<select>
+					<option>校驗週期</option>
+				</select>
+				<div class="overSelectDiv"></div>
+			</div>
+
+			<div id="cycleCheckBoxesDiv">
+				<label><input type="checkbox" id="cycleSelectAll" value="全選" onchange="toggleCheckboxes('cycle', 'cycleSelectAll'); submitForm();">全選</label><br>
+				<label><input type="checkbox" name="cycle" value="6" onchange="checkSelectAll('cycle', 'cycleSelectAll'); submitForm();" checked>6</label><br>
+				<label><input type="checkbox" name="cycle" value="12" onchange="checkSelectAll('cycle', 'cycleSelectAll'); submitForm();">12</label><br>
+				<label><input type="checkbox" name="cycle" value="24" onchange="checkSelectAll('cycle', 'cycleSelectAll'); submitForm();">24</label><br>
+			</div>
+		</div>
+		
+		<br>
+		
+		<div class="multipleSelectionDiv">
+			<div class="selectBoxDiv" onclick="showCheckboxes('typeCheckBoxesDiv')">
+				<select>
+					<option>校驗類型</option>
+				</select>
+				<div class="overSelectDiv"></div>
+			</div>
+
+			<div id="typeCheckBoxesDiv">
+				<label><input type="checkbox" id="typeSelectAll" value="全選" onchange="toggleCheckboxes('type', 'typeSelectAll'); submitForm();">全選</label><br>
+				<label><input type="checkbox" name="type" value="內校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();" checked>內校</label><br>
+				<label><input type="checkbox" name="type" value="外校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();">外校</label><br>
+				<label><input type="checkbox" name="type" value="遊校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();">遊校</label><br>
+			</div>
+		</div>
+		
+		<br>
+		
+		<div class="multipleSelectionDiv">
+			<div class="selectBoxDiv" onclick="showCheckboxes('personCheckBoxesDiv')">
+				<select>
+					<option>校驗人員</option>
+				</select>
+				<div class="overSelectDiv"></div>
+			</div>
+
+			<div id="personCheckBoxesDiv">
+				<label><input type="checkbox" id="personSelectAll" value="全選" onchange="toggleCheckboxes('person', 'personSelectAll'); submitForm();">全選</label><br>
+				<label><input type="checkbox" name="person" value="簡茗家" onchange="checkSelectAll('person', 'personSelectAll'); submitForm();" checked>簡茗家</label><br>
+				<label><input type="checkbox" name="person" value="陳曉明" onchange="checkSelectAll('person', 'personSelectAll'); submitForm();">陳曉明</label><br>
+				<label><input type="checkbox" name="person" value="張皓程" onchange="checkSelectAll('person', 'personSelectAll'); submitForm();">張皓程</label><br>
+			</div>
+		</div>
+		
+		<br>
+		
+		<div class="multipleSelectionDiv">
+			<div class="selectBoxDiv" onclick="showCheckboxes('localationCheckBoxesDiv')">
+				<select>
+					<option>校驗地點/公司</option>
+				</select>
+				<div class="overSelectDiv"></div>
+			</div>
+
+			<div id="localationCheckBoxesDiv">
+				<label><input type="checkbox" id="localationSelectAll" value="全選" onchange="toggleCheckboxes('localation', 'localationSelectAll'); submitForm();">全選</label><br>
+				<label><input type="checkbox" name="localation" value="BQC" onchange="checkSelectAll('localation', 'localationSelectAll'); submitForm();" checked>BQC</label><br>
+				<label><input type="checkbox" name="localation" value="新竹商檢中心" onchange="checkSelectAll('localation', 'localationSelectAll'); submitForm();">新竹商檢中心</label><br>
+				<label><input type="checkbox" name="localation" value="百徑" onchange="checkSelectAll('localation', 'localationSelectAll'); submitForm();">百徑</label><br>
+			</div>
+		</div>
+		
+	</form>
+	
+</div>
+
+<div id="instrumentTableDiv" style="margin: 50px auto;"></div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $("#header").load("header.html");
+	  
+	});
+	
+	//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
+	$.ajax({
+	    type:"GET",//請求方式
+	    url:"/crud/instruments",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
+	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+	    async:true,//true為非同步
+	    success:function (data) {//接收後端來的資料
+	    	console.log(data);
+	    	updateData(data);	
+	    },
+	    error :function(errorMsg) {
+	        alert("請求後端資料失敗！(/crud/instruments)");
+	    }
+	});
+
+	// ===== 取得文字表單的內容 =====
+	document.getElementById("textForm").addEventListener("submit", function(event) {
+		// 防止表單的預設提交行為
+	    event.preventDefault();
+		
+		var number = document.getElementById("number").value;
+		var name = document.getElementById("name").value;
+		var url = ""
+		var request = false;
+
+		if (number !="" && name ==""){ 
+			url = "/crud/instrumentNo/" + number;
+			request = true;
+		}
+		else if(number =="" && name !=""){
+			url = "/crud/instrumentName/" + name;
+			request = true;
+		}
+		else if (number =="" && name ==""){
+			alert("請輸入任一內容");
+			request = false;
+		}
+		else {alert("請輸入任一內容");request = false;}
+		
+		if(request == true){
+			// Send the table data to the server
+			$.ajax({
+			    type: "GET",
+			    url: url,
+			    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
+			    contentType: 'application/json',
+			    dateType: 'json', // 前端接收資料格式 (後端需有標註@ResponseBody)
+			    //data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+			    success: function(data) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
+			    	console.log(data);
+			    	updateData(data);
+			    },
+			    error: function(xhr, status, error) {
+			    	alert("沒有此儀器或量具");
+			    }
+		  	}); // ajax method end	
+		}
+	}); // addEventListener method end
+	
+	// 自訂submitForm()方法, 使用者依條件選取，並搭配ajax將表單內容傳送到後端
+    function submitForm() {
+    	//var formData = $("#checkForm").serialize(); // $("#checkForm") ->取得表單元素id的值, serialize() ->並將其序列化轉為字串
+
+		var jsonString = getChecked(); // 取得選取後的json資料
+		//console.log(jsonString);
+    	$.ajax({
+    		type: "POST", //請求方式
+    		url: "/crud/serchInstrument", //url代表向後端發送請求 (後端需有標註@GetMapping("/serchInstrument")的方法)
+    		contentType: "application/json;charset=UTF-8", // 後端如果要以List接收, 這行必須要開
+    	  	dataType:"json", // 前端接收資料格式 (後端需有標註@ResponseBody)
+    	  	//data: formData, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+    	  	data:  jsonString, // 指定資料傳到後端
+    	  	success: function(data) {
+    	  		console.log(data);
+    	  		updateData(data);
+    	  	},
+    	  	error: function(xhr, status, error) {
+    		}
+    	});	
+    }
+    
+ 	// 取得檢核方塊內所選取的值, 再存入Array, 並轉成json格式
+	function getChecked(){
+		
+		var monthSelected = new Array(); // 建立初始陣列, 存放選取後的校驗月份
+		var cycleSelected = new Array(); // 建立初始陣列, 存放選取後的校驗週期
+		var typeSelected = new Array(); // 建立初始陣列, 存放選取後的校驗類型
+		var personSelected = new Array(); // 建立初始陣列, 存放選取後的校驗人員
+		var localationSelected = new Array(); // 建立初始陣列, 存放選取後的校驗地點or公司
+		
+		var jsonArray = new Array(); // 建立初始陣列, 存放待轉成 json 格式的Array
+		
+		// ========== 從month的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var monthDiv = document.getElementById("monthCheckBoxesDiv");
+		var monthChecks = monthDiv.querySelectorAll("input[type='checkbox']");
+
+        for (var i = 1; i < monthChecks.length; i++){ // 0為全選, 故重1開始
+        	if (monthChecks[i].checked == true){
+        		monthSelected.push(monthChecks[i].value);
+        		//console.log(productChecks[i].value);
+        	}
+        }
+		console.log("選取的校驗月份: " + monthSelected);
+		
+		// ========== 從cycle的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var cycleDiv = document.getElementById("cycleCheckBoxesDiv");
+		var cycleChecks = cycleDiv.querySelectorAll("input[type='checkbox']");
+		
+        for (var i = 1; i < cycleChecks.length; i++){ // 0為全選, 故重1開始
+        	if (cycleChecks[i].checked == true){
+        		cycleSelected.push(cycleChecks[i].value);
+        		
+        	}
+        }
+		console.log("選取的校驗週期: " + cycleSelected);	
+		
+		// ========== 從type的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var typeDiv = document.getElementById("typeCheckBoxesDiv");
+		var typeChecks = typeDiv.querySelectorAll("input[type='checkbox']");
+
+        for (var i = 1; i < typeChecks.length; i++){ // 0為全選, 故重1開始
+        	if (typeChecks[i].checked == true){
+        		typeSelected.push(typeChecks[i].value);
+
+        	}
+        }
+		console.log("選取的校驗類型: " + typeSelected);
+		
+		// ========== 從person的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var personDiv = document.getElementById("personCheckBoxesDiv");
+		var personChecks = personDiv.querySelectorAll("input[type='checkbox']");
+		
+		for (var i = 1; i < personChecks.length; i++){ // 0為全選, 故重1開始
+        	if (personChecks[i].checked == true){
+        		personSelected.push(personChecks[i].value);
+
+        	}
+        }
+		console.log("選取的校驗人員: " + personSelected);
+		
+		// ========== 從local的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var localationDiv = document.getElementById("localationCheckBoxesDiv");
+		var localationChecks = localationDiv.querySelectorAll("input[type='checkbox']");
+		
+		for (var i = 1; i < localationChecks.length; i++){ // 0為全選, 故重1開始
+        	if (localationChecks[i].checked == true){
+        		localationSelected.push(localationChecks[i].value);
+
+        	}
+        }
+		console.log("選取的校驗地點or公司: " + localationSelected);
+		
+		// ========== 從將陣列資料,以key-value方式放入rowData ==========
+	  	var rowData = { // key開頭不能為大寫, 否則後端接收會為null
+			'month': monthSelected,
+			'cycle': cycleSelected,
+		    'type': typeSelected,
+		    'person': personSelected,
+		    'localation': localationSelected
+		};
+		jsonArray.push(rowData); // 將整理好的資料放入jsonArray
+		
+		var jsonString = JSON.stringify(jsonArray); // 轉成 json 格式
+		return jsonString;
+	}
+	
+	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的table上
+	function updateData(data){
+		var innerTable = "";
+		innerTable += "<div style='text-align: center;'>";
+		innerTable += "<table border='1' class='styled-table' style='margin-left: auto; margin-right: auto;'>";
+		//table title
+		innerTable += "<thead>";
+		innerTable += "<tr><td>器具編號</td><td>器具名稱</td><td>廠牌型式</td><td>校驗特性</td><td>校驗單位</td>" +
+						"<td>校驗週期</td><td>校驗類型</td><td>校驗地點</td><td>校驗月份</td><td>上次校驗時間</td><td>母儀編號</td><td colspan='2'>操作</td>";
+		innerTable += "</thead>";
+		innerTable += "<tbody>";
+		for (var i = 0; i < data.length; i++) {
+			innerTable += "<tr class='active-row'>";
+			innerTable += "<td>" + data[i].number + "</td>";
+			innerTable += "<td>" + data[i].name + "</td>";
+			innerTable += "<td>" + data[i].type + "</td>";
+			innerTable += "<td>" + data[i].characteristic + "</td>";
+			innerTable += "<td>" + data[i].unit + "</td>";
+			innerTable += "<td>" + data[i].cycle + "</td>";
+			innerTable += "<td>" + data[i].calibrate_type + "</td>";
+			innerTable += "<td>" + data[i].calibrate_location + "</td>";
+			innerTable += "<td>" + data[i].calibrate_month + "</td>";
+			innerTable += "<td>" + data[i].last_calibrate_date + "</td>";
+			innerTable += "<td>" + data[i].mother_instrument_number + "</td>";
+			//innerTable += "<td>" + "<a href='editUser?action=edit&id=" + data[i].id  + "'>修改</a>" + "</td>";
+			innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='redirectToEditPage()'>編輯</button>" + "</td>";
+			//innerTable += "<td>" + "<a href='users/" + data[i].id + "' class='edit-link' data-id=" + data[i].id + ">修改</a>" + "</td>";
+			//innerTable += "<td>" + "<a href='deleteUser?action=del&id=" + data[i].id  + "' class='delete-link' data-id=" + data[i].id + " onclick='if(! confirm(\"確認刪除該紀錄?\")) {return false}'>刪除</a>" + "</td>";
+			innerTable += "<td>" + "<button class='delete-button' data-id=" + data[i].id + " onclick='deleteFun()'>刪除</button>" + "</td>";
+		}
+		innerTable += "</tr>";
+		innerTable += "</tbody>";
+		innerTable += "</table>";
+		innerTable += "</div>";
+		document.getElementById("instrumentTableDiv").innerHTML = innerTable;
+		
+	}
+	
+	
+	// ========== 點選全選時,取得所有checkbox內容值 ==========
+	function toggleCheckboxes(selectCheckName, selectCheckAll) {
+		var checkboxes = document.getElementsByName(selectCheckName);
+        var selectAllCheckbox = document.getElementById(selectCheckAll);
+         
+        for (var i = 0; i < checkboxes.length; i++) {
+        	checkboxes[i].checked = selectAllCheckbox.checked;
+        }
+    }
+	 
+	// ========== 當全選checked時, 任一取消checkbox的內容值, 則全選也會被取消 ===========
+	function checkSelectAll(selectCheckName, selectCheckAll) {
+		var checkboxes = document.getElementsByName(selectCheckName);
+		var selectAllCheckbox = document.getElementById(selectCheckAll);
+		var allChecked = true;
+
+		for (var i = 0; i < checkboxes.length; i++) {
+			if (!checkboxes[i].checked) {
+				allChecked = false;
+				break;
+			}
+		}
+		selectAllCheckbox.checked = allChecked;
+	}
+	
+	
+	var show = true;
+
+	function showCheckboxes(selectCheckBox) {
+		
+		let checkboxes = document.getElementById(selectCheckBox);
+		
+		if (checkboxes.style.display == "block"){
+			show = false;
+		}
+		else{
+			show = true;
+		}
+		
+		if (show) {
+			checkboxes.style.display = "block";	
+			show = false;
+		} else {
+			checkboxes.style.display = "none";
+			show = true;
+		}
+	}
+
+</script>
+
+</body>
+</html>
