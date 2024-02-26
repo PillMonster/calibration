@@ -2,15 +2,43 @@
 	float:left;
 	width: 12%;
 	padding: 5px 10px 5px 10px;
-	margin: 10px 0px 0px 0px;
+	margin: 10px 0px 0px 0px; /* 上 右 下 左 */
 
 }
 
-.instrumentTableDiv{
+.rightDiv{	
+	/*border: 1px solid #868687;*/
 	float:right;
-	width: 85%;
+	width: 80%;
 	padding: 0px 0px 0px 0px;
-	margin:10px 0px 0px 0px;
+	margin:10px 50px 0px 0px; /* 上 右 下 左 */
+}
+
+.createButtonDiv{
+	text-align: right;
+	margin:0px 0px 5px 0px; /* 上 右 下 左 */
+}
+
+.instrumentTableDiv{	
+	/*border: 1px solid #868687;*/
+	/*float:right;*/
+	width: 100%;
+	padding: 0px 0px 0px 0px;
+	margin: 0px auto;
+}
+
+.create-button{
+	background-color:#B8860B;
+	color: white;
+	font-weight:bold;
+	font-size:16px;
+	text-align:center;
+	padding: 3px 5px;
+	border-width:1px;
+	border-color:#9cf #159 #159 #9cf;
+	height:30px;
+	width: 80px;
+
 }
 
 .edit-button{
@@ -46,7 +74,7 @@
     font-size: 0.9em;
     font-family: sans-serif;
     min-width: 600px;
-    width: 80%;
+    width: 100%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     text-align: center;
 }
@@ -96,28 +124,28 @@ header, footer {
 }
 
 .input-text { /* 文字輸入方塊 */
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  margin: 0px 0px 5px 0px;
-  padding: 10px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* 陰影效果 */
+	font-family: 'Arial', sans-serif;
+  	font-size: 16px;
+  	margin: 0px 0px 5px 0px;
+  	padding: 10px;
+  	border: 2px solid #ccc;
+  	border-radius: 8px;
+  	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* 陰影效果 */
 
-  color: #333; /* 文本顏色  */
-  outline: none; /* 移除默認輪廓效果  */
-  border-color: #A9A9A9; /* 滑鼠懸停時的邊框顏色為前藍色 */
-  height: 10px;
-  width: 90%;
+  	color: #333; /* 文本顏色  */
+  	outline: none; /* 移除默認輪廓效果  */
+  	border-color: #A9A9A9; /* 滑鼠懸停時的邊框顏色為前藍色 */
+  	height: 10px;
+  	width: 90%;
 }
 
 /* 當獲得焦點時的樣式 */
 input[type="text"]:focus {
-  border-color: #3498db; /* 當獲得焦點時的邊框顏色 */
-  outline: none; /* 移除默認輪廓效果 */
+	border-color: #3498db; /* 當獲得焦點時的邊框顏色 */
+	outline: none; /* 移除默認輪廓效果 */
 }
 
-.submit-button{ 
+.query-button{ 
 	background-color:#228B22;
 	color: white;
 	font-weight:bold;
