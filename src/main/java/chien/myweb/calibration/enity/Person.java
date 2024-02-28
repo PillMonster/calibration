@@ -115,7 +115,7 @@ public class Person {
 	
 	@Override
 	public String toString() {
-		return "Person [id=" + id + ", job_number=" + job_number + ", password=" + password + ", username=" + username + "]";
+		return "Person [id=" + id + ", job_number=" + job_number + ", password=" + password + ", username=" + username + ", create_date=" + create_date + "]";
 	}
 	/*public String toString() {
 		return "Person [id=" + id + ", job_number=" + job_number + ", password=" + password + ", username=" + username

@@ -1,0 +1,111 @@
+/* 全局樣式 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* 表單頭部 */
+.form-header {
+    margin-bottom: 20px;
+    text-align: center; /* 將表頭置中 */
+}
+
+/* 表單容器 */
+.form-container {
+    width: 300px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    
+	
+}
+
+.form-container-in {
+	/*border: 1px solid #868687;*/
+	padding: 20px 10px 20px 30px;  /* 上 右 下 左 */
+}
+
+form {
+    overflow: hidden; /* 清除浮動 */
+}
+
+.button-container{
+	margin: 20px auto;
+	text-align: center; /* 將表頭置中 */
+}
+
+
+label {
+    font-weight: bold;
+    margin-bottom: 4px;
+    font-size: 16px;
+}
+
+/* ===== 文字輸入框格的樣式 ===== */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select 
+{
+    padding: 4px; /* 調整文字欄位的內部填充 */
+    line-height: 1.2; /* 調整行高 */
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px; /* 使邊框的角落呈現圓滑的外觀 */
+    width: 80%;
+}
+
+/* ===== 文字輸入框格當獲得焦點時的樣式 ===== */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus{
+	border-color: #3498db; /* 當獲得焦點時的邊框顏色 */
+	outline: none; /* 移除默認輪廓效果 */
+}
+
+/* ===== 下拉式選單的樣式 ===== */
+select {
+    padding: 4px; /* 調整文字欄位的內部填充 */
+    line-height: 1.2; /* 調整行高 */
+    margin-bottom: 10px;
+    border: 1px solid #ccc; /* 使用顏色 #3498db 的實線邊框 */
+    border-radius: 4px; /* 使用 6px 的圓角 */
+    transition: border-color 0.3s; /* 加入漸變效果 */
+    font-size: 16px;
+}
+
+/* 點擊時改變邊框顏色 */
+select:focus {
+    border-color: #3498db; /* 選中或點擊時邊框顏色改為 #e74c3c */
+}
+
+
+button[type="submit"],
+input[type="button"] {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+input[type="button"] {
+    background-color: #95a5a6;
+    margin-right: 6px;
+}
+
+button[type="submit"]:hover,
+input[type="button"]:hover {
+    background-color: #2980b9;
+}
+
+button[type="submit"]:focus,
+input[type="button"]:focus {
+    outline: none;
+}

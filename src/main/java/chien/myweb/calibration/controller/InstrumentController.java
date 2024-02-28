@@ -26,7 +26,7 @@ public class InstrumentController {
 	@Autowired
 	InstrumentService instrumentService;
 	
-	@PostMapping("/serchInstrument")
+	@PostMapping("/searchInstrument")
 	public ResponseEntity<List<Instrument>> getSerchResult(@RequestBody List<RequestChecked> requestChecked){
 		
 		List<String> monthList = new ArrayList<>();

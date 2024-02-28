@@ -5,11 +5,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/instrument")
 public class ShowPageController {
 	
-	@GetMapping("/crud")
-	public String showInstrument() {
+	@GetMapping("/instrument/crud")
+	public String showInstruments() {
 		return "crud";
+	}
+	
+	@GetMapping("/instrument/create")
+	public String showCreateInstrument() {
+		return "createInstrument";
+	}
+	
+	@GetMapping("/person/crud")
+	public String showPersons() {
+		return "person";
+	}
+	
+	@GetMapping("/person/create")
+	public String showCreatePersons() {
+		return "createPerson";
 	}
 }

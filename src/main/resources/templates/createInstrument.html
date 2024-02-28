@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>新增器具</title>
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/createInstrumentStyle.css">
+</head>
+<body>
+<div id="header"></div>
+
+<div class="form-container">
+	
+	<h2 class="form-header">新增器具</h2>
+	
+	<form id="myForm" action="./addUser" method="POST">
+		
+		<div class="form-container-left">
+		
+			<label for="number">器具編號：</label>
+           	<input type="text" id="number" name="number" required><br>
+
+           	<label for="name">器具名稱：</label>
+           	<input type="text" id="name" name="name" required><br>
+
+           	<label for="type">廠牌型式：</label>
+           	<input type="text" id="type" name="type" required><br>
+
+           	<label for="characteristic">校驗特性：</label>
+           	<input type="text" id="characteristic" name="characteristic" required><br>
+
+           	<label for="unit">校驗單位：</label>
+           	<input type="text" id="unit" name="unit" required><br>
+
+           	<label for="cycle">校驗週期：</label>
+           	<select name="cycle" id=cycle>
+           		<option>6個月</option>
+			    <option>12個月</option>
+			    <option>24個月</option>
+           	</select><br>
+
+           	<label for="calibrate_type">校驗類型：</label>
+           	<select name="calibrate_type" id=calibrate_type>
+           		<option>內校</option>
+			    <option>外校</option>
+			    <option>遊校</option>
+           	</select><br>
+
+           	<label for="calibrate_location">校驗地點：</label>
+           	<input type="text" id="calibrate_location" name="calibrate_location" required><br>
+           
+           	<label for="calibrate_month">校驗月份：</label>
+           	<select name="calibrate_month" id=calibrate_month>
+           		<option>1月</option>	<option>2月</option><option>3月</option><option>4月</option><option>5月</option><option>6月</option>
+				<option>7月</option>	<option>8月</option><option>9月</option><option>10月</option><option>11月</option><option>12月</option>
+           	</select><br>
+           
+           	<label for="mother_instrument_number">母儀編號：</label>
+           	<input type="text" id="mother_instrument_number" name="mother_instrument_number" required>	 <br>    		
+		
+		</div>
+		
+		<div class="form-container-right">
+		
+			<label for="specification">校驗規格：</label>
+           	<input type="text" id="specification" name="specification" placeholder="多個規格，ex:20,50,100" required><br>
+
+           	<label for="tolerance">允收公差：</label>
+           	<input type="text" id="tolerance" name="tolerance" required><br>
+
+           	<label for="custos">保管人員：</label>
+           	<select name="custos" id=custos>
+           		<option>Annie</option>	
+           		<option>Bob</option>	
+				<option>Candy</option>	
+           	</select><br>
+
+           	<label for="checker">校驗人員：</label>
+           	<select name="custos" id=custos>
+           		<option>簡茗家</option>	
+           		<option>陳曉明</option>	
+				<option>張皓程</option>	
+           	</select><br>	
+
+		</div>
+
+	</form>
+	
+	<div class="button-container">
+    	<button type="submit">新增</button>
+		<input type='button' onclick="location.href='./crud'" value="回上頁">
+    </div>
+	
+</div>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $("#header").load("header.html");
+	  
+	});
+	
+	
+
+</script>
+
+</body>
+</html>

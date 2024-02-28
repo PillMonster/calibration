@@ -28,7 +28,7 @@
 }
 
 .create-button{
-	background-color:#B8860B;
+	/*background-color:#B8860B;
 	color: white;
 	font-weight:bold;
 	font-size:16px;
@@ -37,8 +37,24 @@
 	border-width:1px;
 	border-color:#9cf #159 #159 #9cf;
 	height:30px;
-	width: 80px;
+	width: 80px;*/
+	
+	display: inline-block;
+    padding: 3px 5px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #3498db;
+    color: #ffffff;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    height:20px;
+	width: 70px;
 
+}
+
+.create-button:hover {
+	background-color: #2980b9;
 }
 
 .edit-button{
