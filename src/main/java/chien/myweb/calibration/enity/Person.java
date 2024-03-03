@@ -1,9 +1,9 @@
 package chien.myweb.calibration.enity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +12,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name="persons")
@@ -28,6 +31,9 @@ public class Person {
 	@Column(name = "password")
 	private String password;
 	
+	@Transient //@Transient 會告訴 JPA 不將 confirmPassword 欄位映射到資料庫表
+	private String confirmPassword;
+	
 	@Column(name = "username")
 	private String username;
 	
@@ -43,9 +49,15 @@ public class Person {
 	@Column(name = "identity")
 	private String identity;
 	
-	@Column(name = "create_date")
+	/*
+	 * @CreationTimestamp Hibernate提供JPA的註解，在執行插入操作時，會自動將創建日期設置為當前時間。
+	 * @Temporal(TemporalType.TIMESTAMP) 用於指定日期時間屬性的型別
+	 * updatable = false 用於維護創建日期等，不應該被更新的欄位
+	 */
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_date", updatable = false)
 	private LocalDateTime create_date;
-	
 	
 	public Long getId() {
 		return id;
@@ -64,6 +76,12 @@ public class Person {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
 	}
 	public String getUsername() {
 		return username;

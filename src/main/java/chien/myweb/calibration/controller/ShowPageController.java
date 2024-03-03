@@ -26,4 +26,9 @@ public class ShowPageController {
 	public String showCreatePersons() {
 		return "createPerson";
 	}
+	
+	@GetMapping("/person/edit")
+	public String showEditPersons() {
+		return "editPerson";
+	}
 }

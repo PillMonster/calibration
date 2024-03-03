@@ -9,6 +9,14 @@ import chien.myweb.calibration.enity.Person;
 
 public interface PersonService {
 	
+	// 新增
+	Person addPerson(Person person);
+	
+	// 修改
+	Person updatePerson(Long id, Person person);
+	
+	void deletePerson(Long id);
+	
 	// 單一查詢(透過ID)
 	List<Person> findPersonById(Long id);
 		
@@ -32,5 +40,14 @@ public interface PersonService {
 	
 	// 查詢(全部)
 	Map<String, Set<String>>  findPersonAllNoRepeat();
+	
+	// 帳號驗證
+	boolean validateAccount_number(String account_number);
+	
+	// 密碼驗證
+	boolean validatePassword(String password);
+
+	// email驗證
+    boolean validateEmail(String email);
 	
 }

@@ -4,9 +4,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.PersonDao;
@@ -22,6 +26,43 @@ public class PersonServiceImpl implements PersonService{
 	Set<String> usernameSet = new HashSet<>();
 	Set<String> departmentSet = new HashSet<>();
 	Set<String> identitySet = new HashSet<>();
+	
+	@Override
+	public Person addPerson(Person person) {
+		return personDao.save(person);
+	}
+	
+	@Override
+	public Person updatePerson(Long id, Person person) {
+		
+		List<Person> personDB = findPersonById(id);	
+		
+		Optional<Person> personOp = personDB.stream()
+				.filter(p -> p.getId().equals(id))
+				.findFirst();
+		
+		if(personOp.isPresent()){
+			
+			Person updatePerson = personOp.get();
+			updatePerson.setJob_number(person.getJob_number());
+			updatePerson.setUsername(person.getUsername());
+			updatePerson.setDepartment(person.getDepartment());
+			updatePerson.setPosition(person.getPosition());
+			updatePerson.setIdentity(person.getIdentity());
+			updatePerson.setEmail(person.getEmail());
+			updatePerson.setPassword(person.getPassword());
+
+			return personDao.save(updatePerson); // 這裡使用 save 進行更新
+		}
+		else{
+			return null;
+	    }
+	}
+	
+	@Override
+	public void deletePerson(Long id) {
+		personDao.deleteById(id);
+	}
 	
 	@Override
 	public List<Person> findPersonById(Long id) {
@@ -70,7 +111,7 @@ public class PersonServiceImpl implements PersonService{
 	@Override
 	public Map<String, Set<String>> findPersonAllNoRepeat() {
 		
-		List<Person> persons = personDao.findPersons();
+		List<Person> persons = findPersonAll();
 		// 遍歷原始集合，提取姓名並存儲到新的 List 中
 		for (Person person : persons) {
 			usernameSet.add(person.getUsername());
@@ -83,5 +124,30 @@ public class PersonServiceImpl implements PersonService{
 		
 		return personMap;
 	}
+	
+	// 帳號驗證
+    public boolean validateAccount_number(String account_number) {
+        String regex = "^[a-zA-Z0-9]+$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(account_number);
+        return matcher.matches();
+    }
+    
+    // 密碼驗證
+	public boolean validatePassword(String password) {
+        String pattern = "^(?=.*[a-z])(?=.*\\d)[a-zA-Z0-9]{8,16}$";
+        Pattern regex = Pattern.compile(pattern);
+        Matcher matcher = regex.matcher(password);
+        return matcher.matches();
+    }
+
+	// email驗證
+    public boolean validateEmail(String email) {
+		String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
 
 }

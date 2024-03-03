@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>新增人員</title>
+	<title>編輯人員</title>
 	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/createPersonStyle.css">
 </head>
@@ -12,7 +12,7 @@
 
 <div class="form-container">
 	
-	<h2 class="form-header">新增人員</h2>
+	<h2 class="form-header">編輯人員</h2>
 	
 	
 	<form id="personForm" action="/crud/createPerson" method="POST">
@@ -64,7 +64,7 @@
   		</div>
   		
   		<div class="button-container">
-    		<button type="submit">新增</button>
+    		<button type="submit">編輯</button>
 	    </div>
 	    <div class="button-container">
 	    	<input type='button' onclick="location.href='./crud'" value="回上頁">
@@ -80,6 +80,33 @@
 	    $("#header").load("/instrument/header.html");
 	  
 	});
+	
+	var urlParams = new URLSearchParams(window.location.search); // 獲取當前頁面的URL中的查詢參數
+	var id = urlParams.get("id"); // 獲取ID參數的值
+
+	$.ajax({
+	    type:"GET",//請求方式
+	    url:"/crud/person/" + id,//url代表向後端發送請求 (後端需有標註@GetMapping("/personId{id}")的方法)
+	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+	    async:true,//true為非同步
+	    success:function (data) {//接收後端來的資料
+	    	console.log("取得成功, Person物件的id為: " + data.id);	
+	    	
+	    	document.getElementById("job_number").value = data.job_number;
+	    	document.getElementById("username").value = data.username;
+	    	document.getElementById("department").value = data.department;
+	    	document.getElementById("position").value = data.position;
+	    	document.getElementById("identity").value = data.identity;
+	    	document.getElementById("email").value = data.email;
+	    	document.getElementById("password").value = data.password;
+	    	document.getElementById("confirmPassword").value = data.password;   	
+
+	    },
+	    error :function(errorMsg) {
+	        alert("請求後端資料失敗！(personId)");
+	    }
+	});
+	
 	
 	// 在文件載入完畢後執行的函數
     document.addEventListener("DOMContentLoaded", function() {
@@ -121,8 +148,8 @@
 		jsonString = JSON.stringify(rowData); //轉成json格式
         
         $.ajax({
-		    type: "POST", // 後端的要有標註PostMapping的方法
-		    url: "/crud/person",
+		    type: "PUT", // 後端的要有標註PutMapping的方法
+		    url: "/crud/person/" + id,
 		    cache: false,
 		    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
 		    contentType: "application/json",
