@@ -1,10 +1,12 @@
 package chien.myweb.calibration.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import chien.myweb.calibration.dao.PersonDao;
 import chien.myweb.calibration.enity.Person;
 import chien.myweb.calibration.service.PersonService;
 
@@ -27,7 +30,7 @@ public class PersonController {
 	
 	@Autowired
 	PersonService personService;
-	
+
 	@PostMapping("/person") // 新增
 	public ResponseEntity<String> createPerson(@RequestBody Person person) {
 		
@@ -100,30 +103,6 @@ public class PersonController {
 		return new ResponseEntity<>("第 " + id + " 筆刪除成功", HttpStatus.CREATED); 
 	}
 	
-	@PostMapping("/searchPerson")
-	public ResponseEntity<List<Person>> getSerchResult(@RequestBody Person person){
-		
-		if (person.getUsername() != null && person.getDepartment() == null && person.getIdentity() == null) {
-			//System.out.println(person.getUsername());
-			List<Person> personDB = personService.findUsername(person.getUsername());
-			return ResponseEntity.ok().body(personDB); 
-		}
-		
-		else if (person.getUsername() == null && person.getDepartment() != null && person.getIdentity() == null) {
-			//System.out.println(person.getDepartment());
-			List<Person> personDB = personService.findByDepartmente(person.getDepartment());
-			return ResponseEntity.ok().body(personDB); 
-			
-		}else if (person.getUsername() == null && person.getDepartment() == null && person.getIdentity() != null) {
-			//System.out.println(person.getIdentity());
-			List<Person> personDB = personService.findByidentity(person.getIdentity());
-			return ResponseEntity.ok().body(personDB); 
-		}else {
-			return ResponseEntity.notFound().build();
-		}
-	}
-	
-	
 	@GetMapping("/person/{id}")  
 	public ResponseEntity<Person> getPersonById(@PathVariable("id") Long id){
 		
@@ -144,7 +123,7 @@ public class PersonController {
 	    }
 	}
 	
-	@GetMapping("/personJobNumber/{jobnumber}")  
+	@GetMapping("/personJobNumber/{jobnumber}")  // 查詢
 	public ResponseEntity<Person> getPersonJobNumber(@PathVariable("jobnumber") String jobnumber){
 		
 		List<Person> personDB = personService.findJobnumber(jobnumber);	
@@ -203,13 +182,35 @@ public class PersonController {
 	    }
 	}
 	
-	@GetMapping("/personNoRepeat")  
+	@PostMapping("/searchPerson") // 前端條件查詢
+	public ResponseEntity<List<Person>> getSerchResult(@RequestBody Person person){
+		
+		if (person.getUsername() != null && person.getDepartment() == null && person.getIdentity() == null) {
+			//System.out.println(person.getUsername());
+			List<Person> personDB = personService.findUsername(person.getUsername());
+			return ResponseEntity.ok().body(personDB); 
+		}
+		
+		else if (person.getUsername() == null && person.getDepartment() != null && person.getIdentity() == null) {
+			//System.out.println(person.getDepartment());
+			List<Person> personDB = personService.findByDepartmente(person.getDepartment());
+			return ResponseEntity.ok().body(personDB); 
+			
+		}else if (person.getUsername() == null && person.getDepartment() == null && person.getIdentity() != null) {
+			//System.out.println(person.getIdentity());
+			List<Person> personDB = personService.findByidentity(person.getIdentity());
+			return ResponseEntity.ok().body(personDB); 
+		}else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@GetMapping("/personNoRepeat")  // 前端下拉式選單的內容
 	public ResponseEntity<Map<String, Set<String>>> personNoRepeat() {
 		
-		Map<String, Set<String>> personMap = personService.findPersonAllNoRepeat();		
-		
+		Map<String, Set<String>> personMap = personService.findPersonAllNoRepeat();	
+
 		if(!personMap.isEmpty()){		
-			
 			return ResponseEntity.ok().body(personMap); 
 		}
 		else{

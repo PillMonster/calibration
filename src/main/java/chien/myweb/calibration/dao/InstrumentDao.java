@@ -1,6 +1,7 @@
 package chien.myweb.calibration.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -40,4 +41,8 @@ public interface InstrumentDao extends JpaRepository<Instrument, Long>{
     
     @Query(value = "select * from instrument", nativeQuery = true) //查詢全部
     List<Instrument> findInstruments();
+    
+    @Query(value = "SELECT DISTINCT calibrate_location FROM instrument", nativeQuery = true) //查詢校驗地點(單一欄位)
+    List<String> findInstrumentByLocation();
+
 }

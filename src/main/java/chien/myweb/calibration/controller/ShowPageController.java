@@ -9,7 +9,7 @@ public class ShowPageController {
 	
 	@GetMapping("/instrument/crud")
 	public String showInstruments() {
-		return "crud";
+		return "crudInstrument";
 	}
 	
 	@GetMapping("/instrument/create")
@@ -19,7 +19,7 @@ public class ShowPageController {
 	
 	@GetMapping("/person/crud")
 	public String showPersons() {
-		return "person";
+		return "crudPerson";
 	}
 	
 	@GetMapping("/person/create")

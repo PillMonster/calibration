@@ -29,45 +29,47 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-	    $("#header").load("/instrument/header.html");
-	  
+	    $("#header").load("/instrument/header.html");	 
+	    ajaxMethod();
 	});
 	
-	//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
-	$.ajax({
-	    type:"GET",//請求方式
-	    url:"/crud/persons",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
-	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
-	    async:true,//true為非同步
-	    success:function (data) {//接收後端來的資料
-	    	
-	    	console.log(data);
-	    	updateData(data);
-	    	//populateDropdown(data);
-	    },
-	    error :function(errorMsg) {
-	        alert("請求後端資料失敗！(/crud/persons)");
-	    }
-	});
-	
-	//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
-	$.ajax({
-	    type:"GET",//請求方式
-	    url:"/crud/personNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
-	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
-	    async:true,//true為非同步
-	    success:function (data) {//接收後端來的資料
-	    	
-	    	console.log(data);
-	    	populateDropdown(data);
-	    	//populateDropdown(data);
-	    },
-	    error :function(errorMsg) {
-	        alert("請求後端資料失敗！(/crud/personNoRepeat)");
-	    }
-	});
-	
-	
+	function ajaxMethod(){
+		//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
+		$.ajax({
+		    type:"GET",//請求方式
+		    url:"/crud/persons",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
+		    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+		    async:true,//true為非同步
+		    success:function (data) {//接收後端來的資料
+		    	
+		    	console.log(data);
+		    	updateData(data);
+		    	//populateDropdown(data);
+		    },
+		    error :function(errorMsg) {
+		        alert("請求後端資料失敗！(/crud/persons)");
+		    }
+		});
+		
+		//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
+		$.ajax({
+		    type:"GET",//請求方式
+		    url:"/crud/personNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
+		    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+		    async:true,//true為非同步
+		    success:function (data) {//接收後端來的資料
+  	
+		    	console.log(data);
+		    	populateDropdown(data);
+		    	//populateDropdown(data);
+		    },
+		    error :function(errorMsg) {
+		        alert("請求後端資料失敗！(/crud/personNoRepeat)");
+		    }
+		});
+		
+	}
+
 	// 自訂submitUserName()方法, 使用者依條件選取，並搭配ajax將表單內容傳送到後端
     function submitUserName() {
     	
@@ -121,13 +123,11 @@
 		});	
 	}
 	
-	function redirectToEditPage() {
-    	$(document).on("click", ".edit-button", function(e) {
-    		var id = $(this).data("id");
-    		console.log(id);
-        	// 使用 window.location.href 進行導向
-        	window.location.href = "edit?id=" +id;
-    	});
+	function redirectToEditPage(button) {
+		
+		var id = $(button).data("id");
+		console.log(id);
+		window.location.href = "edit?id=" +id;
     };
     
     function deleteFun(button) {
@@ -144,17 +144,7 @@
     	 	    	success: function(message) {  		
     	 	      		//window.location.reload(); // 刪除成功後會刷新葉面
     	 	      		alert(message);
-    	 	      		$.ajax({
-    	 	      		    type:"GET",//請求方式
-    	 	      		    url:"/crud/persons",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
-    	 	      		    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
-    	 	      		    async:false,//true為非同步
-    	 	      		    success:function (data) {//接收後端來的資料
-    	 	      		    	updateData(data);    	
-    	 	      		    },
-    	 	      		    error :function(errorMsg) {
-    	 	      		    }
-    	 	      		});	
+    	 	      		ajaxMethod();	
     	 	    	},
     	 	    	error: function(xhr, status, error) {
     	 	    		alert("刪除失敗");
@@ -188,7 +178,7 @@
 			innerTable += "<td>" + data[i].identity + "</td>";
 			innerTable += "<td>" + data[i].create_date.replace("T", " ") + "</td>";
 			
-			innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='redirectToEditPage()'>編輯</button>" + "</td>";
+			innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='redirectToEditPage(this)'>編輯</button>" + "</td>";
 			innerTable += "<td>" + "<button class='delete-button' data-id=" + data[i].id + " onclick='deleteFun(this)'>刪除</button>" + "</td>";
 		}
 		innerTable += "</tr>";

@@ -42,5 +42,10 @@ public class InstrumentServiceImpl implements InstrumentService{
 		// TODO Auto-generated method stub
 		return instrumentDao.findInstruments();
 	}
-
+	
+	@Override
+	public List<String> findInstrumentByLocation(){
+		// TODO Auto-generated method stub
+		return instrumentDao.findInstrumentByLocation();
+	}
 }

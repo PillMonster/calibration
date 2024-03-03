@@ -1,8 +1,11 @@
 package chien.myweb.calibration.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.RequestChecked;
 import chien.myweb.calibration.service.InstrumentService;
+import chien.myweb.calibration.service.PersonService;
 
 @RestController
 @RequestMapping("/crud")
@@ -25,37 +29,8 @@ public class InstrumentController {
 	
 	@Autowired
 	InstrumentService instrumentService;
-	
-	@PostMapping("/searchInstrument")
-	public ResponseEntity<List<Instrument>> getSerchResult(@RequestBody List<RequestChecked> requestChecked){
-		
-		List<String> monthList = new ArrayList<>();
-        List<String> cycleList = new ArrayList<>();
-        List<String> typeList = new ArrayList<>();
-        List<String> personList = new ArrayList<>();
-        List<String> localationList = new ArrayList<>();
-        
-        for (RequestChecked jsonData : requestChecked) {
-        	monthList = jsonData.getMonth();
-            cycleList = jsonData.getCycle();
-            typeList = jsonData.getType();
-            personList = jsonData.getPerson();
-            localationList = jsonData.getLocalation();
-            
-            System.out.println("====== From 前端 ======");
-			System.out.println("校驗月份 from 前端: " + monthList);
-	    	System.out.println("校驗週期 from 前端: " + cycleList);
-	    	System.out.println("校驗類型 from 前端: " +  typeList);
-	    	System.out.println("校驗人員 from 前端: " + personList);
-	    	System.out.println("校驗地點or公司 from 前端: " + localationList);
-	    	System.out.println("-----------------------");
-        }
-        
-        List<Instrument> instrumentList = instrumentService.findByMultiple(monthList, cycleList, typeList, personList, localationList); 
-
-		return ResponseEntity.ok().body(instrumentList);
-	}
-	
+	@Autowired
+	PersonService personService;
 	
 	@GetMapping("/instrumentId/{id}")  
 	public ResponseEntity<Instrument> getInstrumentById(@PathVariable("id") Long id){
@@ -134,5 +109,55 @@ public class InstrumentController {
 			System.out.println("資料庫沒有內容");
 			return ResponseEntity.notFound().build();
 		}
+	}
+	
+	@PostMapping("/searchInstrument")
+	public ResponseEntity<List<Instrument>> getSerchResult(@RequestBody List<RequestChecked> requestChecked){
+		
+		List<String> monthList = new ArrayList<>();
+        List<String> cycleList = new ArrayList<>();
+        List<String> typeList = new ArrayList<>();
+        List<String> personList = new ArrayList<>();
+        List<String> localationList = new ArrayList<>();
+        
+        for (RequestChecked jsonData : requestChecked) {
+        	monthList = jsonData.getMonth();
+            cycleList = jsonData.getCycle();
+            typeList = jsonData.getType();
+            personList = jsonData.getPerson();
+            localationList = jsonData.getLocalation();
+            
+            System.out.println("====== From 前端 ======");
+			System.out.println("校驗月份 from 前端: " + monthList);
+	    	System.out.println("校驗週期 from 前端: " + cycleList);
+	    	System.out.println("校驗類型 from 前端: " +  typeList);
+	    	System.out.println("校驗人員 from 前端: " + personList);
+	    	System.out.println("校驗地點or公司 from 前端: " + localationList);
+	    	System.out.println("-----------------------");
+        }
+        
+        List<Instrument> instrumentList = instrumentService.findByMultiple(monthList, cycleList, typeList, personList, localationList); 
+
+		return ResponseEntity.ok().body(instrumentList);
+	}
+	
+	@GetMapping("/instrumentNoRepeat")  // 前端下拉式選單的內容
+	public ResponseEntity<Map<String, List<String>>> instrumentNoRepeat() {
+		
+		Map<String, List<String>> instrumentMap = new HashMap<>();	
+		
+		List<String> calibrateLocation = instrumentService.findInstrumentByLocation();	
+		List<String> calibratePerson = personService.findPersonByCheck();
+
+		instrumentMap.put("calibrateLocation", calibrateLocation);
+		instrumentMap.put("calibratePerson", calibratePerson);
+		
+		if(!instrumentMap.isEmpty()){		
+			return ResponseEntity.ok().body(instrumentMap); 
+		}
+		else{
+			System.out.println("資料庫沒有內容");
+	        return ResponseEntity.notFound().build();
+	    }
 	}
 }

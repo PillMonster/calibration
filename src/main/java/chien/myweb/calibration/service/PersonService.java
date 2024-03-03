@@ -38,7 +38,10 @@ public interface PersonService {
 	// 查詢(全部)
 	List<Person> findPersonAll();
 	
-	// 查詢(全部)
+	// 查詢不重複的校驗人員
+	List<String> findPersonByCheck();
+	
+	// 查詢不重複的內容
 	Map<String, Set<String>>  findPersonAllNoRepeat();
 	
 	// 帳號驗證

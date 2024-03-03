@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.PersonDao;
@@ -22,10 +22,8 @@ public class PersonServiceImpl implements PersonService{
 	@Autowired
 	PersonDao personDao;
 	
-	Map<String, Set<String>> personMap = new HashMap<>();
-	Set<String> usernameSet = new HashSet<>();
-	Set<String> departmentSet = new HashSet<>();
-	Set<String> identitySet = new HashSet<>();
+	
+	//List<Person> persons = new ArrayList<>();
 	
 	@Override
 	public Person addPerson(Person person) {
@@ -107,21 +105,33 @@ public class PersonServiceImpl implements PersonService{
 		return personDao.findPersons();
 	}
 	
+	@Override
+	public List<String> findPersonByCheck(){
+		// TODO Auto-generated method stub
+		return personDao.findPersonByCheck();
+	}
 	
 	@Override
 	public Map<String, Set<String>> findPersonAllNoRepeat() {
 		
+		Map<String, Set<String>> personMap = new HashMap<>();
+		Set<String> usernameSet = new TreeSet<>(); // TreeSet: 不重複, 排序
+		Set<String> departmentSet = new TreeSet<>();
+		Set<String> identitySet = new HashSet<>(); // HasgSet: 不重複, 不排序
+		
 		List<Person> persons = findPersonAll();
+		
 		// 遍歷原始集合，提取姓名並存儲到新的 List 中
 		for (Person person : persons) {
 			usernameSet.add(person.getUsername());
 			departmentSet.add(person.getDepartment());
 			identitySet.add(person.getIdentity());
 		}
+
 		personMap.put("username", usernameSet);
 		personMap.put("department", departmentSet);
 		personMap.put("identity", identitySet);
-		
+
 		return personMap;
 	}
 	

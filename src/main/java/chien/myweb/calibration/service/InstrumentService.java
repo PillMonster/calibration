@@ -21,4 +21,7 @@ public interface InstrumentService {
 	
 	// 查詢(全部)
 	List<Instrument> findInstruments();
+	
+	// 查詢不重複的校驗地點
+	List<String> findInstrumentByLocation();
 }
