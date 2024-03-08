@@ -43,6 +43,6 @@ public interface InstrumentDao extends JpaRepository<Instrument, Long>{
     List<Instrument> findInstruments();
     
     @Query(value = "SELECT DISTINCT calibrate_location FROM instrument", nativeQuery = true) //查詢校驗地點(單一欄位)
-    List<String> findInstrumentByLocation();
+    List<String> findInstrumentByLocalation();
 
 }

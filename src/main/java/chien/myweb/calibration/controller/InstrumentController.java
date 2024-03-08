@@ -146,10 +146,10 @@ public class InstrumentController {
 		
 		Map<String, List<String>> instrumentMap = new HashMap<>();	
 		
-		List<String> calibrateLocation = instrumentService.findInstrumentByLocation();	
+		List<String> calibrateLocalation = instrumentService.findInstrumentByLocalation();	
 		List<String> calibratePerson = personService.findPersonByCheck();
 
-		instrumentMap.put("calibrateLocation", calibrateLocation);
+		instrumentMap.put("calibrateLocalation", calibrateLocalation);
 		instrumentMap.put("calibratePerson", calibratePerson);
 		
 		if(!instrumentMap.isEmpty()){		
