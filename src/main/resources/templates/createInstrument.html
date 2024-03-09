@@ -9,89 +9,113 @@
 <body>
 <div id="header"></div>
 
-<div class="form-container">
-	
-	<h2 class="form-header">新增器具</h2>
-	
+
+
+<div class="form-container">	
+
 	<form id="myForm" action="./addUser" method="POST">
+	
+		<div style="text-align: center;"><h2 class="form-header">新增器具</h2></div>
 		
 		<div class="form-container-left">
 		
 			<label for="number">器具編號：</label>
-           	<input type="text" id="number" name="number" required><br>
+           	<input type="text" class="input-instrument" id="number" name="number" required><br>
 
            	<label for="name">器具名稱：</label>
-           	<input type="text" id="name" name="name" required><br>
+           	<input type="text" class="input-instrument" id="name" name="name" required><br>
 
            	<label for="type">廠牌型式：</label>
-           	<input type="text" id="type" name="type" required><br>
+           	<input type="text" class="input-instrument" id="type" name="type" required><br>
 
            	<label for="characteristic">校驗特性：</label>
-           	<input type="text" id="characteristic" name="characteristic" required><br>
+           	<input type="text" class="input-instrument" id="characteristic" name="characteristic" required><br>
 
            	<label for="unit">校驗單位：</label>
-           	<input type="text" id="unit" name="unit" required><br>
+           	<input type="text" class="input-instrument" id="unit" name="unit" required><br>
 
            	<label for="cycle">校驗週期：</label>
-           	<select name="cycle" id=cycle>
+           	<select class="select-instrument" name="cycle" id=cycle>
            		<option>6個月</option>
 			    <option>12個月</option>
 			    <option>24個月</option>
            	</select><br>
 
            	<label for="calibrate_type">校驗類型：</label>
-           	<select name="calibrate_type" id=calibrate_type>
+           	<select class="select-instrument" name="calibrate_type" id=calibrate_type>
            		<option>內校</option>
 			    <option>外校</option>
 			    <option>遊校</option>
            	</select><br>
 
-           	<label for="calibrate_location">校驗地點：</label>
-           	<input type="text" id="calibrate_location" name="calibrate_location" required><br>
+           	<label for="calibrate_localation">校驗地點：</label>
+           	<input type="text" class="input-instrument"  id="calibrate_localation" name="calibrate_localation" required><br>
            
            	<label for="calibrate_month">校驗月份：</label>
-           	<select name="calibrate_month" id=calibrate_month>
+           	<select class="select-instrument" name="calibrate_month" id=calibrate_month>
            		<option>1月</option>	<option>2月</option><option>3月</option><option>4月</option><option>5月</option><option>6月</option>
 				<option>7月</option>	<option>8月</option><option>9月</option><option>10月</option><option>11月</option><option>12月</option>
            	</select><br>
            
            	<label for="mother_instrument_number">母儀編號：</label>
-           	<input type="text" id="mother_instrument_number" name="mother_instrument_number" required>	 <br>    		
+           	<input type="text" class="input-instrument" id="mother_instrument_number" name="mother_instrument_number" required>	 <br>    		
 		
+		</div>
+		
+		<div class="form-container-center">
+			
+			<div style="text-align: right;"><button class="create-button" onclick="addRow()">新增規格</button></div>
+			<table id="specTable" class="styled-table">
+				<thead>
+				    <tr class="row">
+				      <th class="table-cell">校驗規格</th>
+				      <th class="table-cell">上公差</th>
+				      <th class="table-cell">下公差</th>
+				      <th class="table-cell">規格上限</th>
+				      <th class="table-cell">規格下限</th>
+				      <th class="table-cell">操作</th>
+				    </tr>
+			  	</thead>
+			  	<tbody>
+				    <tr class="row">
+				      <td class="table-cell"><input type="text" id="row1-1" class="input-spec"></td>
+				      <td class="table-cell"><input type="text" id="row1-2" onblur="calculateRow(this)" class="input-spec"></td>
+				      <td class="table-cell"><input type="text" id="row1-3" onblur="calculateRow(this)" class="input-spec"></td>
+				      <td class="table-cell"><input type="text" id="row1-4" class="input-spec"></td>
+				      <td class="table-cell"><input type="text" id="row1-5" class="input-spec"></td>
+				      <td class="table-cell"><button class="delete-button" onclick="deleteRow(this)">刪除</button></td>
+				    </tr>
+			  </tbody>
+			</table>
+
 		</div>
 		
 		<div class="form-container-right">
 		
-			<label for="specification">校驗規格：</label>
-           	<input type="text" id="specification" name="specification" placeholder="多個規格，ex:20,50,100" required><br>
-
-           	<label for="tolerance">允收公差：</label>
-           	<input type="text" id="tolerance" name="tolerance" required><br>
-
-           	<label for="custos">保管人員：</label>
-           	<select name="custos" id=custos>
-           		<option>Annie</option>	
-           		<option>Bob</option>	
-				<option>Candy</option>	
-           	</select><br>
+			<label for="custos">保管人員：</label>
+           	<select class="select-instrument" name="custos" id=custos></select><br>
+           	
+           	<label for="custosLeader">保管主管：</label>
+           	<select class="select-instrument" name="custosLeader" id=custosLeader></select><br>
 
            	<label for="checker">校驗人員：</label>
-           	<select name="custos" id=custos>
-           		<option>簡茗家</option>	
-           		<option>陳曉明</option>	
-				<option>張皓程</option>	
-           	</select><br>	
+           	<select class="select-instrument" name="checker" id=checker></select><br>	
+           	
+           	<label for="checkerLeader">校驗主管：</label>
+           	<select class="select-instrument" name="checkerLeader" id=checkerLeader></select><br>	
+           	<div style="text-align: center;"><a href="/person/create">找不到名子?</a></div>
 
 		</div>
-
+		
+		
 	</form>
-	
-	<div class="button-container">
-    	<button type="submit">新增</button>
-		<input type='button' onclick="location.href='./crud'" value="回上頁">
-    </div>
-	
+
 </div>
+
+	<div class="button-container">
+    	<button type="submit" class="submit-button">新增</button>
+		<input type='button' class="back-button" onclick="location.href='./crud'" value="回上頁">
+   </div>
 
 
 <script type="text/javascript">
@@ -100,7 +124,121 @@
 	  
 	});
 	
+	var rowCounter = 1;
 	
+	$.ajax({
+	    type:"GET",//請求方式
+	    url:"/crud/instrumentNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
+	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+	    async:true,//true為非同步
+	    success:function (data) {//接收後端來的資料
+	    	console.log(data);
+	    	populateDropdown(data);
+	    },
+	    error :function(errorMsg) {
+	        alert("請求後端資料失敗！(/crud/instruments)");
+	    }
+	});
+	
+	// 用於填充下拉選單的函數
+	function populateDropdown(data) {
+		
+		// 添加至下拉選單的資料
+		//const localationList = data.localation;
+		const custosList = data.custos;
+		const custosLeaderList = data.custosLeader;
+		const checkerList = data.checker;
+		const checkerLeaderList = data.checkerLeader;
+		
+		// 選擇下拉選單元素
+	  	//const localationSelect = document.getElementById("calibrate_localation");
+	  	const custosSelect = document.getElementById("custos");
+	  	const custosLeaderSelect = document.getElementById("custosLeader");
+	  	const checkerSelect = document.getElementById("checker");
+	  	const checkerLeaderSelect = document.getElementById("checkerLeader");
+	  	
+	  	// 清空現有選項
+	  	//localationSelect.innerHTML = "";
+	  	custosSelect.innerHTML = "";
+	  	custosLeaderSelect.innerHTML = "";
+	  	checkerSelect.innerHTML = "";
+	  	checkerLeaderSelect.innerHTML = "";
+	  	
+	  	/*for (let i = 0; i < localationList.length; i++) {
+	      	const localationOption = document.createElement("option"); // 創建新的選項元素
+	      	localationOption.text = localationList[i]; 
+	      	localationSelect.appendChild(localationOption); // 將選項添加至下拉選單
+	  	}*/
+	  	
+	  	for (let i = 0; i < custosList.length; i++) {
+	      	const custosOption = document.createElement("option"); // 創建新的選項元素
+	      	custosOption.text = custosList[i]; 
+	      	custosSelect.appendChild(custosOption); // 將選項添加至下拉選單
+	  	}
+	  	
+	  	for (let i = 0; i < custosLeaderList.length; i++) {
+	      	const custosLeaderOption = document.createElement("option"); // 創建新的選項元素
+	      	custosLeaderOption.text = custosLeaderList[i]; 
+	      	custosLeaderSelect.appendChild(custosLeaderOption); // 將選項添加至下拉選單
+	  	}	
+	  	
+	  	for (let i = 0; i < checkerList.length; i++) {
+	      	const checkerOption = document.createElement("option"); // 創建新的選項元素
+	      	checkerOption.text = checkerList[i]; 
+	      	checkerSelect.appendChild(checkerOption); // 將選項添加至下拉選單
+	  	}
+	  	
+	  	for (let i = 0; i < checkerLeaderList.length; i++) {
+	      	const checkerLeaderOption = document.createElement("option"); // 創建新的選項元素
+	      	checkerLeaderOption.text = checkerLeaderList[i]; 
+	      	checkerLeaderSelect.appendChild(checkerLeaderOption); // 將選項添加至下拉選單
+	  	}
+	}
+	
+	function addRow() {
+		var table = document.getElementById("specTable");
+	    var tbody = table.getElementsByTagName('tbody')[0];
+	    var newRow = tbody.insertRow();
+
+	    for (var i = 0; i < 5; i++) {
+	    	var cell = newRow.insertCell(i);  // 新增的表格行(row)中插入一個新的列(column)，cell變數為單元格
+	      	var input = document.createElement("input"); // 創建了一個新的 input 元素
+	      	input.type = "text";
+	      	input.classList.add("input-spec");
+	      	var inputId = 'row' + rowCounter + '-' + (i + 1);
+	      	input.id = inputId;
+	      	cell.appendChild(input); // 把 input 元素附加到該列的單元格中
+	    }
+		
+	    var deleteButton = document.createElement("button");
+	    deleteButton.innerHTML = "刪除";
+	    deleteButton.classList.add("delete-button");
+	    deleteButton.onclick = function() {
+	    	deleteRow(this);
+	    };
+
+	    newRow.insertCell().appendChild(deleteButton);
+	 
+	    rowCounter++; // 增加行數計數
+	}
+
+	function deleteRow(button) {
+		/*
+		1. button 是在點擊事件中傳遞進來的按鈕元素。
+		2. button.parentNode 表示按鈕的父元素，也就是該按鈕所在的單元格 (td)。
+		3. 再次使用 .parentNode 取得這個單元格的父元素，即整個表格行 (tr)。
+		4. row.parentNode 取得表格行 (tr) 的父元素，即表格的 <tbody> 部分。
+		5. .removeChild(row) 移除 <tbody> 中的子元素 row，也就是移除整個表格行。
+		*/
+	    var row = button.parentNode.parentNode; 
+	    row.parentNode.removeChild(row);
+	}
+	
+	// ========== 焦點事件 ==========
+	for (var i=1; i<13; i++){
+		var num = document.getElementById("inputData"+i);
+		num.addEventListener("blur", checkNum) // 當焦點離開輸入欄位時, 會呼叫checkNum函示
+	}
 
 </script>
 

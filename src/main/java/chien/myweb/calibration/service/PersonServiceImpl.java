@@ -1,5 +1,6 @@
 package chien.myweb.calibration.service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -64,51 +65,66 @@ public class PersonServiceImpl implements PersonService{
 	
 	@Override
 	public List<Person> findPersonById(Long id) {
-		// TODO Auto-generated method stub
 		return personDao.findByPersonId(id);
 	}
 
 	@Override
 	public List<Person> findJobnumber(String jobnumber) {
-		// TODO Auto-generated method stub
 		return personDao.findByJobnumber(jobnumber);
 	}
 
 	@Override
 	public List<Person> findUsername(String username) {
-		// TODO Auto-generated method stub
 		return personDao.findByUsername(username);
 	}
 
 	@Override
 	public List<Person> findPassword(String password) {
-		// TODO Auto-generated method stub
 		return personDao.findByPassword(password);
 	}
 	
 
 	@Override
 	public List<Person> findByDepartmente(String department) {
-		// TODO Auto-generated method stub
 		return personDao.findByDepartmente(department);
 	}
 
 	@Override
 	public List<Person> findByidentity(String identity) {
-		// TODO Auto-generated method stub
 		return personDao.findByidentity(identity);
 	}
 
 	@Override
 	public List<Person> findPersonAll() {
-		// TODO Auto-generated method stub
 		return personDao.findPersons();
 	}
 	
 	@Override
-	public List<String> findPersonByCheck(){
-		// TODO Auto-generated method stub
-		return personDao.findPersonByCheck();
+	public List<String> findPersonByCustos() {
+		List<String> custos = personDao.findPersonByCustos();
+		Collections.sort(custos, (s1, s2) -> s1.compareTo(s2));
+		return custos;
+	}
+
+	@Override
+	public List<String> findPersonByCustosLeader() {
+		List<String> custosLeader = personDao.findPersonByCustosLeader();
+		Collections.sort(custosLeader, (s1, s2) -> s1.compareTo(s2));
+		return custosLeader;
+	}
+
+	@Override
+	public List<String> findPersonByChecker(){
+		List<String> checker = personDao.findPersonByChecker();
+		Collections.sort(checker, (s1, s2) -> s1.compareTo(s2));
+		return checker;
+	}
+	
+	@Override
+	public List<String> findPersonByCheckerLeader() {
+		List<String> checkerLeader = personDao.findPersonByCheckerLeader();
+		Collections.sort(checkerLeader, (s1, s2) -> s1.compareTo(s2));
+		return checkerLeader;
 	}
 	
 	@Override

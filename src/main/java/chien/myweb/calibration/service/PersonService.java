@@ -38,8 +38,17 @@ public interface PersonService {
 	// 查詢(全部)
 	List<Person> findPersonAll();
 	
+	// 查詢不重複的保管人員
+	List<String> findPersonByCustos();
+	
+	// 查詢不重複的保管主管
+	List<String> findPersonByCustosLeader();
+	
 	// 查詢不重複的校驗人員
-	List<String> findPersonByCheck();
+	List<String> findPersonByChecker();
+	
+	// 查詢不重複的校驗主管
+	List<String> findPersonByCheckerLeader();
 	
 	// 查詢不重複的內容
 	Map<String, Set<String>>  findPersonAllNoRepeat();

@@ -1,6 +1,7 @@
 package chien.myweb.calibration.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -37,7 +38,16 @@ public interface PersonDao extends JpaRepository<Person, Long>{
     @Query(value = "select * from persons", nativeQuery = true) //查詢全部
     List<Person> findPersons();
     
+    @Query(value = "SELECT DISTINCT username FROM persons WHERE identity='保管人員';", nativeQuery = true) //查詢保管人員(單一欄位)
+    List<String> findPersonByCustos();
+    
+    @Query(value = "SELECT DISTINCT username FROM persons WHERE identity='保管主管';", nativeQuery = true) //查詢保管主管(單一欄位)
+    List<String> findPersonByCustosLeader();
+    
     @Query(value = "SELECT DISTINCT username FROM persons WHERE identity='校驗人員';", nativeQuery = true) //查詢校驗人員(單一欄位)
-    List<String> findPersonByCheck();
+    List<String> findPersonByChecker();
+    
+    @Query(value = "SELECT DISTINCT username FROM persons WHERE identity='校驗主管';", nativeQuery = true) //查詢校驗主管(單一欄位)
+    List<String> findPersonByCheckerLeader();
     
 }

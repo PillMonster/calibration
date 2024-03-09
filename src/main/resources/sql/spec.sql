@@ -7,7 +7,8 @@ CREATE TABLE spec (
   USL DOUBLE COMMENT '規格上限',
   LSL DOUBLE COMMENT '規格下限',
   
-  PRIMARY KEY (spec_id)
+  PRIMARY KEY (spec_id),
+  UNIQUE KEY unique_specification (specification)
 );
 INSERT INTO spec ( specification, USL, LSL) VALUES ( 20.0, 20.02, 19.98);
 INSERT INTO spec ( specification, USL, LSL) VALUES ( 50.0, 50.02, 49.98);

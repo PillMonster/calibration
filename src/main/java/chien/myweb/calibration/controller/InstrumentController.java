@@ -1,6 +1,7 @@
 package chien.myweb.calibration.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,11 +147,17 @@ public class InstrumentController {
 		
 		Map<String, List<String>> instrumentMap = new HashMap<>();	
 		
-		List<String> calibrateLocalation = instrumentService.findInstrumentByLocalation();	
-		List<String> calibratePerson = personService.findPersonByCheck();
+		List<String> localation = instrumentService.findInstrumentByLocalation();	
+		List<String> custos = personService.findPersonByCustos();
+		List<String> custosLeader = personService.findPersonByCustosLeader();
+		List<String> checker = personService.findPersonByChecker();
+		List<String> checkerLeader = personService.findPersonByCheckerLeader();
 
-		instrumentMap.put("calibrateLocalation", calibrateLocalation);
-		instrumentMap.put("calibratePerson", calibratePerson);
+		instrumentMap.put("localation", localation);
+		instrumentMap.put("custos", custos);
+		instrumentMap.put("custosLeader", custosLeader);
+		instrumentMap.put("checker", checker);
+		instrumentMap.put("checkerLeader", checkerLeader);
 		
 		if(!instrumentMap.isEmpty()){		
 			return ResponseEntity.ok().body(instrumentMap); 
