@@ -4,9 +4,13 @@ import java.util.List;
 import java.util.Set;
 
 import chien.myweb.calibration.enity.Instrument;
+import chien.myweb.calibration.enity.RequestData;
 
 
 public interface InstrumentService {
+	
+	// 新增
+	Instrument addInstrument(RequestData request);
 	
 	// 多項條件查詢
 	List<Instrument> findByMultiple(List<String> monthList, List<String> cycleList, List<String> typeList, List<String> personList, List<String> localationList);

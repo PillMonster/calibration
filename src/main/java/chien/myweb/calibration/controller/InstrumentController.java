@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.RequestChecked;
+import chien.myweb.calibration.enity.RequestData;
 import chien.myweb.calibration.service.InstrumentService;
 import chien.myweb.calibration.service.PersonService;
 
@@ -32,6 +34,17 @@ public class InstrumentController {
 	InstrumentService instrumentService;
 	@Autowired
 	PersonService personService;
+	
+	@PostMapping("/instrument")
+	public ResponseEntity<Instrument> createInstrument(@RequestBody RequestData request){
+			
+		System.out.println(request.toString());
+
+		Instrument instrument = instrumentService.addInstrument(request);
+
+		return ResponseEntity.ok().body(instrument); 
+	}
+	
 	
 	@GetMapping("/instrumentId/{id}")  
 	public ResponseEntity<Instrument> getInstrumentById(@PathVariable("id") Long id){

@@ -14,7 +14,7 @@ body {
 
 /* 表單容器 */
 .form-container {
-	display: flex;
+	display: flex; /* 裡面每一個div可以上下左右排列 */
     justify-content: space-between;
 	
     width: 1300px;
@@ -35,7 +35,6 @@ body {
 
 .form-container-center {
 	/*border: 1px solid #868687;*/
-	/*background-color: #f4f4f4;*/
 	float:left;
     width: 600px;
     margin: 0px 30px 10px 0px;  /* 上 右 下 左 */
@@ -46,6 +45,14 @@ body {
 	float:right;
     width: 300px;
     margin: 0px 10px;
+}
+
+/* ===== 按鈕的容器 ===== */
+.button-container{
+	/*border: 1px solid #868687;*/
+    margin-left: auto;  /* 自動對齊 */
+    margin-right: auto; /* 自動對齊 */
+	text-align: center; /* 將表頭置中 */
 }
 
 label {
@@ -78,7 +85,7 @@ label {
     border: 1px solid #ccc; /* 使用顏色 #3498db 的實線邊框 */
     border-radius: 4px; /* 使用 6px 的圓角 */
     transition: border-color 0.3s; /* 加入漸變效果 */
-    font-size: 16px;
+    font-size: 14px;
     width: 53%;
 }
 /* ===== 下拉式選單點擊時改變邊框顏色 ===== */
@@ -86,11 +93,16 @@ label {
     border-color: #3498db; /* 選中或點擊時邊框顏色改為 #e74c3c */
 }
 
-/* ===== 按鈕的容器 ===== */
-.button-container{
-	margin: 20px auto;
-	text-align: center; /* 將表頭置中 */
-}
+/* ===== 日期元件css =====*/
+.datepicker {
+	padding: 4px; /* 調整日期選擇器的內容大小 */
+	line-height: 1.2; /* 調整行高 */
+    margin-bottom: 10px;
+  	border: 1px solid #ccc;
+  	border-radius: 4px;
+    font-size: 14px; /* 調整日期選擇器的字號 */
+    width: 51%; /* 縮短日期選擇器的寬度 */    
+} 
 
 /* ===== 按鈕的樣式 ===== */
 .submit-button {

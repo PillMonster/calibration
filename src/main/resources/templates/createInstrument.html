@@ -13,110 +13,115 @@
 
 <div class="form-container">	
 
-	<form id="myForm" action="./addUser" method="POST">
+	<form id="instrumentForm">
 	
 		<div style="text-align: center;"><h2 class="form-header">新增器具</h2></div>
 		
-		<div class="form-container-left">
+		<div style="display: flex;"> 
 		
-			<label for="number">器具編號：</label>
-           	<input type="text" class="input-instrument" id="number" name="number" required><br>
-
-           	<label for="name">器具名稱：</label>
-           	<input type="text" class="input-instrument" id="name" name="name" required><br>
-
-           	<label for="type">廠牌型式：</label>
-           	<input type="text" class="input-instrument" id="type" name="type" required><br>
-
-           	<label for="characteristic">校驗特性：</label>
-           	<input type="text" class="input-instrument" id="characteristic" name="characteristic" required><br>
-
-           	<label for="unit">校驗單位：</label>
-           	<input type="text" class="input-instrument" id="unit" name="unit" required><br>
-
-           	<label for="cycle">校驗週期：</label>
-           	<select class="select-instrument" name="cycle" id=cycle>
-           		<option>6個月</option>
-			    <option>12個月</option>
-			    <option>24個月</option>
-           	</select><br>
-
-           	<label for="calibrate_type">校驗類型：</label>
-           	<select class="select-instrument" name="calibrate_type" id=calibrate_type>
-           		<option>內校</option>
-			    <option>外校</option>
-			    <option>遊校</option>
-           	</select><br>
-
-           	<label for="calibrate_localation">校驗地點：</label>
-           	<input type="text" class="input-instrument"  id="calibrate_localation" name="calibrate_localation" required><br>
-           
-           	<label for="calibrate_month">校驗月份：</label>
-           	<select class="select-instrument" name="calibrate_month" id=calibrate_month>
-           		<option>1月</option>	<option>2月</option><option>3月</option><option>4月</option><option>5月</option><option>6月</option>
-				<option>7月</option>	<option>8月</option><option>9月</option><option>10月</option><option>11月</option><option>12月</option>
-           	</select><br>
-           
-           	<label for="mother_instrument_number">母儀編號：</label>
-           	<input type="text" class="input-instrument" id="mother_instrument_number" name="mother_instrument_number" required>	 <br>    		
-		
-		</div>
-		
-		<div class="form-container-center">
+			<div class="form-container-left">
 			
-			<div style="text-align: right;"><button class="create-button" onclick="addRow()">新增規格</button></div>
-			<table id="specTable" class="styled-table">
-				<thead>
-				    <tr class="row">
-				      <th class="table-cell">校驗規格</th>
-				      <th class="table-cell">上公差</th>
-				      <th class="table-cell">下公差</th>
-				      <th class="table-cell">規格上限</th>
-				      <th class="table-cell">規格下限</th>
-				      <th class="table-cell">操作</th>
-				    </tr>
-			  	</thead>
-			  	<tbody>
-				    <tr class="row">
-				      <td class="table-cell"><input type="text" id="row1-1" class="input-spec"></td>
-				      <td class="table-cell"><input type="text" id="row1-2" onblur="calculateRow(this)" class="input-spec"></td>
-				      <td class="table-cell"><input type="text" id="row1-3" onblur="calculateRow(this)" class="input-spec"></td>
-				      <td class="table-cell"><input type="text" id="row1-4" class="input-spec"></td>
-				      <td class="table-cell"><input type="text" id="row1-5" class="input-spec"></td>
-				      <td class="table-cell"><button class="delete-button" onclick="deleteRow(this)">刪除</button></td>
-				    </tr>
-			  </tbody>
-			</table>
-
+				<label for="number">器具編號：</label>
+	           	<input type="text" class="input-instrument" id="number" name="number" required><br>
+	
+	           	<label for="name">器具名稱：</label>
+	           	<input type="text" class="input-instrument" id="name" name="name" required><br>
+	
+	           	<label for="type">廠牌型式：</label>
+	           	<input type="text" class="input-instrument" id="type" name="type" required><br>
+	
+	           	<label for="characteristic">校驗特性：</label>
+	           	<input type="text" class="input-instrument" id="characteristic" name="characteristic" required><br>
+	
+	           	<label for="unit">校驗單位：</label>
+	           	<input type="text" class="input-instrument" id="unit" name="unit" required><br>
+	
+	           	<label for="cycle">校驗週期：</label>
+	           	<select class="select-instrument" name="cycle" id=cycle>
+	           		<option>6個月</option>
+				    <option>12個月</option>
+				    <option>24個月</option>
+	           	</select><br>
+	
+	           	<label for="calibrate_type">校驗類型：</label>
+	           	<select class="select-instrument" name="calibrate_type" id=calibrate_type>
+	           		<option>內校</option>
+				    <option>外校</option>
+				    <option>遊校</option>
+	           	</select><br>
+	
+	           	<label for="calibrate_localation">校驗地點：</label>
+	           	<input type="text" class="input-instrument"  id="calibrate_localation" name="calibrate_localation" required><br>
+	           
+	           	<label for="calibrate_month">校驗月份：</label>
+	           	<select class="select-instrument" name="calibrate_month" id=calibrate_month>
+	           		<option>1月</option>	<option>2月</option><option>3月</option><option>4月</option><option>5月</option><option>6月</option>
+					<option>7月</option>	<option>8月</option><option>9月</option><option>10月</option><option>11月</option><option>12月</option>
+	           	</select><br>
+	           	    
+				<label for="last_calibrate_date">校驗日期：</label>
+				<input type="date" class="datepicker" id="last_calibrate_date" name="slast_calibrate_date" required><br>
+	           
+	           	<label for="mother_instrument_number">母儀編號：</label>
+	           	<input type="text" class="input-instrument" id="mother_instrument_number" name="mother_instrument_number" required>	 <br>    		
+			
+			</div>
+			
+			<div class="form-container-center">
+				
+				<div style="text-align: right;"><button class="create-button" onclick="addRow()">新增規格</button></div>
+				<table id="specTable" class="styled-table">
+					<thead>
+					    <tr class="row">
+					      <th class="table-cell">校驗規格</th>
+					      <th class="table-cell">上公差</th>
+					      <th class="table-cell">下公差</th>
+					      <th class="table-cell">規格上限</th>
+					      <th class="table-cell">規格下限</th>
+					      <th class="table-cell">操作</th>
+					    </tr>
+				  	</thead>
+				  	<tbody>
+					    <tr class="row">
+					      <td class="table-cell"><input type="text" id="row1-1" onblur="calculateRow(this)" class="input-spec" required></td>
+					      <td class="table-cell"><input type="text" id="row1-2" onblur="calculateRow(this)" class="input-spec"></td>
+					      <td class="table-cell"><input type="text" id="row1-3" onblur="calculateRow(this)" class="input-spec"></td>
+					      <td class="table-cell"><input type="text" id="row1-4" class="input-spec" required></td>
+					      <td class="table-cell"><input type="text" id="row1-5" class="input-spec" required></td>
+					      <td class="table-cell"><button class="delete-button" onclick="deleteRow(this)">刪除</button></td>
+					    </tr>
+				  </tbody>
+				</table>
+	
+			</div>
+			
+			<div class="form-container-right">
+			
+				<label for="custos">保管人員：</label>
+	           	<select class="select-instrument" name="custos" id=custos></select><br>
+	           	
+	           	<label for="custosLeader">保管主管：</label>
+	           	<select class="select-instrument" name="custosLeader" id=custosLeader></select><br>
+	
+	           	<label for="checker">校驗人員：</label>
+	           	<select class="select-instrument" name="checker" id=checker></select><br>	
+	           	
+	           	<label for="checkerLeader">校驗主管：</label>
+	           	<select class="select-instrument" name="checkerLeader" id=checkerLeader></select><br>	
+	           	<div style="text-align: center;"><a href="/person/create">找不到名子?</a></div>
+	
+			</div>
+		
 		</div>
 		
-		<div class="form-container-right">
-		
-			<label for="custos">保管人員：</label>
-           	<select class="select-instrument" name="custos" id=custos></select><br>
-           	
-           	<label for="custosLeader">保管主管：</label>
-           	<select class="select-instrument" name="custosLeader" id=custosLeader></select><br>
-
-           	<label for="checker">校驗人員：</label>
-           	<select class="select-instrument" name="checker" id=checker></select><br>	
-           	
-           	<label for="checkerLeader">校驗主管：</label>
-           	<select class="select-instrument" name="checkerLeader" id=checkerLeader></select><br>	
-           	<div style="text-align: center;"><a href="/person/create">找不到名子?</a></div>
-
-		</div>
-		
+		<div class="button-container">
+	    	<button type="submit" class="submit-button">新增</button>
+			<input type='button' class="back-button" onclick="location.href='./crud'" value="回上頁">
+   		</div>
 		
 	</form>
 
 </div>
-
-	<div class="button-container">
-    	<button type="submit" class="submit-button">新增</button>
-		<input type='button' class="back-button" onclick="location.href='./crud'" value="回上頁">
-   </div>
-
 
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -124,7 +129,6 @@
 	  
 	});
 	
-	var rowCounter = 1;
 	
 	$.ajax({
 	    type:"GET",//請求方式
@@ -139,6 +143,88 @@
 	        alert("請求後端資料失敗！(/crud/instruments)");
 	    }
 	});
+	
+	document.getElementById("instrumentForm").addEventListener("submit", function(event) {
+	        
+		event.preventDefault();// 如果需要阻止實際的表單提交，可以取消事件
+		
+		var jsonArray = new Array();
+	    var spec = new Array();
+	    var USL = new Array();
+	    var LSL = new Array()
+		
+	    var number = document.getElementById("number").value;
+	    var name = document.getElementById("name").value;
+	    var type = document.getElementById("type").value;
+	    var characteristic = document.getElementById("characteristic").value;
+	    var unit = document.getElementById("unit").value;
+	    var cycle = document.getElementById("cycle").value;
+	    var calibrate_type = document.getElementById("calibrate_type").value;
+	    var calibrate_localation = document.getElementById("calibrate_localation").value;
+	    var calibrate_month = document.getElementById("calibrate_month").value;
+	    var last_calibrate_date = document.getElementById("last_calibrate_date").value;    
+	    var mother_instrument_number = document.getElementById("mother_instrument_number").value;
+	    
+	    var custos = document.getElementById("custos").value;
+	    var custosLeader = document.getElementById("custosLeader").value;
+	    var checker = document.getElementById("checker").value;
+	    var checkerLeader = document.getElementById("checkerLeader").value;
+	    
+		var table = document.getElementById("specTable");
+	    var tbody = table.getElementsByTagName("tbody")[0];
+	    var rows = tbody.getElementsByTagName("tr");
+
+	    for (var i = 0; i < rows.length; i++) {
+	      	var row = rows[i];
+	      	var cells = row.getElementsByTagName("input");
+	      	spec.push(cells[0].value);
+	      	USL.push(cells[3].value);
+	      	LSL.push(cells[4].value);	
+		}
+	    
+	    var instrumentData = {
+	    	"number": number,
+	    	"name": name,
+	    	"type": type,
+	    	"characteristic": characteristic,
+	    	"unit": unit,
+	    	"cycle": cycle,
+	    	"calibrate_type": calibrate_type,
+	    	"calibrate_localation": calibrate_localation,
+	    	"calibrate_month": calibrate_month,
+	    	"last_calibrate_date": last_calibrate_date,
+	    	"mother_instrument_number": mother_instrument_number,
+	    	"custos": custos,
+        	"custosLeader": custosLeader,
+        	"checker": checker,
+        	"checkerLeader": checkerLeader,
+        	"specification": spec,
+        	"usl": USL,
+        	"lsl": LSL
+        	
+		};
+	    
+ 		jsonString = JSON.stringify(instrumentData) //轉成json格式
+    	//console.log(jsonString);
+	    
+	    $.ajax({
+		    type: "POST", // 後端的要有標註PostMapping的方法
+		    url: "/crud/instrument",
+		    cache: false,
+		    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
+		    contentType: "application/json",
+		    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
+		    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+		    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
+		    	console.log(response)
+		    	alert("新增成功!!");
+		    },
+		    error: function(xhr, status, error) {
+		    	alert(xhr.responseText);
+		    }
+	  	});
+   
+  	});
 	
 	// 用於填充下拉選單的函數
 	function populateDropdown(data) {
@@ -195,6 +281,8 @@
 	  	}
 	}
 	
+	var rowCounter = 2;
+	
 	function addRow() {
 		var table = document.getElementById("specTable");
 	    var tbody = table.getElementsByTagName('tbody')[0];
@@ -205,8 +293,18 @@
 	      	var input = document.createElement("input"); // 創建了一個新的 input 元素
 	      	input.type = "text";
 	      	input.classList.add("input-spec");
-	      	var inputId = 'row' + rowCounter + '-' + (i + 1);
+	      	var inputId = "row" + rowCounter + "-" + (i + 1);
 	      	input.id = inputId;
+	      	
+	     	// 添加事件監聽器
+	        if (i < 3) {
+	          input.setAttribute("onblur", "calculateRow(this)");
+	        }
+	     	
+	     	if (i == 0 || i == 3 || i ==4){
+	     		input.setAttribute("required", "true"); // 將這行添加到 input 中
+	     	}
+	      	
 	      	cell.appendChild(input); // 把 input 元素附加到該列的單元格中
 	    }
 		
@@ -235,9 +333,16 @@
 	}
 	
 	// ========== 焦點事件 ==========
-	for (var i=1; i<13; i++){
-		var num = document.getElementById("inputData"+i);
-		num.addEventListener("blur", checkNum) // 當焦點離開輸入欄位時, 會呼叫checkNum函示
+	function calculateRow(input) {
+	    var row = input.parentNode.parentNode;
+	    var cells = row.getElementsByTagName("input");
+	    // 這是將 input 元素的值轉換為浮點數。parseFloat 函數嘗試將字符串轉換為浮點數，如果無法轉換，如果轉換失敗，則使用預設值 0
+	    var value1 = parseFloat(cells[0].value) || 0;
+	    var value2 = parseFloat(cells[1].value) || 0;
+	    var value3 = parseFloat(cells[2].value) || 0;
+	    
+	    cells[3].value = value1 + value2;
+	    cells[4].value = value1 - value3;
 	}
 
 </script>

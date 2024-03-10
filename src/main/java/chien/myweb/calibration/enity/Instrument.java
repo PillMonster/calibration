@@ -47,8 +47,8 @@ public class Instrument {
 	@Column(name = "calibrate_type")
 	private String calibrate_type;
 	
-	@Column(name = "calibrate_location")
-	private String calibrate_location;
+	@Column(name = "calibrate_localation")
+	private String calibrate_localation;
 	
 	@Column(name = "calibrate_month")
 	private String calibrate_month;
@@ -123,12 +123,12 @@ public class Instrument {
 		this.calibrate_type = calibrate_type;
 	}
 
-	public String getCalibrate_location() {
-		return calibrate_location;
+	public String getCalibrate_localation() {
+		return calibrate_localation;
 	}
 
-	public void setCalibrate_location(String calibrate_location) {
-		this.calibrate_location = calibrate_location;
+	public void setCalibrate_localation(String calibrate_localation) {
+		this.calibrate_localation = calibrate_localation;
 	}
 
 	public String getCalibrate_month() {
@@ -188,7 +188,7 @@ public class Instrument {
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JsonIgnore // 使用多對多要加上，阻止該方(spec)的序列化
-	@JoinTable(name = "instrument_spec_value", //指示兩個實體之間的關聯表（junction table）的配置
+	@JoinTable(name = "instrument_spec", //指示兩個實體之間的關聯表（junction table）的配置
 		    joinColumns = @JoinColumn(name = "instrument_id"), // 指定中介表中與當前實體（instrument）關聯的外鍵列
 		    inverseJoinColumns = @JoinColumn(name = "spec_id")) // 指定了中介表中與另一實體（spec）關聯的外鍵列
 	private List<Spec> spec = new ArrayList<>();
@@ -215,13 +215,11 @@ public class Instrument {
 	public void setData(List<Data> data) {
 		this.data = data;
 	}
-	
-	
+		
 	@Override
 	public String toString() {
 		return "Instrument [編號=" + number + ", 名稱=" + name + "]";
 	}
-	
 	
 
 }

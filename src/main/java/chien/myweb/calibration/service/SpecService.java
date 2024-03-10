@@ -6,12 +6,18 @@ import chien.myweb.calibration.enity.Spec;
 
 public interface SpecService {
 	
+	// 新增
+	Spec addSpec(Spec spec);
+	
 	// 單一查詢(透過ID)
 	List<Spec> findSpecById(Long id);
 		
 	// 單一查詢(透過number)
 	List<Spec> findSpecification(Double specification);
-		
+	
+	// 多項條件查詢
+	List<Spec> findBySpecAndUSLAndLSL(Double specification, Double USL, Double LSL);
+
 	// 查詢(全部)
 	List<Spec> findSpecAll();
 }

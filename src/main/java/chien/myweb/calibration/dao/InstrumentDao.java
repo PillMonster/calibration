@@ -21,13 +21,13 @@ public interface InstrumentDao extends JpaRepository<Instrument, Long>{
 	@Query(value = "SELECT DISTINCT instrument.* FROM instrument " +
             "JOIN instrument_person ON instrument.instrument_id = instrument_person.instrument_id " +
             "JOIN persons ON instrument_person.person_id = persons.person_id " +
-            "WHERE calibrate_month IN(:months) AND cycle IN(:cycles) AND calibrate_type IN(:types) AND username IN(:usernames) AND calibrate_location IN(:locations)", 
+            "WHERE calibrate_month IN(:months) AND cycle IN(:cycles) AND calibrate_type IN(:types) AND username IN(:usernames) AND calibrate_localation IN(:localations)", 
     nativeQuery = true) // 多條件查詢
 	List<Instrument> findByMultiple(@Param("months") List<String> months, 
 		                              @Param("cycles") List<String> cycles, 
 		                              @Param("types") List<String> types, 
 		                              @Param("usernames") List<String> usernames, 
-		                              @Param("locations") List<String> locations);
+		                              @Param("localations") List<String> localations);
 	
 	
     @Query(value = "select * from instrument where instrument_id = ?1", nativeQuery = true)  //單一查詢 (by ID)
@@ -42,7 +42,7 @@ public interface InstrumentDao extends JpaRepository<Instrument, Long>{
     @Query(value = "select * from instrument", nativeQuery = true) //查詢全部
     List<Instrument> findInstruments();
     
-    @Query(value = "SELECT DISTINCT calibrate_location FROM instrument", nativeQuery = true) //查詢校驗地點(單一欄位)
+    @Query(value = "SELECT DISTINCT calibrate_localation FROM instrument", nativeQuery = true) //查詢校驗地點(單一欄位)
     List<String> findInstrumentByLocalation();
 
 }
