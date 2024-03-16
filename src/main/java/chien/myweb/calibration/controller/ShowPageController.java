@@ -17,6 +17,11 @@ public class ShowPageController {
 		return "createInstrument";
 	}
 	
+	@GetMapping("/instrument/edit")
+	public String showEditInstrument() {
+		return "editInstrument";
+	}
+	
 	@GetMapping("/person/crud")
 	public String showPersons() {
 		return "crudPerson";

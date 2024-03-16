@@ -39,6 +39,14 @@
 				<label><input type="checkbox" name="month" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">2</label><br>
 				<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">3</label><br>
 				<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">4</label><br>
+				<label><input type="checkbox" name="month" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">5</label><br>
+				<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">6</label><br>
+				<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">7</label><br>
+				<label><input type="checkbox" name="month" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">8</label><br>
+				<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">9</label><br>
+				<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">10</label><br>
+				<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">11</label><br>
+				<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">12</label><br>
 			</div>
 		</div>
 		
@@ -227,6 +235,41 @@
     		}
     	});	
     }
+	
+	
+	function redirectToEditPage(button) {
+		
+		var id = $(button).data("id");
+		console.log(id);
+		window.location.href = "edit?id=" +id;
+    };
+    
+    function deleteFun(button) {
+		var result = confirm("確認刪除該紀錄?");
+    	    
+		if (result == true) {
+			var id = $(button).data("id");
+			console.log(id);
+
+			$.ajax({
+				type: "DELETE", // 後端的要有標註DeleteMapping的方法
+   	 	    	url: "/crud/instrument/" + id, 
+   	 	    	async:false,//true為非同步
+   	 	    	success: function(message) {  		
+   	 	      		//window.location.reload(); // 刪除成功後會刷新葉面
+   	 	      		alert(message);
+   	 	      		ajaxMethod();	
+   	 	    	},
+   	 	    	error: function(xhr, status, error) {
+   	 	    		alert("刪除失敗");
+   	 	    	}
+   	    	}); 
+    	        
+		} else {
+			return false;
+		}
+    }
+	
 	
  	// 用於填充檢核方塊的函數
 	function populateDropdown(data) {
@@ -421,15 +464,13 @@
 			innerTable += "<td>" + data[i].unit + "</td>";
 			innerTable += "<td>" + data[i].cycle + "</td>";
 			innerTable += "<td>" + data[i].calibrate_type + "</td>";
-			innerTable += "<td>" + data[i].calibrate_location + "</td>";
+			innerTable += "<td>" + data[i].calibrate_localation + "</td>";
 			innerTable += "<td>" + data[i].calibrate_month + "</td>";
 			innerTable += "<td>" + data[i].last_calibrate_date + "</td>";
 			innerTable += "<td>" + data[i].mother_instrument_number + "</td>";
-			//innerTable += "<td>" + "<a href='editUser?action=edit&id=" + data[i].id  + "'>修改</a>" + "</td>";
-			innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='redirectToEditPage()'>編輯</button>" + "</td>";
-			//innerTable += "<td>" + "<a href='users/" + data[i].id + "' class='edit-link' data-id=" + data[i].id + ">修改</a>" + "</td>";
-			//innerTable += "<td>" + "<a href='deleteUser?action=del&id=" + data[i].id  + "' class='delete-link' data-id=" + data[i].id + " onclick='if(! confirm(\"確認刪除該紀錄?\")) {return false}'>刪除</a>" + "</td>";
-			innerTable += "<td>" + "<button class='delete-button' data-id=" + data[i].id + " onclick='deleteFun()'>刪除</button>" + "</td>";
+			
+			innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='redirectToEditPage(this)'>編輯</button>" + "</td>";
+			innerTable += "<td>" + "<button class='delete-button' data-id=" + data[i].id + " onclick='deleteFun(this)'>刪除</button>" + "</td>";
 		}
 		innerTable += "</tr>";
 		innerTable += "</tbody>";

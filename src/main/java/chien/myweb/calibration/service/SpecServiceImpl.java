@@ -3,6 +3,7 @@ package chien.myweb.calibration.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.SpecDao;
@@ -41,6 +42,11 @@ public class SpecServiceImpl implements SpecService{
 	public List<Spec> findSpecAll() {
 		// TODO Auto-generated method stub
 		return specDao.findSpecAll();
+	}
+	
+	@Override
+	public List<Spec> findSpecByInstrumentId(Long id){
+		return specDao.findSpecByInstrumentId(id);
 	}
 	
 }

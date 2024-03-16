@@ -50,4 +50,6 @@ public interface PersonDao extends JpaRepository<Person, Long>{
     @Query(value = "SELECT DISTINCT username FROM persons WHERE identity='校驗主管';", nativeQuery = true) //查詢校驗主管(單一欄位)
     List<String> findPersonByCheckerLeader();
     
+    
+    
 }

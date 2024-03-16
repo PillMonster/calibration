@@ -61,5 +61,7 @@ public interface PersonService {
 
 	// email驗證
     boolean validateEmail(String email);
+
+	
 	
 }

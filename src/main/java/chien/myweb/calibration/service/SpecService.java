@@ -20,4 +20,7 @@ public interface SpecService {
 
 	// 查詢(全部)
 	List<Spec> findSpecAll();
+	
+	// 透過instrument ID下查詢該儀器的規格(spec, USL, LSL)
+	List<Spec> findSpecByInstrumentId(Long id);
 }

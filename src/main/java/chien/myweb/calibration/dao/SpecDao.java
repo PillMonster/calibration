@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.Spec;
@@ -27,4 +28,11 @@ public interface SpecDao extends JpaRepository<Spec, Long>{
 
     @Query(value = "select * from spec", nativeQuery = true) //查詢全部
     List<Spec> findSpecAll();
+    
+    @Query(value = "SELECT DISTINCT spec.* FROM instrument " +
+	    		"JOIN instrument_spec ON instrument.instrument_id = instrument_spec.instrument_id " +
+	    		"JOIN spec ON instrument_spec.spec_id = spec.spec_id " +
+	    		"WHERE instrument.instrument_id = :id", nativeQuery = true)
+    List<Spec> findSpecByInstrumentId(@Param("id") Long id);
+
 }

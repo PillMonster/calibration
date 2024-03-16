@@ -1,30 +1,31 @@
 package chien.myweb.calibration.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import chien.myweb.calibration.enity.Instrument;
+import chien.myweb.calibration.enity.Person;
 import chien.myweb.calibration.enity.RequestChecked;
 import chien.myweb.calibration.enity.RequestData;
+import chien.myweb.calibration.enity.Spec;
+import chien.myweb.calibration.service.InstrumentPersonService;
 import chien.myweb.calibration.service.InstrumentService;
 import chien.myweb.calibration.service.PersonService;
+import chien.myweb.calibration.service.SpecService;
 
 @RestController
 @RequestMapping("/crud")
@@ -34,8 +35,12 @@ public class InstrumentController {
 	InstrumentService instrumentService;
 	@Autowired
 	PersonService personService;
+	@Autowired
+	InstrumentPersonService instrumentPersonService;
+	@Autowired
+	SpecService specService;
 	
-	@PostMapping("/instrument")
+	@PostMapping("/instrument") // 新增
 	public ResponseEntity<Instrument> createInstrument(@RequestBody RequestData request){
 			
 		System.out.println(request.toString());
@@ -45,16 +50,25 @@ public class InstrumentController {
 		return ResponseEntity.ok().body(instrument); 
 	}
 	
+	@PutMapping("/instrument/{id}") // 修改
+	public ResponseEntity<String> updateInstrument(@PathVariable("id") Long id, @RequestBody RequestData request){
+		
+		System.out.println(request.toString());
+		
+		
+		return new ResponseEntity<String>("更新儀器資訊成功", HttpStatus.CREATED); 
+	}
 	
-	@GetMapping("/instrumentId/{id}")  
+	
+	@GetMapping("/instrumen/{id}")  // 查詢
 	public ResponseEntity<Instrument> getInstrumentById(@PathVariable("id") Long id){
 		
 		List<Instrument> instrumentDB = instrumentService.findInstrumentById(id);	
-
+		
 		Optional<Instrument> instrumentOp = instrumentDB.stream()
 				.filter(p -> p.getId().equals(id))
 				.findFirst();
-		
+
 		if(instrumentOp.isPresent()){
 			Instrument instrument = instrumentOp.get();
 			System.out.println(instrument.toString());
@@ -64,6 +78,35 @@ public class InstrumentController {
 			System.out.println("沒有此儀器或量具");
 	        return ResponseEntity.notFound().build();
 	    }
+	}
+	
+	@GetMapping("/instrumentInfo/{id}")  
+	public ResponseEntity<Map<String, List<?>>> getInstrumentInfoById(@PathVariable("id") Long id){
+		
+		System.out.println("get edit's id: " + id);
+		
+		Map<String, List<?>> instrumentInfoMap = new HashMap<>();	
+		
+		List<Instrument> instrumentDB = instrumentService.findInstrumentById(id);	
+		List<Person> personDB = instrumentPersonService.findPersonByInstrumentId(id);
+		List<Spec> specDB = specService.findSpecByInstrumentId(id);
+		
+
+		if(!instrumentDB.isEmpty() && !personDB.isEmpty()){
+			instrumentInfoMap.put("instrument", new ArrayList<>(instrumentDB) );
+			instrumentInfoMap.put("persons", new ArrayList<>(personDB) );
+			instrumentInfoMap.put("spec", new ArrayList<>(specDB) );
+			
+			return ResponseEntity.ok().body(instrumentInfoMap); 
+		}
+		
+		else{
+			System.out.println("找不到此儀器資訊");
+	        return ResponseEntity.notFound().build();
+	    }
+		
+		//instrumentInfoMap.put("instrument", new ArrayList<>(instrumentDB) );
+		//return ResponseEntity.ok().body(instrumentInfoMap); 
 	}
 	
 	@GetMapping("/instrumentNo/{number}")  
