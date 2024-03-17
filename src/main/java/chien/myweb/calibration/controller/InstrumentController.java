@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,7 +45,6 @@ public class InstrumentController {
 	public ResponseEntity<Instrument> createInstrument(@RequestBody RequestData request){
 			
 		System.out.println(request.toString());
-
 		Instrument instrument = instrumentService.addInstrument(request);
 
 		return ResponseEntity.ok().body(instrument); 
@@ -54,11 +54,10 @@ public class InstrumentController {
 	public ResponseEntity<String> updateInstrument(@PathVariable("id") Long id, @RequestBody RequestData request){
 		
 		System.out.println(request.toString());
-		
-		
+		instrumentService.updateInstrument(id, request);	
+
 		return new ResponseEntity<String>("更新儀器資訊成功", HttpStatus.CREATED); 
-	}
-	
+	}	
 	
 	@GetMapping("/instrumen/{id}")  // 查詢
 	public ResponseEntity<Instrument> getInstrumentById(@PathVariable("id") Long id){
@@ -78,6 +77,12 @@ public class InstrumentController {
 			System.out.println("沒有此儀器或量具");
 	        return ResponseEntity.notFound().build();
 	    }
+	}
+	
+	@DeleteMapping("/instrument/{id}") // 刪除
+	public ResponseEntity<String> deleteInstrumentById(@PathVariable("id") Long id){	
+		instrumentService.deleteInstrumentById(id);
+		return new ResponseEntity<>("第 " + id + " 筆刪除成功", HttpStatus.CREATED); 
 	}
 	
 	@GetMapping("/instrumentInfo/{id}")  

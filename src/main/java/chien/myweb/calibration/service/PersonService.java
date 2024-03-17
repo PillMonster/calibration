@@ -15,6 +15,7 @@ public interface PersonService {
 	// 修改
 	Person updatePerson(Long id, Person person);
 	
+	// 刪除
 	void deletePerson(Long id);
 	
 	// 單一查詢(透過ID)
@@ -25,6 +26,9 @@ public interface PersonService {
 	
 	// 單一查詢(透過username)
 	List<Person> findUsername(String username);
+	
+	// 透過username查詢ID (單一欄位)
+	Long findPersonIdByUsername(String usernames);
 	
 	// 單一查詢(透過department)
 	List<Person> findByDepartmente(String department);

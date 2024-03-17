@@ -1,7 +1,11 @@
 package chien.myweb.calibration.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,9 +29,10 @@ public class InstrumentServiceImpl implements InstrumentService{
 	SpecDao specDao;
 	@Autowired
 	SpecService specService;
-
+	
+	// ========== 新增 ==========
 	@Override
-	public Instrument addInstrument(RequestData request) {
+	public Instrument addInstrument(RequestData request) { 
 		
 		String cycle = request.getCycle().replaceAll("[^0-9]", "");
 		String calibrate_month = request.getCalibrate_month().replaceAll("[^0-9]", "");
@@ -85,17 +90,160 @@ public class InstrumentServiceImpl implements InstrumentService{
 		//return null;
 	}
 	
+	// ========== 修改 ==========
 	@Override
-	public List<Instrument> findByMultiple(List<String> monthList, List<String> cycleList, List<String> typeList, List<String> personList, List<String> localationList) {
-		return instrumentDao.findByMultiple(monthList, cycleList, typeList, personList, localationList);
+	public Instrument updateInstrument(Long id, RequestData request) {
+
+		Set<Long> newPersonIds = new TreeSet<>(); // 宣告Set集合: 存放更新後人員的id
+		Set<Long> newSpecIds = new TreeSet<>(); // 宣告Set集合: 存放更新後規格的id
+		List<Instrument> instrumentDB = findInstrumentById(id);	 // 透過前端得到儀器id, 並取得該儀器的物件
+		
+		Optional<Instrument> instrumentOp = instrumentDB.stream() 
+				.filter(p -> p.getId().equals(id))
+				.findFirst();
+		
+		if(instrumentOp.isPresent()){
+
+			Instrument updateInstrument = instrumentOp.get(); // 取得當前id的儀器
+			
+			// ===== instrument update service =====
+			String cycle = request.getCycle().replaceAll("[^0-9]", "");
+			String calibrate_month = request.getCalibrate_month().replaceAll("[^0-9]", "");
+
+			// ===== 取得當前儀器的物件進行更新 =====
+			updateInstrument.setNumber(request.getNumber()); 
+			updateInstrument.setName(request.getName());
+			updateInstrument.setType(request.getType());
+			updateInstrument.setCharacteristic(request.getCharacteristic());
+			updateInstrument.setUnit(request.getUnit());
+			updateInstrument.setCycle(cycle);
+			updateInstrument.setCalibrate_type(request.getCalibrate_type());
+			updateInstrument.setCalibrate_localation(request.getCalibrate_localation());
+			updateInstrument.setCalibrate_month(calibrate_month);
+			updateInstrument.setLast_calibrate_date(request.getLast_calibrate_date());
+			updateInstrument.setMother_instrument_number(request.getMother_instrument_number());
+			
+			// ===== person update service =====
+			// 取得該儀器當前的person id
+			Set<Long> currentPersonIds = updateInstrument.getPersons().stream()
+						                .map(Person::getId)
+						                .collect(Collectors.toSet());
+			
+			// 取得該儀器更新後的person id
+			newPersonIds.add(personDao.findPersonIdByUsername(request.getCustos()));
+			newPersonIds.add(personDao.findPersonIdByUsername(request.getCustosLeader()));
+			newPersonIds.add(personDao.findPersonIdByUsername(request.getChecker()));
+			newPersonIds.add(personDao.findPersonIdByUsername(request.getCheckerLeader()));
+			
+			System.out.println("===== person service =====");
+			System.out.println("currentPersonIds: " + currentPersonIds);
+			System.out.println("newPersonIds: " + newPersonIds);
+			
+			// 該儀器要新增的person id
+			Set<Long> personsToAdd = newPersonIds.stream()
+				                    .filter(personId -> !currentPersonIds.contains(personId))
+				                    .collect(Collectors.toSet());
+			
+			// 該儀器要刪除的person id
+			Set<Long> personsToRemove = currentPersonIds.stream()
+			                           .filter(personId -> !newPersonIds.contains(personId))
+			                           .collect(Collectors.toSet());
+			
+			System.out.println("personsToAdd: " + personsToAdd);
+			System.out.println("personToRemove: " + personsToRemove);
+			
+			// 更新儀器的人員關聯紀錄
+	        for (Long personId : personsToAdd) { // 儀器與更新後的人員新增關聯紀錄
+	        	
+	            Optional<Person> addPerson = personDao.findById(personId);
+	            
+	            if(addPerson.isPresent()){
+	            	updateInstrument.getPersons().add(addPerson.get());
+	            }    
+	        }
+
+	        for (Long personId : personsToRemove) { // 儀器與更新前的人員移除關聯紀錄
+	        	
+	        	Optional<Person> deletePerson = personDao.findById(personId);
+	        	
+	        	if(deletePerson.isPresent()){
+	        		updateInstrument.getPersons().remove(deletePerson.get());
+	        	}
+	        }
+	        
+	        // ===== spec service =====
+	        
+	        // 取得該儀器當前的person id
+ 			Set<Long> currentSpecIds = updateInstrument.getSpec().stream()
+ 						                .map(Spec::getId)
+ 						                .collect(Collectors.toSet());
+	        
+	        List<Double> requestSpec = request.getSpecification(); // 先取得前端輸入的規格值
+	
+			for(int i=0; i < requestSpec.size(); i++) { // 讀取多個規格值
+				
+				Double specification = request.getSpecification().get(i);
+				Double USL = request.getUSL().get(i);
+				Double LSL = request.getLSL().get(i);
+				
+				newSpecIds.add(specDao.findSpedIdBySpecAndUSLAndLSL(specification, USL, LSL));
+			}
+			
+			// 該儀器要新增的spec id
+			Set<Long> specToAdd = newSpecIds.stream()
+				                    .filter(specId -> !currentSpecIds.contains(specId))
+				                    .collect(Collectors.toSet());
+			
+			// 該儀器要刪除的spec id
+			Set<Long> specToRemove = currentSpecIds.stream()
+			                           .filter(specId -> !newSpecIds.contains(specId))
+			                           .collect(Collectors.toSet());
+			System.out.println("===== spec service =====");
+			System.out.println("currentSpecIds: " + currentSpecIds);
+			System.out.println("newSpecIds: " + newSpecIds);
+			System.out.println("specToAdd: " + specToAdd);
+			System.out.println("specToRemove: " + specToRemove);
+			
+			// 更新儀器的規格關聯紀錄
+	        for (Long specId : specToAdd) { // 儀器與更新後的規格新增關聯紀錄
+	        	
+	            Optional<Spec> addSpec = specDao.findById(specId);
+	            
+	            if(addSpec.isPresent()){
+	            	updateInstrument.getSpec().add(addSpec.get());
+	            }    
+	        }
+
+	        for (Long specId : specToRemove) { // 儀器與更新前的規格移除關聯紀錄
+	        	
+	        	Optional<Spec> deleteSpec = specDao.findById(specId);
+	        	
+	        	if(deleteSpec.isPresent()){
+	        		updateInstrument.getSpec().remove(deleteSpec.get());
+	        	}
+	        }
+			
+			//return null;
+			return instrumentDao.save(updateInstrument); // 這裡使用 save 進行更新
+		}
+		else{
+			return null;
+	    }
 	}
 	
+	// ========== 刪除 ==========
+	@Override
+	public void deleteInstrumentById(Long id) {
+		instrumentDao.deleteById(id);
+	}
+	
+	// ========== 查詢 ==========
 	@Override
 	public List<Instrument> findInstrumentById(Long id) {
 		
 		return instrumentDao.findByInstrumentId(id);
 	}
-
+		
 	@Override
 	public List<Instrument> findInstrumentByNumber(String number) {
 		// TODO Auto-generated method stub
@@ -118,6 +266,11 @@ public class InstrumentServiceImpl implements InstrumentService{
 	public List<String> findInstrumentByLocalation(){
 		// TODO Auto-generated method stub
 		return instrumentDao.findInstrumentByLocalation();
+	}
+
+	@Override
+	public List<Instrument> findByMultiple(List<String> monthList, List<String> cycleList, List<String> typeList, List<String> personList, List<String> localationList) {
+		return instrumentDao.findByMultiple(monthList, cycleList, typeList, personList, localationList);
 	}
 
 }

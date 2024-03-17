@@ -23,14 +23,14 @@ public class PersonServiceImpl implements PersonService{
 	@Autowired
 	PersonDao personDao;
 	
-	
-	//List<Person> persons = new ArrayList<>();
-	
+	// ========== 新增 ==========
 	@Override
 	public Person addPerson(Person person) {
 		return personDao.save(person);
 	}
 	
+	
+	// ========== 修改 ==========
 	@Override
 	public Person updatePerson(Long id, Person person) {
 		
@@ -58,11 +58,14 @@ public class PersonServiceImpl implements PersonService{
 	    }
 	}
 	
+	// ========== 刪除 ==========
 	@Override
 	public void deletePerson(Long id) {
 		personDao.deleteById(id);
 	}
 	
+	
+	// ========== 查詢 ==========
 	@Override
 	public List<Person> findPersonById(Long id) {
 		return personDao.findByPersonId(id);
@@ -76,6 +79,11 @@ public class PersonServiceImpl implements PersonService{
 	@Override
 	public List<Person> findUsername(String username) {
 		return personDao.findByUsername(username);
+	}
+	
+	@Override
+	public Long findPersonIdByUsername(String usernames){
+		return personDao.findPersonIdByUsername(usernames);
 	}
 
 	@Override

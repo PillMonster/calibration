@@ -26,6 +26,9 @@ public interface PersonDao extends JpaRepository<Person, Long>{
     @Query(value = "select * from persons where username = ?1", nativeQuery = true) //單一查詢 (by username)
     List<Person> findByUsername(String username);
     
+    @Query(value = "select person_id from persons where username = ?1", nativeQuery = true) //透過username查詢ID (單一欄位)
+    Long findPersonIdByUsername(String usernames);
+    
     @Query(value = "select * from persons where password = ?1", nativeQuery = true) //單一查詢 (by password)
     List<Person> findByPassword(String password); 
     

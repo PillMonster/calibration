@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.Spec;
 
 public interface SpecDao extends JpaRepository<Spec, Long>{
@@ -19,12 +18,15 @@ public interface SpecDao extends JpaRepository<Spec, Long>{
 
 	@Query(value = "select * from spec where spec_id = ?1", nativeQuery = true)  //單一查詢 (by ID)
     List<Spec> findBySpecId(Long id);
-    
+	 
     @Query(value = "select * from spec where specification = ?1", nativeQuery = true) //單一查詢 (by specification)
     List<Spec> findBySpecification(Double specification);
     
     @Query(value = "select * from spec where specification = ?1 and USL = ?2 and LSL = ?3", nativeQuery = true) // 多項條件查詢
     List<Spec> findBySpecAndUSLAndLSL(Double specification, Double USL, Double LSL);
+    
+    @Query(value = "select spec_id from spec where specification = ?1 and USL = ?2 and LSL = ?3", nativeQuery = true) // 透過多項條件查詢ID (單一欄位)
+    Long findSpedIdBySpecAndUSLAndLSL(Double specification, Double USL, Double LSL);
 
     @Query(value = "select * from spec", nativeQuery = true) //查詢全部
     List<Spec> findSpecAll();

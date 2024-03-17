@@ -1,5 +1,6 @@
 package chien.myweb.calibration.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,11 @@ public class SpecServiceImpl implements SpecService{
 	public List<Spec> findBySpecAndUSLAndLSL(Double specification, Double USL, Double LSL){
 		return specDao.findBySpecAndUSLAndLSL(specification, USL, LSL);
 	}
+	
+	@Override
+	public Long findSpedIdBySpecAndUSLAndLSL(Double specification, Double USL, Double LSL) {
+		return specDao.findSpedIdBySpecAndUSLAndLSL(specification, USL, LSL);
+	}
 
 	@Override
 	public List<Spec> findSpecAll() {
@@ -46,7 +52,9 @@ public class SpecServiceImpl implements SpecService{
 	
 	@Override
 	public List<Spec> findSpecByInstrumentId(Long id){
-		return specDao.findSpecByInstrumentId(id);
+		List<Spec> spec = specDao.findSpecByInstrumentId(id);
+		Collections.sort(spec, (s1, s2) -> s1.getSpecification().compareTo(s2.getSpecification()));
+		return spec;
 	}
 	
 }

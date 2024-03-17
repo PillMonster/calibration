@@ -154,21 +154,6 @@ public class Instrument {
 	public void setMother_instrument_number(String mother_instrument_number) {
 		this.mother_instrument_number = mother_instrument_number;
 	}
-
-	/*@ManyToMany(fetch = FetchType.LAZY)
-	@JsonIgnore // 使用多對多要加上，阻止該方(spec)的序列化
-	@JoinTable(name = "instrument_spec_person", //指示兩個實體之間的關聯表（junction table）的配置
-		    joinColumns = @JoinColumn(name = "instrument_id"), // 指定中介表中與當前實體（instrument）關聯的外鍵列
-		    inverseJoinColumns = @JoinColumn(name = "spec_id")) // 指定了中介表中與另一實體（spec）關聯的外鍵列
-	private List<Spec> spec = new ArrayList<>();
-
-	public List<Spec> getSpec() {
-		return spec;
-	}
-
-	public void setSpec(List<Spec> spec) {
-		this.spec = spec;
-	}*/
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JsonIgnore // 使用多對多要加上，阻止該方(person)的序列化
@@ -201,11 +186,12 @@ public class Instrument {
 		this.spec = spec;
 	}
 	
+	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JsonIgnore // 使用多對多要加上，阻止該方(data)的序列化
-	@JoinTable(name = "instrument_spec_value", //指示兩個實體之間的關聯表（junction table）的配置
+	@JoinTable(name = "instrument_spec_data", //指示三個實體之間的關聯表（junction table）的配置
 		    joinColumns = @JoinColumn(name = "instrument_id"), // 指定中介表中與當前實體（instrument）關聯的外鍵列
-		    inverseJoinColumns = @JoinColumn(name = "data_id")) // 指定了中介表中與另一實體（data）關聯的外鍵列*/
+		    inverseJoinColumns = @JoinColumn(name = "data_id")) // 指定了中介表中與另一實體（data）關聯的外鍵列
 	private List<Data> data = new ArrayList<>();
 
 	public List<Data> getData() {

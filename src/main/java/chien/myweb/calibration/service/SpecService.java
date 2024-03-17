@@ -17,6 +17,9 @@ public interface SpecService {
 	
 	// 多項條件查詢
 	List<Spec> findBySpecAndUSLAndLSL(Double specification, Double USL, Double LSL);
+	
+	// 透過多項條件查詢ID (單一欄位)
+	Long findSpedIdBySpecAndUSLAndLSL(Double specification, Double USL, Double LSL);
 
 	// 查詢(全部)
 	List<Spec> findSpecAll();

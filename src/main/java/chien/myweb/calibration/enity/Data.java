@@ -53,7 +53,7 @@ public class Data {
 		this.calibrate_date = calibrate_date;
 	}
 	
-	@ManyToMany(mappedBy = "data") //指定了反向關聯到 Instrument 類的 spec 屬性
+	@ManyToMany(mappedBy = "data") //指定了反向關聯到 Instrument 類的 data 屬性
 	private Set<Instrument> instruments;
 	
 	public Set<Instrument> getInstruments() {
