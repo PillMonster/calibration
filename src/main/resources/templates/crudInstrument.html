@@ -39,14 +39,14 @@
 				<label><input type="checkbox" name="month" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">2</label><br>
 				<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">3</label><br>
 				<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">4</label><br>
-				<label><input type="checkbox" name="month" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">5</label><br>
-				<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">6</label><br>
-				<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">7</label><br>
-				<label><input type="checkbox" name="month" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">8</label><br>
-				<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">9</label><br>
-				<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">10</label><br>
-				<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">11</label><br>
-				<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">12</label><br>
+				<label><input type="checkbox" name="month" value="5" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">5</label><br>
+				<label><input type="checkbox" name="month" value="6" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">6</label><br>
+				<label><input type="checkbox" name="month" value="7" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">7</label><br>
+				<label><input type="checkbox" name="month" value="8" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">8</label><br>
+				<label><input type="checkbox" name="month" value="9" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">9</label><br>
+				<label><input type="checkbox" name="month" value="10" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">10</label><br>
+				<label><input type="checkbox" name="month" value="11" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">11</label><br>
+				<label><input type="checkbox" name="month" value="12" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">12</label><br>
 			</div>
 		</div>
 		
@@ -133,9 +133,11 @@
 	<div class="instrumentTableDiv" id="instrumentTableDiv"></div>
 </div>
 <script type="text/javascript">
+	
 	$(document).ready(function(){
 	    $("#header").load("header.html");
 	    ajaxMethod();
+	
 	});
 	
 	function ajaxMethod(){
@@ -169,7 +171,7 @@
 		    }
 		});
 	}
-
+	
 	// ===== 取得文字表單的內容 =====
 	document.getElementById("textForm").addEventListener("submit", function(event) {
 		// 防止表單的預設提交行為

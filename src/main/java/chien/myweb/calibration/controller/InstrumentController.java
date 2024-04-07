@@ -155,7 +155,7 @@ public class InstrumentController {
 	
 	//@CrossOrigin(origins = "http://localhost:8080/instrument/show")
 	@GetMapping("/instruments") 
-	public ResponseEntity<List<Instrument>> getInstruments(){
+	public ResponseEntity<?> getInstruments(){
 		
 		List<Instrument> instrumentDB = instrumentService.findInstruments();
  

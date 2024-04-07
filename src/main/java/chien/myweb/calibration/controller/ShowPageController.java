@@ -7,6 +7,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ShowPageController {
 	
+	@GetMapping("/calibration/result")
+	public String showCalibrationResult() {
+		return "calibrationResult";
+	}
+	
+	@GetMapping("calibration/prep")
+	public String showCalibrationPrep() {
+		return "calibrationPrep";
+	}
+	
 	@GetMapping("/instrument/crud")
 	public String showInstruments() {
 		return "crudInstrument";

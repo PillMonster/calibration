@@ -116,7 +116,7 @@
 		
 		<div class="button-container">
 	    	<button type="submit" class="submit-button">新增</button>
-			<input type='button' class="back-button" onclick="history.back()" value="回上頁">
+			<input type='button' class="back-button" onclick="location.href='/instrument/crud'" value="回上頁">
    		</div>
 		
 	</form>
@@ -124,11 +124,11 @@
 </div>
 
 <script type="text/javascript">
+	
 	$(document).ready(function(){
 	    $("#header").load("header.html");
-	  
+
 	});
-	
 	
 	$.ajax({
 	    type:"GET",//請求方式
@@ -143,6 +143,25 @@
 	        alert("請求後端資料失敗！(/crud/instruments)");
 	    }
 	});
+	
+	// 当页面从隐藏状态变为可见状态时执行 AJAX 函数
+    document.addEventListener("visibilitychange", function() {
+        if (document.visibilityState === 'visible') {
+        	$.ajax({
+        	    type:"GET",//請求方式
+        	    url:"/crud/instrumentNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
+        	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+        	    async:true,//true為非同步
+        	    success:function (data) {//接收後端來的資料
+        	    	console.log("人員新增成功!!");
+        	    	populateDropdown(data);
+        	    },
+        	    error :function(errorMsg) {
+        	        alert("請求後端資料失敗！(/crud/instruments)");
+        	    }
+        	});
+        }
+    });
 	
 	document.getElementById("instrumentForm").addEventListener("submit", function(event) {
 	        
