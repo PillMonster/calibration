@@ -270,7 +270,10 @@ public class InstrumentServiceImpl implements InstrumentService{
 
 	@Override
 	public List<Instrument> findByMultiple(List<String> monthList, List<String> cycleList, List<String> typeList, List<String> personList, List<String> localationList) {
-		return instrumentDao.findByMultiple(monthList, cycleList, typeList, personList, localationList);
+		
+		String monthRegex = "(" + String.join("|", monthList) + ")";
+		//System.out.println(monthRegex);
+		return instrumentDao.findByMultiple(monthRegex, cycleList, typeList, personList, localationList);
 	}
 
 }

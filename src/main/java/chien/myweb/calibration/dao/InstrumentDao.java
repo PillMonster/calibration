@@ -21,9 +21,10 @@ public interface InstrumentDao extends JpaRepository<Instrument, Long>{
 	@Query(value = "SELECT DISTINCT instrument.* FROM instrument " +
             "JOIN instrument_person ON instrument.instrument_id = instrument_person.instrument_id " +
             "JOIN persons ON instrument_person.person_id = persons.person_id " +
-            "WHERE calibrate_month IN(:months) AND cycle IN(:cycles) AND calibrate_type IN(:types) AND username IN(:usernames) AND calibrate_localation IN(:localations)", 
+            "WHERE CONCAT(',', calibrate_month, ',') REGEXP CONCAT(',',:months, ',') AND cycle IN(:cycles) AND calibrate_type IN(:types) AND username IN(:usernames) AND calibrate_localation IN(:localations)", 
+            //"WHERE calibrate_month IN(:months) AND cycle IN(:cycles) AND calibrate_type IN(:types) AND username IN(:usernames) AND calibrate_localation IN(:localations)", 
     nativeQuery = true) // 多條件查詢
-	List<Instrument> findByMultiple(@Param("months") List<String> months, 
+	List<Instrument> findByMultiple(@Param("months") String months, 
 		                              @Param("cycles") List<String> cycles, 
 		                              @Param("types") List<String> types, 
 		                              @Param("usernames") List<String> usernames, 

@@ -52,12 +52,40 @@
 	
 	           	<label for="calibrate_localation">校驗地點：</label>
 	           	<input type="text" class="input-instrument"  id="calibrate_localation" name="calibrate_localation" required><br>
+	           	  	
+	           	<div class="multipleSelectionDiv">
+	           		
+	           		<span><label for="calibrate_month">校驗月份：</label></span>
+	           		
 	           
-	           	<label for="calibrate_month">校驗月份：</label>
+	           		<div class="selectBoxDiv" onclick="showCheckboxes('monthCheckBoxesDiv')">
+						<select class="select-instrument" name="calibrate_month" id=calibrate_month>
+							<option></option>
+						</select>
+						<div class="overSelectDiv"></div>
+					</div>
+			
+					<div id="monthCheckBoxesDiv">
+						<label><input type="checkbox" id="monthSelectAll" value="全選" onchange="toggleCheckboxes('month', 'monthSelectAll'); textCheckboxes();">全選</label><br>
+						<label><input type="checkbox" name="month" value="1" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); " checked>1</label><br>
+						<label><input type="checkbox" name="month" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">2</label><br>
+						<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">3</label><br>
+						<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">4</label><br>
+						<label><input type="checkbox" name="month" value="5" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">5</label><br>
+						<label><input type="checkbox" name="month" value="6" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">6</label><br>
+						<label><input type="checkbox" name="month" value="7" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">7</label><br>
+						<label><input type="checkbox" name="month" value="8" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">8</label><br>
+						<label><input type="checkbox" name="month" value="9" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">9</label><br>
+						<label><input type="checkbox" name="month" value="10" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">10</label><br>
+						<label><input type="checkbox" name="month" value="11" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">11</label><br>
+						<label><input type="checkbox" name="month" value="12" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">12</label><br>
+					</div>
+	           	</div><br>
+	           	<!--  <label for="calibrate_month">校驗月份：</label>
 	           	<select class="select-instrument" name="calibrate_month" id=calibrate_month>
 	           		<option>1月</option>	<option>2月</option><option>3月</option><option>4月</option><option>5月</option><option>6月</option>
 					<option>7月</option>	<option>8月</option><option>9月</option><option>10月</option><option>11月</option><option>12月</option>
-	           	</select><br>
+	           	</select><br>-->
 	           	    
 				<label for="last_calibrate_date">校驗日期：</label>
 				<input type="date" class="datepicker" id="last_calibrate_date" name="slast_calibrate_date" required><br>
@@ -168,6 +196,7 @@
 		event.preventDefault();// 如果需要阻止實際的表單提交，可以取消事件
 		
 		var jsonArray = new Array();
+		var calibrate_month = new Array(); // 建立初始陣列, 存放選取後的校驗月份
 	    var spec = new Array();
 	    var USL = new Array();
 	    var LSL = new Array()
@@ -180,9 +209,21 @@
 	    var cycle = document.getElementById("cycle").value;
 	    var calibrate_type = document.getElementById("calibrate_type").value;
 	    var calibrate_localation = document.getElementById("calibrate_localation").value;
-	    var calibrate_month = document.getElementById("calibrate_month").value;
+	    //var calibrate_month = document.getElementById("calibrate_month").value;
 	    var last_calibrate_date = document.getElementById("last_calibrate_date").value;    
 	    var mother_instrument_number = document.getElementById("mother_instrument_number").value;
+	    
+	 	// ========== 從month的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var monthDiv = document.getElementById("monthCheckBoxesDiv");
+		var monthChecks = monthDiv.querySelectorAll("input[type='checkbox']");
+
+        for (var i = 1; i < monthChecks.length; i++){ // 0為全選, 故重1開始
+        	if (monthChecks[i].checked == true){
+        		calibrate_month.push(monthChecks[i].value);
+        		//console.log(productChecks[i].value);
+        	}
+        }
+		console.log("選取的校驗月份: " + calibrate_month);
 	    
 	    var custos = document.getElementById("custos").value;
 	    var custosLeader = document.getElementById("custosLeader").value;
@@ -226,7 +267,7 @@
  		jsonString = JSON.stringify(instrumentData) //轉成json格式
     	//console.log(jsonString);
 	    
-	    $.ajax({
+	    /*$.ajax({
 		    type: "POST", // 後端的要有標註PostMapping的方法
 		    url: "/crud/instrument",
 		    cache: false,
@@ -241,7 +282,7 @@
 		    error: function(xhr, status, error) {
 		    	alert(xhr.responseText);
 		    }
-	  	});
+	  	});*/
    
   	});
 	
@@ -364,6 +405,76 @@
 	    
 	    cells[3].value = value1 + value2;
 	    cells[4].value = value1 - value3;
+	}
+	
+	// ========== 點選全選時,取得所有checkbox內容值 ==========
+	function toggleCheckboxes(selectCheckName, selectCheckAll) {
+		var checkboxes = document.getElementsByName(selectCheckName);
+        var selectAllCheckbox = document.getElementById(selectCheckAll);    
+
+        for (var i = 0; i < checkboxes.length; i++) {
+        	checkboxes[i].checked = selectAllCheckbox.checked;
+        }
+    }
+	 
+	// ========== 當全選checked時, 任一取消checkbox的內容值, 則全選也會被取消 ===========
+	function checkSelectAll(selectCheckName, selectCheckAll) {
+		var checkboxes = document.getElementsByName(selectCheckName);
+		var selectAllCheckbox = document.getElementById(selectCheckAll);
+		var allChecked = true;
+
+		for (var i = 0; i < checkboxes.length; i++) {
+			if (!checkboxes[i].checked) {
+				allChecked = false;
+				break;
+			}
+		}
+		selectAllCheckbox.checked = allChecked;
+	}
+	
+	var show = true;
+
+	function showCheckboxes(selectCheckBox) {
+		
+		let checkboxes = document.getElementById(selectCheckBox);
+		
+		if (checkboxes.style.display == "block"){
+			show = false;
+		}
+		else{
+			show = true;
+		}
+		
+		if (show) {
+			checkboxes.style.display = "block";	
+			show = false;
+		} else {
+			checkboxes.style.display = "none";
+			show = true;
+		}
+	}
+	
+	// ========== 當下拉選單的月份checked時, 挑出放入下拉選單的文字內 ===========
+	function textCheckboxes(){
+     	// 選擇下拉選單元素
+	  	const calibrate_month = document.getElementById("calibrate_month");
+
+        // ========== 從month的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var monthDiv = document.getElementById("monthCheckBoxesDiv");
+		var monthChecks = monthDiv.querySelectorAll("input[type='checkbox']");
+		var option = document.createElement("option");
+		
+		calibrate_month.innerHTML = ""; // 清空現有選項
+		
+        for (var i = 1; i < monthChecks.length; i++){ // 0為全選, 故重1開始
+        	if (monthChecks[i].checked == true){
+        		
+        		//console.log(monthChecks[i].value);
+        		option.text += monthChecks[i].value + ",";
+        	}
+        }
+
+   	 	calibrate_month.appendChild(option); // 將選項添加至下拉選單
 	}
 
 </script>

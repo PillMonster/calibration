@@ -233,3 +233,51 @@ label {
    	border: none; /* 取消外框 */
    	outline: none; /* 取消點擊時的外框  */
 }
+
+/*  =====  下拉選單內的核選方塊  ===== */
+.selectBoxDiv {
+	float:right;
+	position: relative;
+	display: flex; /* 上下對齊 */
+ 	align-items: center; /* 上下對齊 */
+ 	
+}
+
+.selectBoxDiv select {
+	width: 160px;
+	font-size:14px;
+	font-weight: bold;
+	padding: 4px;
+	margin-right: 55px;
+	/*border: 1px solid #868687;*/
+	border-radius: 4px; /* 圓角 8 像素 */
+	line-height: 1.2; /* 調整行高 */
+	transition: border-color 0.3s; /* 加入漸變效果 */
+	border: 1px solid #ccc; /* 使用顏色 #3498db 的實線邊框 */
+	
+	/*padding: 4px; /* 調整文字欄位的內部填充 
+    line-height: 1.2; /* 調整行高 
+    margin-bottom: 10px;
+    border: 1px solid #ccc; /* 使用顏色 #3498db 的實線邊框 
+    border-radius: 4px; /* 使用 6px 的圓角 
+    transition: border-color 0.3s; /* 加入漸變效果 
+    font-size: 14px;
+    width: 53%;*/
+}
+
+
+.overSelectDiv {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+#monthCheckBoxesDiv{
+	display: none; /*設定隱藏元件*/
+}
+#monthCheckBoxesDiv label:hover { /*滑鼠懸停後的事件*/
+	background-color: #4F615E;
+	color: white;
+}
