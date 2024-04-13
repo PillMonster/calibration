@@ -15,7 +15,7 @@ import chien.myweb.calibration.service.CalibrationService;
 
 @RestController
 @RequestMapping("/calibration")
-public class calibrationController {
+public class CalibrationController {
 	
 	@Autowired
 	CalibrationService calibrationService;
