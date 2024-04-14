@@ -56,8 +56,7 @@
 	           	<div class="multipleSelectionDiv">
 	           		
 	           		<span><label for="calibrate_month">校驗月份：</label></span>
-	           		
-	           
+	           		      
 	           		<div class="selectBoxDiv" onclick="showCheckboxes('monthCheckBoxesDiv')">
 						<select class="select-instrument" name="calibrate_month" id=calibrate_month>
 							<option></option>
@@ -80,7 +79,9 @@
 						<label><input type="checkbox" name="month" value="11" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">11</label><br>
 						<label><input type="checkbox" name="month" value="12" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">12</label><br>
 					</div>
+					
 	           	</div><br>
+	           	
 	           	<!--  <label for="calibrate_month">校驗月份：</label>
 	           	<select class="select-instrument" name="calibrate_month" id=calibrate_month>
 	           		<option>1月</option>	<option>2月</option><option>3月</option><option>4月</option><option>5月</option><option>6月</option>
@@ -197,7 +198,6 @@
 		
 		var jsonArray = new Array();
 		var calibrate_month = new Array(); // 建立初始陣列, 存放選取後的校驗月份
-		//var calibrate_month = "";
 	    var spec = new Array();
 	    var USL = new Array();
 	    var LSL = new Array()
@@ -221,16 +221,10 @@
         for (var i = 1; i < monthChecks.length; i++){ // 0為全選, 故重1開始
         	if (monthChecks[i].checked == true){
         		calibrate_month.push(monthChecks[i].value);
-        		//calibrate_month += monthChecks[i].value + "," 
-        		//console.log(monthChecks[i].value);
         	}
         }
-        //calibrate_month = calibrate_month.substring(0, calibrate_month.length - 1); // 去掉最后一个字符
-        //var calibrate_month = calibrate_month_List.join(','); // 將數字陣列轉換為以逗號分隔的字串
-        //var calibrate_month = calibrate_month_List.map(String).join(','); // 先将数组中的元素转换为字符串，然后再连接
 		console.log("選取的校驗月份: " + calibrate_month);
-		//console.log("轉換成字串後: " + calibrate_month_string);
-		//console.log("轉換成字串後2: " + calibrate_month_string2);
+		
 	    var custos = document.getElementById("custos").value;
 	    var custosLeader = document.getElementById("custosLeader").value;
 	    var checker = document.getElementById("checker").value;
