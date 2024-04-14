@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>執行校驗</title>
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/createInstrumentStyle.css">
+</head>
+<body>
+<div id="header"></div>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $("#header").load("/instrument/header.html");
+	});
+	
+	var urlParams = new URLSearchParams(window.location.search); // 獲取當前頁面的URL中的查詢參數
+	var id = urlParams.get("id"); // 獲取ID參數的值
+	console.log("get edit'id: " + id);
+</script>
+
+</body>
+</html>

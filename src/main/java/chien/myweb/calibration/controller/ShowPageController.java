@@ -17,6 +17,11 @@ public class ShowPageController {
 		return "calibrationPrep";
 	}
 	
+	@GetMapping("calibration/execute")
+	public String showCalibrationExecute() {
+		return "calibrationExecute";
+	}
+	
 	@GetMapping("/instrument/crud")
 	public String showInstruments() {
 		return "crudInstrument";
