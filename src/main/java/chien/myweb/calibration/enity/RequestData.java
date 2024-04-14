@@ -13,7 +13,7 @@ public class RequestData {
 	private String cycle;
 	private String calibrate_type;
 	private String calibrate_localation;
-	private String calibrate_month;
+	private List<String> calibrate_month;
 	private String mother_instrument_number;
 	private LocalDate last_calibrate_date;
 	
@@ -82,10 +82,10 @@ public class RequestData {
 		this.calibrate_localation = calibrate_localation;
 	}
 
-	public String getCalibrate_month() {
+	public List<String> getCalibrate_month() {
 		return calibrate_month;
 	}
-	public void setCalibrate_month(String calibrate_month) {
+	public void setCalibrate_month(List<String> calibrate_month) {
 		this.calibrate_month = calibrate_month;
 	}
 	public LocalDate getLast_calibrate_date() {

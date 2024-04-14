@@ -35,8 +35,9 @@ public class InstrumentServiceImpl implements InstrumentService{
 	public Instrument addInstrument(RequestData request) { 
 		
 		String cycle = request.getCycle().replaceAll("[^0-9]", "");
-		String calibrate_month = request.getCalibrate_month().replaceAll("[^0-9]", "");
-		
+		List<String> calibrate_month_list = request.getCalibrate_month();
+		String calibrate_month = String.join(",", calibrate_month_list);
+
 		Instrument instrument = new Instrument();
 		
 		instrument.setNumber(request.getNumber()); 
@@ -108,7 +109,8 @@ public class InstrumentServiceImpl implements InstrumentService{
 			
 			// ===== instrument update service =====
 			String cycle = request.getCycle().replaceAll("[^0-9]", "");
-			String calibrate_month = request.getCalibrate_month().replaceAll("[^0-9]", "");
+			List<String> calibrate_month_list = request.getCalibrate_month();
+			String calibrate_month = String.join(",", calibrate_month_list);
 
 			// ===== 取得當前儀器的物件進行更新 =====
 			updateInstrument.setNumber(request.getNumber()); 

@@ -197,6 +197,7 @@
 		
 		var jsonArray = new Array();
 		var calibrate_month = new Array(); // 建立初始陣列, 存放選取後的校驗月份
+		//var calibrate_month = "";
 	    var spec = new Array();
 	    var USL = new Array();
 	    var LSL = new Array()
@@ -220,11 +221,16 @@
         for (var i = 1; i < monthChecks.length; i++){ // 0為全選, 故重1開始
         	if (monthChecks[i].checked == true){
         		calibrate_month.push(monthChecks[i].value);
-        		//console.log(productChecks[i].value);
+        		//calibrate_month += monthChecks[i].value + "," 
+        		//console.log(monthChecks[i].value);
         	}
         }
+        //calibrate_month = calibrate_month.substring(0, calibrate_month.length - 1); // 去掉最后一个字符
+        //var calibrate_month = calibrate_month_List.join(','); // 將數字陣列轉換為以逗號分隔的字串
+        //var calibrate_month = calibrate_month_List.map(String).join(','); // 先将数组中的元素转换为字符串，然后再连接
 		console.log("選取的校驗月份: " + calibrate_month);
-	    
+		//console.log("轉換成字串後: " + calibrate_month_string);
+		//console.log("轉換成字串後2: " + calibrate_month_string2);
 	    var custos = document.getElementById("custos").value;
 	    var custosLeader = document.getElementById("custosLeader").value;
 	    var checker = document.getElementById("checker").value;
@@ -241,7 +247,7 @@
 	      	USL.push(cells[3].value);
 	      	LSL.push(cells[4].value);	
 		}
-	    
+
 	    var instrumentData = {
 	    	"number": number,
 	    	"name": name,
@@ -267,7 +273,7 @@
  		jsonString = JSON.stringify(instrumentData) //轉成json格式
     	//console.log(jsonString);
 	    
-	    /*$.ajax({
+	    $.ajax({
 		    type: "POST", // 後端的要有標註PostMapping的方法
 		    url: "/crud/instrument",
 		    cache: false,
@@ -282,7 +288,7 @@
 		    error: function(xhr, status, error) {
 		    	alert(xhr.responseText);
 		    }
-	  	});*/
+	  	});
    
   	});
 	
@@ -356,7 +362,7 @@
 	      	var inputId = "row" + rowCounter + "-" + (i + 1);
 	      	input.id = inputId;
 	      	
-	      	console.log(inputId);
+	      	//console.log(inputId);
 	     	// 添加事件監聽器
 	        if (i < 3) {
 	          input.setAttribute("onblur", "calculateRow(this)");
