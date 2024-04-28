@@ -81,8 +81,8 @@
 					
 	           	</div><br>
 
-				<label for="last_calibrate_date">校驗日期：</label>
-				<input type="date" class="datepicker" id="last_calibrate_date" name="slast_calibrate_date" disabled><br>
+				<label for="last_calibrate_date">上次校驗日期：</label>
+				<input type="date" class="datepicker" style="width: 40%;" id="last_calibrate_date" name="last_calibrate_date" disabled><br>
 	           
 	           	<label for="mother_instrument_number">母儀編號：</label>
 	           	<input type="text" class="input-instrument" id="mother_instrument_number" name="mother_instrument_number" disabled>	 <br>    		
@@ -117,11 +117,14 @@
 				
 				<br><br>
 				<label for="temperature">溫度：</label>
-	           	<input type="text" class="input-instrument" style="width: 25%;" id="temperature" name="temperature" required>&emsp;
+	           	<input type="text" class="input-instrument" style="width: 15%;" id="temperature" name="temperature" required>&emsp;
 	           	<label for="humidity">濕度：</label>
-	           	<input type="text" class="input-instrument" style="width: 25%;" id="humidity" name="humidity" required><br>
+	           	<input type="text" class="input-instrument" style="width: 15%;" id="humidity" name="humidity" required>&emsp;
+	           	<label for="last_calibrate_date">校驗日期：</label>
+				<input type="date" class="datepicker" style="width: 20%;" id="calibrate_date" name="calibrate_date" required><br>
+	           	<br>
 				<br>
-				<span class="resultSpan">校驗結果：</span><span class="resultSpan">合格</span>
+				<span class="resultSpan">校驗結果：</span><span class="resultSpan" id="msg"></span>
 				
 			</div>
 			
@@ -139,14 +142,13 @@
 	           	<label for="checkerLeader">校驗主管：</label>
 	           	<select class="select-instrument" name="checkerLeader" id=checkerLeader disabled></select><br>	
 
-	
 			</div>
 		
 		</div>
 		
 		<div class="button-container">
 	    	<button type="submit" class="submit-button">提交</button>
-			<input type='button' class="back-button" onclick="location.href='./crud'" value="回上頁">
+			<input type='button' class="back-button" onclick="location.href='./prep'" value="回上頁">
    		</div>
 		
 	</form>
@@ -159,6 +161,11 @@
 	$(document).ready(function(){
 	    $("#header").load("/instrument/header.html");
 	});
+	
+	var specNum = "";
+	var pattern = /[a-zA-Z\u4e00-\u9fa5]/; // 定義正則表達式，匹配英文或中文字符
+	var pattern2 = /[a-zA-Z\u4e00-\u9fa5\s]/; // 定義正則表達式，匹配英文或中文字符
+	var pattern3 = /[\W_]/;
 	
 	$.ajax({
 	    type:"GET",//請求方式
@@ -188,6 +195,8 @@
 			const instrumentList = data.instrument;
 			const personList = data.persons;
 	    	const specList = data.spec;	
+	    	
+	    	specNum = specList.length;
 	    	
 	    	for (let i = 0; i < instrumentList.length; i++) {
 	    		console.log(instrumentList[i]);
@@ -267,9 +276,11 @@
 		      	if (i != specList.length -1){ // 滿足條件就不新增行	      		
 	    			addRow(); // 新增規格	    			
 	    		}
-		      	if ( i == specList.length -1){
-		      		test();
-		      	}
+		      	var number = parseInt(i) + 1; // 轉換整數型態
+	
+		      	var num = document.getElementById("row" + number + "-6"); // 取得量測值欄位
+				num.addEventListener("blur", checkNum) // 當焦點離開輸入欄位時, 會呼叫checkNum函示
+
 	    	}    	
 	    	
 	    	document.getElementById("number").value = instrumentList[0].number;
@@ -296,80 +307,51 @@
 	        
 		event.preventDefault();// 如果需要阻止實際的表單提交，可以取消事件
 		
-		var jsonArray = new Array();
-		var calibrate_month = new Array(); // 建立初始陣列, 存放選取後的校驗月份
-	    var spec = new Array();
-	    var USL = new Array();
-	    var LSL = new Array()
+		var valueList = new Array();
+
+		var temperature = document.getElementById("temperature").value.trim();
+		var humidity = document.getElementById("humidity").value.trim();
+		var calibrate_date = document.getElementById("calibrate_date").value;	
+		var result = document.getElementById("msg").textContent.trim();
 		
-	    var number = document.getElementById("number").value;
-	    var name = document.getElementById("name").value;
-	    var type = document.getElementById("type").value;
-	    var characteristic = document.getElementById("characteristic").value;
-	    var unit = document.getElementById("unit").value;
-	    var cycle = document.getElementById("cycle").value;
-	    var calibrate_type = document.getElementById("calibrate_type").value;
-	    var calibrate_localation = document.getElementById("calibrate_localation").value;
-	    //var calibrate_month = document.getElementById("calibrate_month").value;
-	    var last_calibrate_date = document.getElementById("last_calibrate_date").value;    
-	    var mother_instrument_number = document.getElementById("mother_instrument_number").value;
-	    
-	 	// ========== 從month的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
-		var monthDiv = document.getElementById("monthCheckBoxesDiv");
-		var monthChecks = monthDiv.querySelectorAll("input[type='checkbox']");
-
-        for (var i = 1; i < monthChecks.length; i++){ // 0為全選, 故重1開始
-        	if (monthChecks[i].checked == true){
-        		calibrate_month.push(monthChecks[i].value);
-        	}
-        }
-		console.log("選取的校驗月份: " + calibrate_month);
-	    
-	    var custos = document.getElementById("custos").value;
-	    var custosLeader = document.getElementById("custosLeader").value;
-	    var checker = document.getElementById("checker").value;
-	    var checkerLeader = document.getElementById("checkerLeader").value;
-	    
-		var table = document.getElementById("specTable");
-	    var tbody = table.getElementsByTagName("tbody")[0];
-	    var rows = tbody.getElementsByTagName("tr");
-
-	    for (var i = 0; i < rows.length; i++) {
-	      	var row = rows[i];
-	      	var cells = row.getElementsByTagName("input");
-	      	spec.push(cells[0].value);
-	      	USL.push(cells[3].value);
-	      	LSL.push(cells[4].value);	
+		for(let i=1; i<=specNum; i++){
+			
+			var value = document.getElementById("row" + i + "-6").value.trim();
+			
+			if ( temperature === "" || humidity === "" || value === "" ) { // 檢查去除空格後的值是否為空
+				console.log("輸入值不得為空值。");
+				alert("輸入值不得為空值。")
+				return; // 條件成立，則提前退出方法，下述方法內程式不執行
+		
+			} else if ( pattern.test(temperature) || pattern.test(humidity) || pattern2.test(value) || pattern3.test(value) ){
+				console.log("輸入值不是數字。");
+				alert("輸入值不是數字。")
+				return; // 條件成立，提前退出方法，下述方法內程式不執行
+				
+			}  else {
+				valueList.push(value);
+			}		
 		}
-	    
-	    var instrumentData = {
-	    	"number": number,
-	    	"name": name,
-	    	"type": type,
-	    	"characteristic": characteristic,
-	    	"unit": unit,
-	    	"cycle": cycle,
-	    	"calibrate_type": calibrate_type,
-	    	"calibrate_localation": calibrate_localation,
-	    	"calibrate_month": calibrate_month,
-	    	"last_calibrate_date": last_calibrate_date,
-	    	"mother_instrument_number": mother_instrument_number,
-	    	"custos": custos,
-        	"custosLeader": custosLeader,
-        	"checker": checker,
-        	"checkerLeader": checkerLeader,
-        	"specification": spec,
-        	"usl": USL,
-        	"lsl": LSL
-        	
+		
+		/*console.log("temperature: " + temperature + ", humidity: " + humidity + ", calibrate_date: " + calibrate_date);
+		console.log("valueList: " + valueList);
+		console.log("result: " + result);*/
+			
+		var calibrationData = {	
+	    	"id": id,
+	    	"valueList": valueList,
+	    	"result": result,
+	    	"temperature": temperature,
+	    	"humidity": humidity,
+	    	"calibrate_date": calibrate_date
 		};
-	    
- 		jsonString = JSON.stringify(instrumentData) //轉成json格式
-    	//console.log(jsonString);
+    
+ 		jsonString = JSON.stringify(calibrationData) //轉成json格式
+    	console.log(jsonString);
 	    
 	    $.ajax({
-		    type: "PUT", // 後端的要有標註PutMapping的方法
-		    url: "/crud/instrument/" + id,
+		    type: "POST", // 後端的要有標註PutMapping的方法
+		    url: "/calibration/prepCalibrations",
 		    cache: false,
 		    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
 		    contentType: "application/json",
@@ -377,13 +359,14 @@
 		    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
 		    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
 		    	console.log(response)
-		    	alert("更新成功!!");
+		    	alert("已新增一筆校驗紀錄!!");
 		    },
 		    error: function(xhr, status, error) {
 		    	alert(xhr.responseText);
 		    }
 	  	});
-   
+	
+
   	});
 	
 	// 用於填充下拉選單的函數
@@ -460,8 +443,7 @@
 	    rowCounter++; // 增加行數計數
 	}
 
-	
-	
+
 	// ========== 當下拉選單的月份checked時, 挑出放入下拉選單的文字內 ===========
 	function textCheckboxes(){
      	// 選擇下拉選單元素
@@ -500,87 +482,95 @@
 	
    	 	calibrate_month.appendChild(option); // 將選項添加至下拉選單
 	}
-	
-	
+  
 	// ========== 焦點事件 ==========
-    /*
-    var table = document.getElementById("specTable");
-    var tbody = table.getElementsByTagName('tbody')[0];
-    var rows = tbody.getElementsByTagName('tr');
-    
-    addRow1();
-	
-	function addRow1() {
-		var table = document.getElementById("specTable");
-	    var tbody = table.getElementsByTagName('tbody')[0];
-	    var newRow = tbody.insertRow();
-
-	    for (var i = 0; i < 6; i++) {
-	    	var cell = newRow.insertCell(i);  // 新增的表格行(row)中插入一個新的列(column)，cell變數為單元格
-	      	var input = document.createElement("input"); // 創建了一個新的 input 元素
-	      	input.type = "text";
-	      	input.classList.add("input-spec");
-	      	var inputId = "row" + rowCounter + "-" + (i + 1);
-	      	input.id = inputId;
-
-	     	if (i < 5){
-	     		input.setAttribute("disabled", "true"); // 將這行添加到 input 中
-	     	}else {
-	     		input.setAttribute("required", "true"); // 將這行添加到 input 中
-	     	}
-	      	
-	      	cell.appendChild(input); // 把 input 元素附加到該列的單元格中
-	      	
-	      	console.log(document.getElementById("row1-1").value);
-	    }
-	 
-	    rowCounter++; // 增加行數計數
-	}*/
-    
-	// ========== 焦點事件 ==========
-	function test(){
-		for (var i=1; i<4; i++){
-			var num = document.getElementById("row" + i + "-6");
-			num.addEventListener("blur", checkNum) // 當焦點離開輸入欄位時, 會呼叫checkNum函示
-			
-		}
-		
-	}
-	
 	function checkNum(){ // 檢查輸入的值是否在規格內之函式
-		console.log("我被選擇˙");
-		//console.log("num: " + num);
-		/*var table = document.getElementById("specTable");
-	    var tbody = table.getElementsByTagName('tbody')[0];
-	    console.log(tbody);
+
+		rowNum = this.id.replace(/[^0-9]/ig,"").charAt(0);
+	
+		//console.log("rowNum: " + rowNum);
+		var USL = parseFloat(document.getElementById("row" + rowNum + "-4").value);
+		var LSL = parseFloat(document.getElementById("row" + rowNum + "-5").value);
+		var value = document.getElementById("row" + rowNum + "-6").value.trim();
 		
-		num = this.id.replace(/[^0-9]/ig,"");
-		
-		var LSL = parseFloat(document.getElementById("measureTable").rows[num].cells[4].innerHTML);
-		var USL = parseFloat(document.getElementById("measureTable").rows[num].cells[5].innerHTML);
-		
-		var value = parseFloat(this.value);
-		var rex = /[^\u4e00-\u9fa5]/;
-		console.log(rex.test(value));
-		
-		if (isNaN(value)){
-			msg.textContent = "內容不能為空值，或輸入內容不是數字";
-			msg.style.color = "red";
-		}
-		else {
-			msg.textContent = "";
+		if ( value === "" ) { // 檢查去除空格後的值是否為空
+			
+			document.getElementById("row" + rowNum + "-6").style.backgroundColor = "white";
+			document.getElementById("row" + rowNum + "-6").style.color = "black";
+			console.log("輸入值不得為空值。");
+			
+		} else if ( pattern2.test(value) || pattern3.test(value) ){ // 判斷是否非數字
+			
+			document.getElementById("row" + rowNum + "-6").style.backgroundColor = "white";
+			document.getElementById("row" + rowNum + "-6").style.color = "black";			
+			console.log("輸入值不是數字。");
+			
+		} else {
+			
 			if(value>=LSL && value<=USL){
-				document.getElementById("measureTable").rows[num].cells[8].innerHTML = "Pass";
-				document.getElementById("measureTable").rows[num].cells[8].style.backgroundColor = "green";
-				document.getElementById("measureTable").rows[num].cells[8].style.color = "white";		
-			}
-			else if(value<LSL || value>USL){
-				document.getElementById("measureTable").rows[num].cells[8].innerHTML = "Fail";
-				document.getElementById("measureTable").rows[num].cells[8].style.backgroundColor = "red";
-				document.getElementById("measureTable").rows[num].cells[8].style.color = "white";
-			}
-		}*/
+				document.getElementById("row" + rowNum + "-6").style.backgroundColor = "green";
+				document.getElementById("row" + rowNum + "-6").style.color = "white";
+			
+			}else if(value<LSL || value>USL){
+				document.getElementById("row" + rowNum + "-6").style.backgroundColor = "red";
+				document.getElementById("row" + rowNum + "-6").style.color = "white";
+			}	
+		}		
+
+		decide(); // 總判定
 	}
+	
+	function decide(){
+		
+		for(let i=1; i<=specNum; i++){
+	
+			var USL = parseFloat(document.getElementById("row" + i + "-4").value);
+			var LSL = parseFloat(document.getElementById("row" + i + "-5").value);
+			var value = document.getElementById("row" + i + "-6").value.trim();
+			console.log(value);
+			
+			if ( value === "" || pattern2.test(value) || pattern3.test(value)){
+				
+				msg.textContent = "";
+				msg.style.color = "black";
+				break;
+				
+			} else {
+				
+				if(value>=LSL && value<=USL){
+					msg.textContent = "合格";
+					msg.style.color = "green";
+				}
+				else if(value<LSL || value>USL){
+					msg.textContent = "不合格";
+					msg.style.color = "red";
+					break;
+
+				}
+			}	
+		}	
+	}
+	
+	document.getElementById("calibrate_date").value = formatDate(new Date()); // 產生當前日期，轉換對應的日期格式(xxxx-xx-xx)，傳入日期選擇器的元素
+	
+	// ========== 時間格式轉換 ==========
+	function padTo2Digits(num) {
+		// 目標字串被填充到指定長度後，所得的新字串
+		// padStart(指定長度, '填充的值') ex: '3'.padStart(2, '0'); //03
+		return num.toString().padStart(2, '0');
+	}
+	
+	function formatDate(date) {
+		return (
+			[
+				date.getFullYear(),
+				padTo2Digits(date.getMonth() + 1), //傳回值是一個0到11的正整數, 所以要+1
+				padTo2Digits(date.getDate()), 
+				
+			].join('-') //join()方法會將陣列或物件中所有的元素連接,並合併成一個新字串，回傳此新字串。 ['2022','06','02']->['2022-06-02']
+		);
+	}
+	
 	
 	
 </script>

@@ -1,6 +1,7 @@
 package chien.myweb.calibration.enity;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -10,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "Data")
@@ -23,11 +25,21 @@ public class Data {
 	@Column(name = "value")
 	private Double value;
 	
+	@Transient //@Transient 會告訴 JPA 不將 confirmPassword 欄位映射到資料庫表
+	private List<String> valueList;
+	
 	@Column(name = "result")
 	private String result;
 	
 	@Column(name = "calibrate_date")
 	private String calibrate_date;
+	
+	@Column(name = "temperature")
+	private String temperature;
+	
+	@Column(name = "humidity")
+	private String humidity;
+	
 	public Long getId() {
 		return id;
 	}
@@ -39,6 +51,12 @@ public class Data {
 	}
 	public void setValue(Double value) {
 		this.value = value;
+	}
+	public List<String> getValueList() {
+		return valueList;
+	}
+	public void setValueList(List<String> valueList) {
+		this.valueList = valueList;
 	}
 	public String getResult() {
 		return result;
@@ -53,6 +71,19 @@ public class Data {
 		this.calibrate_date = calibrate_date;
 	}
 	
+	public String getTemperature() {
+		return temperature;
+	}
+	public void setTemperature(String temperature) {
+		this.temperature = temperature;
+	}
+	public String getHumidity() {
+		return humidity;
+	}
+	public void setHumidity(String humidity) {
+		this.humidity = humidity;
+	}
+
 	@ManyToMany(mappedBy = "data") //指定了反向關聯到 Instrument 類的 data 屬性
 	private Set<Instrument> instruments;
 	
@@ -66,8 +97,8 @@ public class Data {
 	
 	@Override
 	public String toString() {
-		return "Data [data_id=" + id + ", value=" + value + ", result=" + result + ", calibrate_date="
-				+ calibrate_date + "]";
+		return "Data [id=" + id + ", valueList=" + valueList + ", result=" + result + ", calibrate_date="
+				+ calibrate_date + ", temperature=" + temperature + ", humidity=" + humidity + "]";
 	}
 	
 	

@@ -7,10 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
+import chien.myweb.calibration.enity.RequestData;
 import chien.myweb.calibration.service.CalibrationService;
 
 @RestController
@@ -37,5 +41,15 @@ public class CalibrationController {
 			System.out.println("當月沒有要執行校驗的器具"); 	
 			return ResponseEntity.ok().body("當月沒有要執行校驗的器具");
 		}
+	}
+	
+	@PostMapping("/prepCalibrations") // 新增
+	public ResponseEntity<Data> executeCalibration(@RequestBody Data request){
+			
+		System.out.println(request.toString());
+		//Instrument instrument = instrumentService.addInstrument(request);
+
+		//return ResponseEntity.ok().body(instrument); 
+		return null;
 	}
 }
