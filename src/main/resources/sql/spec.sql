@@ -1,4 +1,4 @@
-dataUSE calibration;	
+USE calibration;	
 
 DROP TABLE IF EXISTS spec;	
 CREATE TABLE spec (		

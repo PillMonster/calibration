@@ -12,6 +12,6 @@ public interface InstrumentSpecDataDao extends JpaRepository<Data, Long>{
 	
 	@Modifying
     @Transactional
-    @Query(value = "insert into instrument_spec_value (instrument_id, spec_id, data_id) values (?1, ?2, ?3)", nativeQuery = true) 
+    @Query(value = "insert into instrument_spec_data (instrument_id, spec_id, data_id) values (?1, ?2, ?3)", nativeQuery = true) 
     int addInstrumentAndSpecAndData(Long instrumentId, Long specId, Long dataId); // 新增量測值
 }

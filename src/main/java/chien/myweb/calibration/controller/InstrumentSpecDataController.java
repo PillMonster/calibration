@@ -21,16 +21,16 @@ public class InstrumentSpecDataController {
 	@Autowired
 	InstrumentSpecDataService instrumentSpecDataService;
 	
-	@PostMapping("/instrument/{instrumentId}/spec/{specId}/addData")
-    public ResponseEntity<String> createInstrumentSpecPerson(@PathVariable Long instrumentId, @PathVariable Long specId,
-    														@RequestBody RequestData request) {
+	@PostMapping("/instrument/{instrumentId}/spec/{specId}/data/{dataId}")
+    public ResponseEntity<String> createInstrumentSpecData(@PathVariable Long instrumentId, @PathVariable Long specId,
+    														@PathVariable Long dataId) {
 		
 		int createResult;
 		String result = "";
 		
 		try {
 			
-			createResult = instrumentSpecDataService.addInstrumentAndSpecAndData(instrumentId, specId, request);
+			createResult = instrumentSpecDataService.addInstrumentAndSpecAndData(instrumentId, specId, dataId);
 			result = createResult == 1 ? "插入成功" : "插入失敗";
 			return new ResponseEntity<String>(result, HttpStatus.OK);
 			

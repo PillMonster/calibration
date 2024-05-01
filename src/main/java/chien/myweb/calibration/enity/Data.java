@@ -26,6 +26,9 @@ public class Data {
 	private Double value;
 	
 	@Transient //@Transient 會告訴 JPA 不將 confirmPassword 欄位映射到資料庫表
+	private List<String> specIdList;
+	
+	@Transient //@Transient 會告訴 JPA 不將 confirmPassword 欄位映射到資料庫表
 	private List<String> valueList;
 	
 	@Column(name = "result")
@@ -51,6 +54,12 @@ public class Data {
 	}
 	public void setValue(Double value) {
 		this.value = value;
+	}
+	public List<String> getSpecIdList() {
+		return specIdList;
+	}
+	public void setSpecIdList(List<String> specIdList) {
+		this.specIdList = specIdList;
 	}
 	public List<String> getValueList() {
 		return valueList;
@@ -95,11 +104,15 @@ public class Data {
 		this.instruments = instruments;
 	}
 	
+	
 	@Override
 	public String toString() {
-		return "Data [id=" + id + ", valueList=" + valueList + ", result=" + result + ", calibrate_date="
-				+ calibrate_date + ", temperature=" + temperature + ", humidity=" + humidity + "]";
+		return "Data [id=" + id + ", specIdList=" + specIdList + ", valueList=" + valueList + ", result=" + result
+				+ ", calibrate_date=" + calibrate_date + ", temperature=" + temperature + ", humidity=" + humidity
+				+ "]";
 	}
+	
+	
 	
 	
 }

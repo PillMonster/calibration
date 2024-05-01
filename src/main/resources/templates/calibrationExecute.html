@@ -163,9 +163,10 @@
 	});
 	
 	var specNum = "";
+	var specIdList = new Array();
+	
 	var pattern = /[a-zA-Z\u4e00-\u9fa5]/; // 定義正則表達式，匹配英文或中文字符
-	var pattern2 = /[a-zA-Z\u4e00-\u9fa5\s]/; // 定義正則表達式，匹配英文或中文字符
-	var pattern3 = /[\W_]/;
+	var pattern2 = /^[\da-zA-Z\u4e00-\u9fa5\W_]*[^\d.][\da-zA-Z\u4e00-\u9fa5\W_]*$/;
 	
 	$.ajax({
 	    type:"GET",//請求方式
@@ -273,6 +274,8 @@
 		      	cells[3].value = specList[i].usl;
 		      	cells[4].value = specList[i].lsl;
 		    	
+		      	specIdList.push(specList[i].id);
+		      	
 		      	if (i != specList.length -1){ // 滿足條件就不新增行	      		
 	    			addRow(); // 新增規格	    			
 	    		}
@@ -282,7 +285,7 @@
 				num.addEventListener("blur", checkNum) // 當焦點離開輸入欄位時, 會呼叫checkNum函示
 
 	    	}    	
-	    	
+	    	//console.log(specIdList);
 	    	document.getElementById("number").value = instrumentList[0].number;
 	    	document.getElementById("name").value = instrumentList[0].name;
 	    	document.getElementById("type").value = instrumentList[0].type;
@@ -323,7 +326,7 @@
 				alert("輸入值不得為空值。")
 				return; // 條件成立，則提前退出方法，下述方法內程式不執行
 		
-			} else if ( pattern.test(temperature) || pattern.test(humidity) || pattern2.test(value) || pattern3.test(value) ){
+			} else if ( pattern.test(temperature) || pattern.test(humidity) || pattern2.test(value) ){
 				console.log("輸入值不是數字。");
 				alert("輸入值不是數字。")
 				return; // 條件成立，提前退出方法，下述方法內程式不執行
@@ -339,6 +342,7 @@
 			
 		var calibrationData = {	
 	    	"id": id,
+	    	"specIdList": specIdList,
 	    	"valueList": valueList,
 	    	"result": result,
 	    	"temperature": temperature,
@@ -499,8 +503,8 @@
 			document.getElementById("row" + rowNum + "-6").style.color = "black";
 			console.log("輸入值不得為空值。");
 			
-		} else if ( pattern2.test(value) || pattern3.test(value) ){ // 判斷是否非數字
-			
+		//} else if ( pattern2.test(value) || pattern3.test(value) ){ // 判斷是否非數字
+		} else if ( pattern2.test(value) ){ // 判斷是否非數字	
 			document.getElementById("row" + rowNum + "-6").style.backgroundColor = "white";
 			document.getElementById("row" + rowNum + "-6").style.color = "black";			
 			console.log("輸入值不是數字。");
@@ -529,7 +533,7 @@
 			var value = document.getElementById("row" + i + "-6").value.trim();
 			console.log(value);
 			
-			if ( value === "" || pattern2.test(value) || pattern3.test(value)){
+			if ( value === "" || pattern2.test(value) ){
 				
 				msg.textContent = "";
 				msg.style.color = "black";

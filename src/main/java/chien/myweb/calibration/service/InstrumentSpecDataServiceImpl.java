@@ -2,6 +2,7 @@ package chien.myweb.calibration.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,9 @@ public class InstrumentSpecDataServiceImpl implements InstrumentSpecDataService{
 	int createResult;
 	
 	@Override
-	public int addInstrumentAndSpecAndData(Long instrumentId, Long specId, RequestData request) {
+	public int addInstrumentAndSpecAndData(Long instrumentId, Long specId, Long dataId) {
 		
-		int result = instrumentSpecDataDao.addInstrumentAndSpecAndData(instrumentId, specId, request.getDataId());
+		int result = instrumentSpecDataDao.addInstrumentAndSpecAndData(instrumentId, specId, dataId);
 		
 		if (result == 1) {
 			return createResult=1;

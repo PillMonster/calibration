@@ -1,6 +1,7 @@
 package chien.myweb.calibration.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.RequestData;
 import chien.myweb.calibration.service.CalibrationService;
+import chien.myweb.calibration.service.DataService;
+import chien.myweb.calibration.service.InstrumentSpecDataService;
 
 @RestController
 @RequestMapping("/calibration")
@@ -23,6 +26,10 @@ public class CalibrationController {
 	
 	@Autowired
 	CalibrationService calibrationService;
+	@Autowired
+	DataService dataService;
+	@Autowired
+	InstrumentSpecDataService instrumentSpecDataService;
 	
 	@GetMapping("/prepCalibrations")  
 	public ResponseEntity<?> getPrepCalibrationList(){
@@ -44,12 +51,22 @@ public class CalibrationController {
 	}
 	
 	@PostMapping("/prepCalibrations") // 新增
-	public ResponseEntity<Data> executeCalibration(@RequestBody Data request){
+	public ResponseEntity<?> executeCalibration(@RequestBody Data request){
 			
 		System.out.println(request.toString());
-		//Instrument instrument = instrumentService.addInstrument(request);
+		List<Data> newData = dataService.addData(request);
+		
+		Optional<Data> dataOp = newData.stream().findAny();
+		
+		if (dataOp.isPresent()) {
+			System.out.println("校驗數據新增成功!");
+			
+			return ResponseEntity.ok().body(newData);
+		}
+		else {
+			System.out.println("沒有新增校驗數據。"); 	
+			return ResponseEntity.ok().body("沒有新增校驗數據");
+		}
 
-		//return ResponseEntity.ok().body(instrument); 
-		return null;
 	}
 }
