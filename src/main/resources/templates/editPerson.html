@@ -31,6 +31,8 @@
 				<option>BQCG</option>
 				<option>BQC1</option>
 				<option>BQC2</option>
+				<option>BQC3</option>
+				<option>BQC4</option>
 				<option>BF4</option>
 				<option>BPEG</option>
 				<option>BECG</option>
@@ -91,7 +93,7 @@
 	    async:true,//true為非同步
 	    success:function (data) {//接收後端來的資料
 	    	console.log("取得成功, Person物件的id為: " + data.id);	
-	    	
+
 	    	document.getElementById("job_number").value = data.job_number;
 	    	document.getElementById("username").value = data.username;
 	    	document.getElementById("department").value = data.department;
