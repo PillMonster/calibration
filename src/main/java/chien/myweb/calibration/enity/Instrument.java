@@ -59,6 +59,9 @@ public class Instrument {
 	@Column(name = "mother_instrument_number")
 	private String mother_instrument_number;
 	
+	@Column(name = "is_calibration")
+	private String is_calibration;
+	
 	public Long getId() {
 		return id;
 	}
@@ -154,7 +157,15 @@ public class Instrument {
 	public void setMother_instrument_number(String mother_instrument_number) {
 		this.mother_instrument_number = mother_instrument_number;
 	}
-	
+
+	public String getIs_calibration() {
+		return is_calibration;
+	}
+
+	public void setIs_calibration(String is_calibration) {
+		this.is_calibration = is_calibration;
+	}
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JsonIgnore // 使用多對多要加上，阻止該方(person)的序列化
 	@JoinTable(name = "instrument_person", //指示兩個實體之間的關聯表（junction table）的配置

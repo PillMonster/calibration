@@ -80,6 +80,7 @@ public class DataServiceImpl implements DataService{
 				LocalDate calibrate_date = LocalDate.parse(request.getCalibrate_date(), formatter); // 轉換格式(String to LocalDate)
 				System.out.println(calibrate_date);
 				updateInstrument.setLast_calibrate_date(calibrate_date); // 設定該物件的校驗日期
+				updateInstrument.setIs_calibration("N");
 				instrumentDao.save(updateInstrument); // 更新資料庫
 				
 			}

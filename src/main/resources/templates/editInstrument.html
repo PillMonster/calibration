@@ -66,18 +66,18 @@
 			
 					<div id="monthCheckBoxesDiv">
 						<label><input type="checkbox" id="monthSelectAll" value="全選" onchange="toggleCheckboxes('month', 'monthSelectAll'); textCheckboxes();">全選</label><br>
-						<label><input type="checkbox" name="month" value="1" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); " checked>1</label><br>
-						<label><input type="checkbox" name="month" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">2</label><br>
-						<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">3</label><br>
-						<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">4</label><br>
-						<label><input type="checkbox" name="month" value="5" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">5</label><br>
-						<label><input type="checkbox" name="month" value="6" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">6</label><br>
-						<label><input type="checkbox" name="month" value="7" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">7</label><br>
-						<label><input type="checkbox" name="month" value="8" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">8</label><br>
-						<label><input type="checkbox" name="month" value="9" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">9</label><br>
-						<label><input type="checkbox" name="month" value="10" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">10</label><br>
-						<label><input type="checkbox" name="month" value="11" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">11</label><br>
-						<label><input type="checkbox" name="month" value="12" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">12</label><br>
+						<label><input type="checkbox" name="month" id="month1" value="1" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); " checked>1</label><br>
+						<label><input type="checkbox" name="month" id="month2" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">2</label><br>
+						<label><input type="checkbox" name="month" id="month3" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">3</label><br>
+						<label><input type="checkbox" name="month" id="month4" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">4</label><br>
+						<label><input type="checkbox" name="month" id="month5" value="5" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">5</label><br>
+						<label><input type="checkbox" name="month" id="month6" value="6" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">6</label><br>
+						<label><input type="checkbox" name="month" id="month7" value="7" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">7</label><br>
+						<label><input type="checkbox" name="month" id="month8" value="8" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">8</label><br>
+						<label><input type="checkbox" name="month" id="month9" value="9" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">9</label><br>
+						<label><input type="checkbox" name="month" id="month10" value="10" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">10</label><br>
+						<label><input type="checkbox" name="month" id="month11" value="11" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">11</label><br>
+						<label><input type="checkbox" name="month" id="month12" value="12" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">12</label><br>
 					</div>
 					
 	           	</div><br>
@@ -279,7 +279,8 @@
 	    	document.getElementById("mother_instrument_number").value = instrumentList[0].mother_instrument_number;
 			
 	    	editCheckboxes(instrumentList[0].calibrate_month); 
-	    	
+	    	//console.log(instrumentList[0].calibrate_month);
+	        
 	    },
 	    error :function(errorMsg) {
 	        alert("請求後端資料失敗！(personId)");
@@ -563,18 +564,33 @@
 	
 	// ========== 當下拉選單的月份checked時, 挑出放入下拉選單的文字內 ===========
 	function editCheckboxes(editChecks){
-     	// 選擇下拉選單元素
-	  	const calibrate_month = document.getElementById("calibrate_month");
-	  	calibrate_month.innerHTML = ""; // 清空現有選項
      	
-        // ========== 從month的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
-		var monthDiv = document.getElementById("monthCheckBoxesDiv");
-		var monthChecks = monthDiv.querySelectorAll("input[type='checkbox']");
-		var option = document.createElement("option");
+		
+     	
+   	// 選擇下拉選單元素
+	  	const calibrate_month = document.getElementById("calibrate_month");
+	  	calibrate_month.innerHTML = ""; // 清空現有選項    	
+   
+		var option = document.createElement("option");	
+		console.log(editChecks);
+		var monthCheckList = new Array();
+   	 	
+   		
 
-		option.text = editChecks;
-	
    	 	calibrate_month.appendChild(option); // 將選項添加至下拉選單
+   	 	
+   		// ========== 從month的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+   	 	var checkSplit = editChecks.split(",");
+		console.log(checkSplit);
+		for (var i=0; i<checkSplit.length; i++){
+			console.log(document.getElementById("month"+checkSplit[i]).value);
+			document.getElementById("month"+checkSplit[i]).value = checkSplit[i];
+		}
+		option.text = editChecks;
+		//var monthDiv = document.getElementById("monthCheckBoxesDiv");
+		//var monthChecks = monthDiv.querySelectorAll("input[type='checkbox']");
+		//console.log(monthChecks[5].value);
+		//document.getElementById("month");
 	}
 
 </script>

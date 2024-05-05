@@ -1,6 +1,7 @@
 package chien.myweb.calibration.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,70 @@ public class CalibrationServiceImpl implements CalibrationService{
 	@Autowired
 	InstrumentDao instrumentDao;
 	
+	@Override
+	public List<Instrument> findPrepInstruments() {
+		
+		List<Instrument> instrumentDB = instrumentDao.findInstruments();
+				
+        LocalDate currentDate = LocalDate.now(); // 獲取當前日期
+        
+		List<Instrument> prepInstrument = instrumentDB.stream()
+            .filter(prep -> {
+            	
+            	String number = prep.getNumber(); // 取得此儀器的編號
+            	
+            	LocalDate lastCalibrateDate = prep.getLast_calibrate_date(); // 取得此儀器的上次校驗日期
+            	int cycle =  Integer.parseInt(prep.getCycle()); // 取得此儀器的校驗週期
+            	   
+                // 計算日期相差的月份
+                long monthsDifference = ChronoUnit.MONTHS.between(lastCalibrateDate, currentDate);
+                System.out.println("儀器 " + number + " 的上次校驗日期與現在日期相差 " + monthsDifference + " 個月");
+                
+                // 檢查是否超過週期
+                boolean isOverdue = monthsDifference >= cycle;
+                
+                // 如果超過週期就回傳 true，否則回傳 false
+                if (isOverdue) {
+                    return isOverdue;
+                } else {
+                    return isOverdue;
+                }	
+            				
+            })
+            .collect(Collectors.toList());	
+		
+		return prepInstrument;	
+	}
+	
+	@Override
+	public boolean findIsCalibration(Instrument instrument) {
+		
+		String number = instrument.getNumber(); // 取得此儀器的編號
+    	
+    	LocalDate lastCalibrateDate = instrument.getLast_calibrate_date(); // 取得此儀器的上次校驗日期
+    	int cycle =  Integer.parseInt(instrument.getCycle()); // 取得此儀器的校驗週期
+    	
+    	// 獲取當前日期
+        LocalDate currentDate = LocalDate.now();
+        
+        // 計算日期相差的月份
+        long monthsDifference = ChronoUnit.MONTHS.between(lastCalibrateDate, currentDate);
+        System.out.println("新增的儀器上次校驗月份與當前月份相差 " + monthsDifference + " 個月");
+        
+        // 檢查是否超過週期
+        boolean isOverdue = monthsDifference >= cycle;
+        
+        // 如果超過週期就回傳 true，否則回傳 false
+        if (isOverdue) {
+            System.out.println("新增儀器編號: " + number + ", 儀器校驗已過期");
+            return isOverdue;
+        } else {
+            System.out.println("新增儀器編號: " + number + ", 儀器校驗未過期");
+            return isOverdue;
+        }	
+	}
+	
+	/*
 	@Override
 	public List<Instrument> findPrepInstruments() {
 		
@@ -50,11 +115,10 @@ public class CalibrationServiceImpl implements CalibrationService{
             .collect(Collectors.toList());
 		
 		return prepInstrument;	
-	}
-
+	}*/
 	
 	/*@Override
-	public List<Instrument> findPrepInstruments() {
+	public List<Instrument> findIsCalibration() {
 		
 		List<Instrument> instrumentDB = instrumentDao.findInstruments();
 
