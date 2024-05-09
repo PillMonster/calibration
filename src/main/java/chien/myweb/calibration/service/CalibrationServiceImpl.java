@@ -34,7 +34,7 @@ public class CalibrationServiceImpl implements CalibrationService{
             	
             	LocalDate lastCalibrateDate = prep.getLast_calibrate_date(); // 取得此儀器的上次校驗日期
             	int cycle =  Integer.parseInt(prep.getCycle()); // 取得此儀器的校驗週期
-            	   
+            	
                 // 計算日期相差的月份
                 long monthsDifference = ChronoUnit.MONTHS.between(lastCalibrateDate, currentDate);
                 System.out.println("儀器 " + number + " 的上次校驗日期與現在日期相差 " + monthsDifference + " 個月");
@@ -44,6 +44,9 @@ public class CalibrationServiceImpl implements CalibrationService{
                 
                 // 如果超過週期就回傳 true，否則回傳 false
                 if (isOverdue) {
+                	System.out.println(number);
+                	prep.setIs_calibration("Y");
+                	instrumentDao.save(prep); // 更新資料庫
                     return isOverdue;
                 } else {
                     return isOverdue;

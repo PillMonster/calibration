@@ -73,6 +73,8 @@ public class InstrumentServiceImpl implements InstrumentService{
 		
 		
 		List<Double> requestSpec = request.getSpecification(); // 先取得前端輸入的規格值
+		List<Spec> specList = new ArrayList<>();
+		//Spec specObj = new Spec();
 	
 		for(int i=0; i < requestSpec.size(); i++) {
 			
@@ -89,6 +91,7 @@ public class InstrumentServiceImpl implements InstrumentService{
 				specObj.setUSL(USL);
 				specObj.setLSL(LSL);
 				specService.addSpec(specObj);
+				instrument.getSpec().add(specObj); // 將儀器與新建立的規格建立關聯
 			}
 			else { // 如果有此項規格，就將儀器與現有規格建立關聯
 				//System.out.println(specification + ", "+ USL + ", " + LSL + "此項規格資料庫有建檔");
