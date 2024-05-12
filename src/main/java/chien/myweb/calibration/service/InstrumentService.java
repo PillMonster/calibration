@@ -5,6 +5,7 @@ import java.util.Set;
 
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.RequestData;
+import chien.myweb.calibration.enity.ResponseData;
 
 
 public interface InstrumentService {
@@ -35,4 +36,7 @@ public interface InstrumentService {
 	
 	// 多項條件查詢
 	List<Instrument> findByMultiple(List<String> monthList, List<String> cycleList, List<String> typeList, List<String> personList, List<String> localationList);
+	
+	// 透過instrument_ID 及 spec_ID 下查詢各儀器、規格、校驗結果等資訊
+	List<ResponseData> getCalibrationResult();
 }

@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.InstrumentDao;
 import chien.myweb.calibration.dao.PersonDao;
+import chien.myweb.calibration.dao.ResponseDataDao;
 import chien.myweb.calibration.dao.SpecDao;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.Person;
 import chien.myweb.calibration.enity.RequestData;
+import chien.myweb.calibration.enity.ResponseData;
 import chien.myweb.calibration.enity.Spec;
 
 @Service
@@ -31,6 +33,8 @@ public class InstrumentServiceImpl implements InstrumentService{
 	SpecService specService;
 	@Autowired
 	CalibrationService calibrationService;
+	@Autowired
+	ResponseDataDao responseDataDao;
 	
 	// ========== 新增 ==========
 	@Override
@@ -288,6 +292,34 @@ public class InstrumentServiceImpl implements InstrumentService{
 		String monthRegex = "(" + String.join("|", monthList) + ")";
 		//System.out.println(monthRegex);
 		return instrumentDao.findByMultiple(monthRegex, cycleList, typeList, personList, localationList);
+	}
+	
+	
+	@Override
+	public List<ResponseData> getCalibrationResult() { // 透過instrument_id 及 spec_id 下查詢各儀器、規格、校驗結果等資訊
+	
+		List<ResponseData> cablibrationResultList = new ArrayList<>();
+		ResponseData cablibrationResultObj = new ResponseData();
+		
+		List<Long> instrumentIds = instrumentDao.findInstrumentIds();
+		List<Long> specIds = specDao.findSpecIds();
+		
+		cablibrationResultObj = responseDataDao.findResultByInstrumentIdAndSpecId(instrumentIds.get(0));	
+		cablibrationResultList.add(cablibrationResultObj);
+		
+		/*for(int i = 0; i < instrumentIds.size(); i++) {
+
+			for(int j = 0; j < specIds.size(); j++) {
+				
+				Long instrumentId = instrumentIds.get(i);
+				Long specId = specIds.get(j);	
+				System.out.println(instrumentId + ", " + specId);
+				cablibrationResultObj = instrumentDao.findResultByInstrumentIdAndSpecId(instrumentId);	
+				cablibrationResultList.add(cablibrationResultObj);
+			}
+		}*/
+		
+		return cablibrationResultList;
 	}
 
 }

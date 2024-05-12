@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.InstrumentDao;
+import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
+import chien.myweb.calibration.enity.Spec;
 
 @Service
 public class CalibrationServiceImpl implements CalibrationService{
@@ -21,7 +23,7 @@ public class CalibrationServiceImpl implements CalibrationService{
 	InstrumentDao instrumentDao;
 	
 	@Override
-	public List<Instrument> findPrepInstruments() {
+	public List<Instrument> findPrepInstruments() {  // 查詢待校驗器具
 		
 		List<Instrument> instrumentDB = instrumentDao.findInstruments();
 				
@@ -37,15 +39,15 @@ public class CalibrationServiceImpl implements CalibrationService{
             	
                 // 計算日期相差的月份
                 long monthsDifference = ChronoUnit.MONTHS.between(lastCalibrateDate, currentDate);
-                System.out.println("儀器 " + number + " 的上次校驗日期與現在日期相差 " + monthsDifference + " 個月");
+                //System.out.println("儀器 " + number + " 的上次校驗日期與現在日期相差 " + monthsDifference + " 個月");
                 
                 // 檢查是否超過週期
                 boolean isOverdue = monthsDifference >= cycle;
                 
                 // 如果超過週期就回傳 true，否則回傳 false
                 if (isOverdue) {
-                	System.out.println(number);
                 	prep.setIs_calibration("Y");
+
                 	instrumentDao.save(prep); // 更新資料庫
                     return isOverdue;
                 } else {
@@ -59,7 +61,7 @@ public class CalibrationServiceImpl implements CalibrationService{
 	}
 	
 	@Override
-	public boolean findIsCalibration(Instrument instrument) {
+	public boolean findIsCalibration(Instrument instrument) { // 新增儀器時，判斷器具是否過期
 		
 		String number = instrument.getNumber(); // 取得此儀器的編號
     	

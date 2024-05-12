@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import chien.myweb.calibration.enity.Instrument;
+import chien.myweb.calibration.enity.ResponseData;
 
 public interface InstrumentDao extends JpaRepository<Instrument, Long>{
 	
@@ -45,5 +46,8 @@ public interface InstrumentDao extends JpaRepository<Instrument, Long>{
     
     @Query(value = "SELECT DISTINCT calibrate_localation FROM instrument", nativeQuery = true) //查詢校驗地點(單一欄位)
     List<String> findInstrumentByLocalation();
+    
+    @Query(value = "SELECT instrument_id FROM instrument", nativeQuery = true) //查詢校驗地點(單一欄位)
+    List<Long> findInstrumentIds();
 
 }

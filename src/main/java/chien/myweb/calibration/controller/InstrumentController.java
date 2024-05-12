@@ -71,6 +71,7 @@ public class InstrumentController {
 		if(instrumentOp.isPresent()){
 			Instrument instrument = instrumentOp.get();
 			System.out.println(instrument.toString());
+				
 			return ResponseEntity.ok().body(instrument); 
 		}
 		else{
@@ -163,7 +164,15 @@ public class InstrumentController {
 		
 		if (instrumentOp.isPresent()) {
 			
-			instrumentDB.forEach(item -> System.out.println(item.toString()));
+			instrumentDB.forEach(item -> System.out.println(item.toString()) );
+			
+			/*for(Instrument instrument : instrumentDB) {
+				List<Spec> specObj = instrument.getSpec();
+				System.out.println("spec:" + specObj);
+			}*/
+			Instrument instrument = instrumentDB.get(0);
+			List<Spec> specObj = instrument.getSpec();
+			System.out.println("spec:" + specObj);
 			
 			return ResponseEntity.ok().body(instrumentDB);
 		}
