@@ -304,8 +304,8 @@ public class InstrumentServiceImpl implements InstrumentService{
 		List<Long> instrumentIds = instrumentDao.findInstrumentIds();
 		List<Long> specIds = specDao.findSpecIds();
 		
-		cablibrationResultObj = responseDataDao.findResultByInstrumentIdAndSpecId(instrumentIds.get(0));	
-		cablibrationResultList.add(cablibrationResultObj);
+		//cablibrationResultObj = responseDataDao.findResultByInstrumentIdAndSpecId(instrumentIds.get(0));	
+		//cablibrationResultList.add(cablibrationResultObj);
 		
 		/*for(int i = 0; i < instrumentIds.size(); i++) {
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +60,7 @@ public class InstrumentController {
 		return new ResponseEntity<String>("更新儀器資訊成功", HttpStatus.CREATED); 
 	}	
 	
-	@GetMapping("/instrumen/{id}")  // 查詢
+	@GetMapping("/instrument/{id}")  // 查詢
 	public ResponseEntity<Instrument> getInstrumentById(@PathVariable("id") Long id){
 		
 		List<Instrument> instrumentDB = instrumentService.findInstrumentById(id);	
@@ -70,6 +71,8 @@ public class InstrumentController {
 
 		if(instrumentOp.isPresent()){
 			Instrument instrument = instrumentOp.get();
+			System.out.println(instrument.getSpec());
+			System.out.println(instrument.getData());
 			System.out.println(instrument.toString());
 				
 			return ResponseEntity.ok().body(instrument); 
