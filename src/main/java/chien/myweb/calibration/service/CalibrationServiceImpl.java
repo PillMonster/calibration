@@ -17,11 +17,9 @@ import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.InstrumentDao;
 import chien.myweb.calibration.enity.Data;
-import chien.myweb.calibration.enity.DataInfo;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.ResponseData;
 import chien.myweb.calibration.enity.Spec;
-import chien.myweb.calibration.enity.SpecInfo;
 
 @Service
 public class CalibrationServiceImpl implements CalibrationService{
