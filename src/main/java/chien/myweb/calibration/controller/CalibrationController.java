@@ -1,5 +1,6 @@
 package chien.myweb.calibration.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -73,9 +74,11 @@ public class CalibrationController {
 	}
 	
 	@GetMapping("/calibrationResult")  
-	public ResponseEntity<?> getCalibrationResult(){
+	public ResponseEntity<List<Map>> getCalibrationResult(){
 		
-		List<ResponseData> cablibrationDB = instrumentService.getCalibrationResult();
+		List<Map> cablibrationResultMap = calibrationService.findCalibrationResult();
+		
+		/*List<ResponseData> cablibrationDB = instrumentService.getCalibrationResult();
 		 
 		Optional<ResponseData> cablibrationOp = cablibrationDB.stream().findAny();
 		
@@ -88,8 +91,9 @@ public class CalibrationController {
 		else {
 			System.out.println("沒有校驗結果"); 	
 			return ResponseEntity.ok().body("沒有校驗結果");
-		}
-	}
+		}*/
 	
+		return ResponseEntity.ok().body(cablibrationResultMap);
+	}
 
 }

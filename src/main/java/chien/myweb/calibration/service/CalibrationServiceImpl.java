@@ -3,8 +3,12 @@ package chien.myweb.calibration.service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +17,46 @@ import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.InstrumentDao;
 import chien.myweb.calibration.enity.Data;
+import chien.myweb.calibration.enity.DataInfo;
 import chien.myweb.calibration.enity.Instrument;
+import chien.myweb.calibration.enity.ResponseData;
 import chien.myweb.calibration.enity.Spec;
+import chien.myweb.calibration.enity.SpecInfo;
 
 @Service
 public class CalibrationServiceImpl implements CalibrationService{
 	
 	@Autowired
 	InstrumentDao instrumentDao;
+	
+	@Override
+	public List<Map> findCalibrationResult() {  // 查詢待校驗器具	
+		
+		List<Map> cablibrationResultList = new ArrayList<>();
+	
+		List<Instrument> instrumentDB = instrumentDao.findInstruments();
+		
+		for(Instrument instrument : instrumentDB) {
+			
+			Map<String, ArrayList> instrumentMap = new LinkedHashMap<>();
+			
+			ArrayList instrumentList = new ArrayList();
+			ArrayList spectList = new ArrayList();
+			ArrayList dataList = new ArrayList();
+			
+			instrumentList.add(instrument);
+			spectList.add(instrument.getSpec());
+			dataList.add(instrument.getData());
+			
+			instrumentMap.put("instrumentInfo", instrumentList);
+			instrumentMap.put("specInfo", spectList);
+			instrumentMap.put("dataInfo", dataList);
+
+			cablibrationResultList.add(instrumentMap);
+		}
+		
+		return cablibrationResultList;	
+	}
 	
 	@Override
 	public List<Instrument> findPrepInstruments() {  // 查詢待校驗器具
