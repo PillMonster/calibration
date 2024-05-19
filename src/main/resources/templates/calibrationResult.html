@@ -4,10 +4,119 @@
 	<meta charset="UTF-8">
 	<title>器具校驗結果</title>
 	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
-	
+	<link rel="stylesheet" type="text/css" href="/css/calibrateResultStyle.css">
 </head>
 <body>
 <div id="header"></div>
+
+<div class="container">
+        <h1>器具校驗結果</h1> 
+    
+		<div class="instrument-info">
+			<p id="number"><strong>編號:</strong></p>
+			<p><strong>名稱:</strong> 游標卡尺</p>
+			<p><strong>類型:</strong> Mitutoyo 200mm</p>
+			<p><strong>特性:</strong> 長度</p>
+			<p><strong>單位:</strong> mm</p>
+			<p><strong>週期:</strong> 6個月</p>
+			<p><strong>校準類型:</strong> 內校</p>
+			<p><strong>校準位置:</strong> BQC</p>
+			<p><strong>校準月份:</strong> 1, 6</p>
+			<p><strong>上次校準日期:</strong> 2024-01-18</p>
+			<p><strong>母儀器編號:</strong> 41QBB99303F</p>
+			<p><strong>校驗人員:</strong> 李大同</p>
+		</div>
+       
+        <div class="calibration-results">
+     
+            <h3>2023-07-18 校準</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>規範</th>
+                        <th>測量值</th>
+                        <th>溫度 (°C)</th>
+                        <th>濕度 (%)</th>
+                        <th>結果</th>
+                        <th>上限規範 (USL)</th>
+                        <th>下限規範 (LSL)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>20</td>
+                        <td>20.01</td>
+                        <td>24.2</td>
+                        <td>54.5%</td>
+                        <td>合格</td>
+                        <td>20.02</td>
+                        <td>19.98</td>
+                    </tr>
+                    <tr>
+                        <td>50</td>
+                        <td>50</td>
+                        <td>24.2</td>
+                        <td>54.5%</td>
+                        <td>合格</td>
+                        <td>50.02</td>
+                        <td>49.98</td>
+                    </tr>
+                    <tr>
+                        <td>150</td>
+                        <td>150.01</td>
+                        <td>24.2</td>
+                        <td>54.5%</td>
+                        <td>合格</td>
+                        <td>150.02</td>
+                        <td>149.98</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>2024-01-18 校準</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>規範</th>
+                        <th>測量值</th>
+                        <th>溫度 (°C)</th>
+                        <th>濕度 (%)</th>
+                        <th>結果</th>
+                        <th>上限規範 (USL)</th>
+                        <th>下限規範 (LSL)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>20</td>
+                        <td>20.01</td>
+                        <td>23.7</td>
+                        <td>56.3%</td>
+                        <td>合格</td>
+                        <td>20.02</td>
+                        <td>19.98</td>
+                    </tr>
+                    <tr>
+                        <td>50</td>
+                        <td>50.01</td>
+                        <td>23.7</td>
+                        <td>56.3%</td>
+                        <td>合格</td>
+                        <td>50.02</td>
+                        <td>49.98</td>
+                    </tr>
+                    <tr>
+                        <td>150</td>
+                        <td>150</td>
+                        <td>23.7</td>
+                        <td>56.3%</td>
+                        <td>合格</td>
+                        <td>150.02</td>
+                        <td>149.98</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+</div>
 
 <script type="text/javascript">
 	
@@ -15,7 +124,24 @@
 	    $("#header").load("/instrument/header.html");
 	
 	});
-
+	
+	//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
+	$.ajax({
+	    type:"GET",//請求方式
+	    url:"/calibration/calibrationResult",//url代表向後端發送請求 (後端需有標註@GetMapping("calibration/calibrationResult")的方法)
+	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法，或回傳方法型態為ResponseEntity<?>)
+	    async:true,//true為非同步
+	    success:function (data) {//接收後端來的資料
+	    	console.log(data);
+	    	//updateData(data);	
+	    	var number = data[0].instrumentInfo.number;
+	    	console.log(number);
+	    	//document.getElementById("number");
+	    },
+	    error :function(errorMsg) {
+	        alert("資料庫沒有內容。");
+	    }
+	});
 
 </script>
 

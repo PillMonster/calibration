@@ -77,21 +77,6 @@ public class CalibrationController {
 	public ResponseEntity<List<Map>> getCalibrationResult(){
 		
 		List<Map> cablibrationResultMap = calibrationService.findCalibrationResult();
-		
-		/*List<ResponseData> cablibrationDB = instrumentService.getCalibrationResult();
-		 
-		Optional<ResponseData> cablibrationOp = cablibrationDB.stream().findAny();
-		
-		if (cablibrationOp .isPresent()) {
-			
-			cablibrationDB.forEach(item -> System.out.println(item.toString()));
-			
-			return ResponseEntity.ok().body(cablibrationDB);
-		}
-		else {
-			System.out.println("沒有校驗結果"); 	
-			return ResponseEntity.ok().body("沒有校驗結果");
-		}*/
 	
 		return ResponseEntity.ok().body(cablibrationResultMap);
 	}

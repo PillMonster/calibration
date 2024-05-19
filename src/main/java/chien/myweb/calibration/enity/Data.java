@@ -57,12 +57,14 @@ public class Data {
 	public void setValue(Double value) {
 		this.value = value;
 	}
+	@JsonIgnore
 	public List<String> getSpecIdList() {
 		return specIdList;
 	}
 	public void setSpecIdList(List<String> specIdList) {
 		this.specIdList = specIdList;
 	}
+	@JsonIgnore
 	public List<String> getValueList() {
 		return valueList;
 	}

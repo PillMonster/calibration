@@ -294,32 +294,5 @@ public class InstrumentServiceImpl implements InstrumentService{
 		return instrumentDao.findByMultiple(monthRegex, cycleList, typeList, personList, localationList);
 	}
 	
-	
-	@Override
-	public List<ResponseData> getCalibrationResult() { // 透過instrument_id 及 spec_id 下查詢各儀器、規格、校驗結果等資訊
-	
-		List<ResponseData> cablibrationResultList = new ArrayList<>();
-		ResponseData cablibrationResultObj = new ResponseData();
-		
-		List<Long> instrumentIds = instrumentDao.findInstrumentIds();
-		List<Long> specIds = specDao.findSpecIds();
-		
-		//cablibrationResultObj = responseDataDao.findResultByInstrumentIdAndSpecId(instrumentIds.get(0));	
-		//cablibrationResultList.add(cablibrationResultObj);
-		
-		/*for(int i = 0; i < instrumentIds.size(); i++) {
-
-			for(int j = 0; j < specIds.size(); j++) {
-				
-				Long instrumentId = instrumentIds.get(i);
-				Long specId = specIds.get(j);	
-				System.out.println(instrumentId + ", " + specId);
-				cablibrationResultObj = instrumentDao.findResultByInstrumentIdAndSpecId(instrumentId);	
-				cablibrationResultList.add(cablibrationResultObj);
-			}
-		}*/
-		
-		return cablibrationResultList;
-	}
 
 }

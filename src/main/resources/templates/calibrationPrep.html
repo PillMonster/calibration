@@ -23,8 +23,8 @@
 	//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
 	$.ajax({
 	    type:"GET",//請求方式
-	    url:"/calibration/prepCalibrations",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
-	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+	    url:"/calibration/prepCalibrations",//url代表向後端發送請求 (後端需有標註@GetMapping("calibration/prepCalibrations")的方法)
+	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法，或回傳方法型態為ResponseEntity<?>)
 	    async:true,//true為非同步
 	    success:function (data) {//接收後端來的資料
 	    	console.log(data);
