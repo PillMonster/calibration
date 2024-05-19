@@ -38,6 +38,7 @@ public class DataServiceImpl implements DataService{
 		List<Data> newData = new ArrayList<>();	
 		
 		int listLength = request.getValueList().size();
+		
 		int createResult = 0;
 		
 		//for (String i : request.getValueList()) {

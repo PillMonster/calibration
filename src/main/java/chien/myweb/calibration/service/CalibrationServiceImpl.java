@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -43,13 +44,11 @@ public class CalibrationServiceImpl implements CalibrationService{
         
 		for(Instrument instrument : instrumentDB) {
 			
-			Map<String, ArrayList> instrumentMap = new LinkedHashMap<>();
-			
-			ArrayList instrumentList = new ArrayList();
-			
 			ArrayList calibrationResultByDateList = new ArrayList<>();
+			Map<String, Object> instrumentMap = new LinkedHashMap<>();	
 
 			List<Date> reponseDate = responseDataDao.findDistinctCalibrateDateByInstrumentId(instrument.getId());
+			Collections.sort(reponseDate); 
 			
 	        for (Date d : reponseDate) {
 	        	
@@ -57,8 +56,9 @@ public class CalibrationServiceImpl implements CalibrationService{
 	        	
 	        	// 取出資料庫的內容，存放在Object類別的reponseObject
 	        	List<Object[]> reponseObject = responseDataDao.findDistinctByInstrumentIdAndCalibrateDate(instrument.getId(), calibrateDate);
-	        	ResponseData responseData = new ResponseData();
+	        	
 	        	ArrayList responsDataList = new ArrayList<>();
+	        	ResponseData responseData = new ResponseData();
 	        	
 	            for (Object[] object : reponseObject ) {
 
@@ -78,9 +78,7 @@ public class CalibrationServiceImpl implements CalibrationService{
 	            
 	        }
 			
-			instrumentList.add(instrument);
-			
-			instrumentMap.put("instrumentInfo", instrumentList);
+			instrumentMap.put("instrumentInfo", instrument);
 			instrumentMap.put("calibrationResult", calibrationResultByDateList);
 
 			cablibrationResultList.add(instrumentMap);

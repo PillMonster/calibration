@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>器具校驗結果</title>
 	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="/css/calibrateResultStyle.css">
+	<link rel="stylesheet" type="text/css" href="/css/calibrationResultStyle.css">
 </head>
 <body>
 <div id="header"></div>
@@ -13,7 +13,7 @@
         <h1>器具校驗結果</h1> 
     
 		<div class="instrument-info">
-			<p id="number"><strong>編號:</strong></p>
+			<strong>編號:</strong><p id=number></p>
 			<p><strong>名稱:</strong> 游標卡尺</p>
 			<p><strong>類型:</strong> Mitutoyo 200mm</p>
 			<p><strong>特性:</strong> 長度</p>
@@ -136,7 +136,8 @@
 	    	//updateData(data);	
 	    	var number = data[0].instrumentInfo.number;
 	    	console.log(number);
-	    	//document.getElementById("number");
+	    	document.getElementById("number").textContent = number;
+	    	console.log(document.getElementById("number").value);
 	    },
 	    error :function(errorMsg) {
 	        alert("資料庫沒有內容。");
