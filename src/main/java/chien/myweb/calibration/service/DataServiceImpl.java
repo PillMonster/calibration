@@ -78,11 +78,11 @@ public class DataServiceImpl implements DataService{
 				
 				Instrument updateInstrument = instrumentOp.get(); // 取得該物件
 				LocalDate calibrate_date = LocalDate.parse(request.getCalibrate_date(), formatter); // 轉換格式(String to LocalDate)
-				System.out.println(calibrate_date);
+
 				updateInstrument.setLast_calibrate_date(calibrate_date); // 設定該物件的校驗日期
 				updateInstrument.setIs_calibration("N");
-				instrumentDao.save(updateInstrument); // 更新資料庫
 				
+				instrumentDao.save(updateInstrument); // 更新資料庫			
 			}
 			else{
 				System.out.println("新增儀器、規格、數據的關聯紀錄失敗。");

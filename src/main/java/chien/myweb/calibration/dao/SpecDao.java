@@ -30,6 +30,9 @@ public interface SpecDao extends JpaRepository<Spec, Long>{
 
     @Query(value = "select * from spec", nativeQuery = true) //查詢全部
     List<Spec> findSpecAll();
+     
+    @Query(value = "SELECT spec_id FROM spec", nativeQuery = true) //查詢全部
+    List<Long> findSpecIds();
     
     @Query(value = "SELECT DISTINCT spec.* FROM instrument " +
 	    		"JOIN instrument_spec ON instrument.instrument_id = instrument_spec.instrument_id " +

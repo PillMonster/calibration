@@ -66,7 +66,7 @@
 			
 					<div id="monthCheckBoxesDiv">
 						<label><input type="checkbox" id="monthSelectAll" value="全選" onchange="toggleCheckboxes('month', 'monthSelectAll'); textCheckboxes();">全選</label><br>
-						<label><input type="checkbox" name="month" id="month1" value="1" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); " checked>1</label><br>
+						<label><input type="checkbox" name="month" id="month1" value="1" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">1</label><br>
 						<label><input type="checkbox" name="month" id="month2" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">2</label><br>
 						<label><input type="checkbox" name="month" id="month3" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">3</label><br>
 						<label><input type="checkbox" name="month" id="month4" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">4</label><br>
@@ -249,6 +249,15 @@
 	    	var table = document.getElementById("specTable");
 		    var tbody = table.getElementsByTagName("tbody")[0];
 		    var rows = tbody.getElementsByTagName("tr");
+		    
+		    decimalNum = countDecimalDigits(specList[0].usl);
+		    
+		    function countDecimalDigits(number) { 
+	    	    if (Math.floor(number) === number) {
+	    	        return 0; // 整数，没有小数位数
+	    	    }
+	    	    return number.toString().split(".")[1].length || 0; // 透拓split分割小數點，取得數組第二個元素(小數點後面)的長度
+	    	}
 
 	    	for (let i = 0; i < specList.length; i++) {
 	    		//console.log(specList[i]);
@@ -256,8 +265,8 @@
 		      	var row = rows[i];
 		      	var cells = row.getElementsByTagName("input");
 		      	cells[0].value = specList[i].specification;
-		      	cells[1].value = (specList[i].usl - specList[i].specification).toFixed(2);
-		      	cells[2].value = (specList[i].specification - specList[i].lsl).toFixed(2);
+		      	cells[1].value = (specList[i].usl - specList[i].specification).toFixed(decimalNum);
+		      	cells[2].value = (specList[i].specification - specList[i].lsl).toFixed(decimalNum);
 		      	cells[3].value = specList[i].usl;
 		      	cells[4].value = specList[i].lsl;
 		    	
@@ -265,7 +274,7 @@
 	    			addRow();
 	    		}
 	    	}    	
-	    	
+
 	    	document.getElementById("number").value = instrumentList[0].number;
 	    	document.getElementById("name").value = instrumentList[0].name;
 	    	document.getElementById("type").value = instrumentList[0].type;
@@ -558,39 +567,25 @@
         		option.text += monthChecks[i].value + ",";
         	}
         }
-
    	 	calibrate_month.appendChild(option); // 將選項添加至下拉選單
 	}
 	
 	// ========== 當下拉選單的月份checked時, 挑出放入下拉選單的文字內 ===========
-	function editCheckboxes(editChecks){
-     	
-		
-     	
-   	// 選擇下拉選單元素
-	  	const calibrate_month = document.getElementById("calibrate_month");
+	function editCheckboxes(monthChecks){ // monthChecks為後端傳來的月份，此月份是創建儀器時當初設定的日期
+
+	  	const calibrate_month = document.getElementById("calibrate_month"); // 取得下拉選單元素
 	  	calibrate_month.innerHTML = ""; // 清空現有選項    	
    
-		var option = document.createElement("option");	
-		console.log(editChecks);
-		var monthCheckList = new Array();
-   	 	
-   		
-
-   	 	calibrate_month.appendChild(option); // 將選項添加至下拉選單
+		var option = document.createElement("option");	// 創建<option>元素
+   
+   	 	calibrate_month.appendChild(option); // 將<option>元素添加至下拉選單
+   	 	option.text = monthChecks; // 後端傳來的月份，添加至下拉選單裡(框框內文字)
    	 	
    		// ========== 從month的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
-   	 	var checkSplit = editChecks.split(",");
-		console.log(checkSplit);
-		for (var i=0; i<checkSplit.length; i++){
-			console.log(document.getElementById("month"+checkSplit[i]).value);
-			document.getElementById("month"+checkSplit[i]).value = checkSplit[i];
+   	 	var checkSplit = monthChecks.split(",");
+		for (var i=0; i<checkSplit.length; i++){ // 取得每一個核選方塊
+			document.getElementById("month"+checkSplit[i]).checked = true; // 後端傳來的月份，讓它核選
 		}
-		option.text = editChecks;
-		//var monthDiv = document.getElementById("monthCheckBoxesDiv");
-		//var monthChecks = monthDiv.querySelectorAll("input[type='checkbox']");
-		//console.log(monthChecks[5].value);
-		//document.getElementById("month");
 	}
 
 </script>

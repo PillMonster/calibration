@@ -3,8 +3,12 @@ package chien.myweb.calibration.service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.InstrumentDao;
+import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
+import chien.myweb.calibration.enity.ResponseData;
+import chien.myweb.calibration.enity.Spec;
 
 @Service
 public class CalibrationServiceImpl implements CalibrationService{
@@ -21,7 +28,36 @@ public class CalibrationServiceImpl implements CalibrationService{
 	InstrumentDao instrumentDao;
 	
 	@Override
-	public List<Instrument> findPrepInstruments() {
+	public List<Map> findCalibrationResult() {  // 查詢待校驗器具	
+		
+		List<Map> cablibrationResultList = new ArrayList<>();
+	
+		List<Instrument> instrumentDB = instrumentDao.findInstruments();
+		
+		for(Instrument instrument : instrumentDB) {
+			
+			Map<String, ArrayList> instrumentMap = new LinkedHashMap<>();
+			
+			ArrayList instrumentList = new ArrayList();
+			ArrayList spectList = new ArrayList();
+			ArrayList dataList = new ArrayList();
+			
+			instrumentList.add(instrument);
+			spectList.add(instrument.getSpec());
+			dataList.add(instrument.getData());
+			
+			instrumentMap.put("instrumentInfo", instrumentList);
+			instrumentMap.put("specInfo", spectList);
+			instrumentMap.put("dataInfo", dataList);
+
+			cablibrationResultList.add(instrumentMap);
+		}
+		
+		return cablibrationResultList;	
+	}
+	
+	@Override
+	public List<Instrument> findPrepInstruments() {  // 查詢待校驗器具
 		
 		List<Instrument> instrumentDB = instrumentDao.findInstruments();
 				
@@ -34,16 +70,19 @@ public class CalibrationServiceImpl implements CalibrationService{
             	
             	LocalDate lastCalibrateDate = prep.getLast_calibrate_date(); // 取得此儀器的上次校驗日期
             	int cycle =  Integer.parseInt(prep.getCycle()); // 取得此儀器的校驗週期
-            	   
+            	
                 // 計算日期相差的月份
                 long monthsDifference = ChronoUnit.MONTHS.between(lastCalibrateDate, currentDate);
-                System.out.println("儀器 " + number + " 的上次校驗日期與現在日期相差 " + monthsDifference + " 個月");
+                //System.out.println("儀器 " + number + " 的上次校驗日期與現在日期相差 " + monthsDifference + " 個月");
                 
                 // 檢查是否超過週期
                 boolean isOverdue = monthsDifference >= cycle;
                 
                 // 如果超過週期就回傳 true，否則回傳 false
                 if (isOverdue) {
+                	prep.setIs_calibration("Y");
+
+                	instrumentDao.save(prep); // 更新資料庫
                     return isOverdue;
                 } else {
                     return isOverdue;
@@ -56,7 +95,7 @@ public class CalibrationServiceImpl implements CalibrationService{
 	}
 	
 	@Override
-	public boolean findIsCalibration(Instrument instrument) {
+	public boolean findIsCalibration(Instrument instrument) { // 新增儀器時，判斷器具是否過期
 		
 		String number = instrument.getNumber(); // 取得此儀器的編號
     	

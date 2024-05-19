@@ -1,25 +1,21 @@
 package chien.myweb.calibration.enity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.support.PersistableIsNewStrategy;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
-@Table(name="instrument")
-public class Instrument {
+@Table(name="ResponseData")
+public class ResponseData {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -165,58 +161,4 @@ public class Instrument {
 	public void setIs_calibration(String is_calibration) {
 		this.is_calibration = is_calibration;
 	}
-
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JsonIgnore // 使用多對多要加上，阻止該方(person)的序列化
-	@JoinTable(name = "instrument_person", //指示兩個實體之間的關聯表（junction table）的配置
-		    joinColumns = @JoinColumn(name = "instrument_id"), // 指定中介表中與當前實體（instrument）關聯的外鍵列
-		    inverseJoinColumns = @JoinColumn(name = "person_id")) // 指定了中介表中與另一實體（person）關聯的外鍵列*/
-	private List<Person> persons = new ArrayList<>();
-
-	public List<Person> getPersons() {
-		return persons;
-	}
-
-	public void setPersons(List<Person> persons) {
-		this.persons = persons;
-	}
-	
-	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JsonIgnore // 使用多對多要加上，阻止該方(spec)的序列化
-	@JoinTable(name = "instrument_spec", //指示兩個實體之間的關聯表（junction table）的配置
-		    joinColumns = @JoinColumn(name = "instrument_id"), // 指定中介表中與當前實體（instrument）關聯的外鍵列
-		    inverseJoinColumns = @JoinColumn(name = "spec_id")) // 指定了中介表中與另一實體（spec）關聯的外鍵列
-	private List<Spec> spec = new ArrayList<>();
-
-	public List<Spec> getSpec() {
-		return spec;
-	}
-
-	public void setSpec(List<Spec> spec) {
-		this.spec = spec;
-	}
-	
-	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JsonIgnore // 使用多對多要加上，阻止該方(data)的序列化
-	@JoinTable(name = "instrument_spec_data", //指示三個實體之間的關聯表（junction table）的配置
-		    joinColumns = @JoinColumn(name = "instrument_id"), // 指定中介表中與當前實體（instrument）關聯的外鍵列
-		    inverseJoinColumns = @JoinColumn(name = "data_id")) // 指定了中介表中與另一實體（data）關聯的外鍵列
-	private List<Data> data = new ArrayList<>();
-
-	public List<Data> getData() {
-		return data;
-	}
-
-	public void setData(List<Data> data) {
-		this.data = data;
-	}
-		
-	@Override
-	public String toString() {
-		return "Instrument [id=" + id + ", 編號=" + number + ", 名稱=" + name + "]";
-	}
-	
-
 }

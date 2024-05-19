@@ -70,6 +70,7 @@ public class Spec {
 	@ManyToMany(mappedBy = "spec") //指定了反向關聯到 Instrument 類的 spec 屬性
 	private Set<Instrument> instruments;
 	
+	@JsonIgnore
 	public Set<Instrument> getInstruments() {
 	    return instruments;
 	}
