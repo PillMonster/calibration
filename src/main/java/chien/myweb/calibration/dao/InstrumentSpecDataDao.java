@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Person;
-import chien.myweb.calibration.enity.ResponseData;
+import chien.myweb.calibration.enity.Calibration;
 
 public interface InstrumentSpecDataDao extends JpaRepository<Data, Long>{
 

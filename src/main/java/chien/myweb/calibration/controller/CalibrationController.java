@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.RequestData;
-import chien.myweb.calibration.enity.ResponseData;
+import chien.myweb.calibration.enity.Calibration;
 import chien.myweb.calibration.service.CalibrationService;
 import chien.myweb.calibration.service.DataService;
 import chien.myweb.calibration.service.InstrumentService;

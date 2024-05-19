@@ -12,7 +12,7 @@ import chien.myweb.calibration.dao.InstrumentSpecDataDao;
 import chien.myweb.calibration.dao.SpecDao;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.RequestData;
-import chien.myweb.calibration.enity.ResponseData;
+import chien.myweb.calibration.enity.Calibration;
 
 @Service
 public class InstrumentSpecDataServiceImpl implements InstrumentSpecDataService{

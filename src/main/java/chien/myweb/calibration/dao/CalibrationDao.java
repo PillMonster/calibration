@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
-import chien.myweb.calibration.enity.ResponseData;
+import chien.myweb.calibration.enity.Calibration;
 
-public interface ResponseDataDao extends JpaRepository<Instrument, Long>{
+public interface CalibrationDao extends JpaRepository<Instrument, Long>{
 	
 	/*
 	 *  1. @Query: 自定義SQL查詢

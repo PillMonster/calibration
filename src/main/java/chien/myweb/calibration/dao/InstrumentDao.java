@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import chien.myweb.calibration.enity.Instrument;
-import chien.myweb.calibration.enity.ResponseData;
+import chien.myweb.calibration.enity.Calibration;
 
 public interface InstrumentDao extends JpaRepository<Instrument, Long>{
 	

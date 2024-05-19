@@ -5,7 +5,7 @@ import java.util.Map;
 
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.RequestData;
-import chien.myweb.calibration.enity.ResponseData;
+import chien.myweb.calibration.enity.Calibration;
 
 public interface InstrumentSpecDataService {
 	

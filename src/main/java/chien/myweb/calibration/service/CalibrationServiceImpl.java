@@ -20,10 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.InstrumentDao;
-import chien.myweb.calibration.dao.ResponseDataDao;
+import chien.myweb.calibration.dao.CalibrationDao;
 import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
-import chien.myweb.calibration.enity.ResponseData;
+import chien.myweb.calibration.enity.Calibration;
 import chien.myweb.calibration.enity.Spec;
 
 @Service
@@ -32,22 +32,23 @@ public class CalibrationServiceImpl implements CalibrationService{
 	@Autowired
 	InstrumentDao instrumentDao;
 	@Autowired
-	ResponseDataDao responseDataDao;
+	CalibrationDao calibrationDao;
 	
 	@Override
 	public List<Map> findCalibrationResult() {  // 查詢待校驗器具	
 		
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); // 日期格式
 		
-		List<Map> cablibrationResultList = new ArrayList<>();
-		List<Instrument> instrumentDB = instrumentDao.findInstruments();   
+		List<Map> cablibrationResultList = new ArrayList<>(); //  List初始化，存放所有器具的資訊及校驗結果
+		
+		List<Instrument> instrumentDB = instrumentDao.findInstruments(); 
         
 		for(Instrument instrument : instrumentDB) {
 			
-			ArrayList calibrationResultByDateList = new ArrayList<>();
-			Map<String, Object> instrumentMap = new LinkedHashMap<>();	
+			ArrayList calibrationDataByDateList = new ArrayList<>(); // List初始化，存放多個校驗日期之校驗結果
+			Map<String, Object> instrumentMap = new LinkedHashMap<>();	// Map初始化，存放一個器具的資訊及校驗結果，Linked為先進先出排列
 
-			List<Date> reponseDate = responseDataDao.findDistinctCalibrateDateByInstrumentId(instrument.getId());
+			List<Date> reponseDate = calibrationDao.findDistinctCalibrateDateByInstrumentId(instrument.getId());
 			Collections.sort(reponseDate); 
 			
 	        for (Date d : reponseDate) {
@@ -55,10 +56,11 @@ public class CalibrationServiceImpl implements CalibrationService{
 	        	String calibrateDate  = df.format(d); // date轉換為String
 	        	
 	        	// 取出資料庫的內容，存放在Object類別的reponseObject
-	        	List<Object[]> reponseObject = responseDataDao.findDistinctByInstrumentIdAndCalibrateDate(instrument.getId(), calibrateDate);
+	        	List<Object[]> reponseObject = calibrationDao.findDistinctByInstrumentIdAndCalibrateDate(instrument.getId(), calibrateDate);
 	        	
-	        	ArrayList responsDataList = new ArrayList<>();
-	        	ResponseData responseData = new ResponseData();
+	        	
+	        	Calibration calibrationDataObj = new Calibration(); // 物件初始化，存放一個物件
+	        	ArrayList calibrationDataList = new ArrayList<>(); // List初始化，存放多個物件
 	        	
 	            for (Object[] object : reponseObject ) {
 
@@ -71,17 +73,17 @@ public class CalibrationServiceImpl implements CalibrationService{
 	            	String humidity = (String)object[6];
 	            	String result = (String)object[7];
 
-	            	responseData = new ResponseData(date, spec, usl, lsl, value, temp, humidity, result);
-	            	responsDataList.add(responseData);
+	            	calibrationDataObj = new Calibration(date, spec, usl, lsl, value, temp, humidity, result); // 單一物件(一個規格)注入建構元
+	            	calibrationDataList.add(calibrationDataObj); // 多個物件(不同規格)放入一個List(一個日期)
 	            }
-	            calibrationResultByDateList.add(responsDataList);
+	            calibrationDataByDateList.add(calibrationDataList); // 多個List(多個日期)放入一個List
 	            
 	        }
 			
-			instrumentMap.put("instrumentInfo", instrument);
-			instrumentMap.put("calibrationResult", calibrationResultByDateList);
+			instrumentMap.put("instrumentInfo", instrument); // 一個儀器資訊
+			instrumentMap.put("calibrationResult", calibrationDataByDateList); // 一個校驗結果
 
-			cablibrationResultList.add(instrumentMap);
+			cablibrationResultList.add(instrumentMap); // 多個儀器資訊及校驗結果
 		}
 		
 		return cablibrationResultList;	

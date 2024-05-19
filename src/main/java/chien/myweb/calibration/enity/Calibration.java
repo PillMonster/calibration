@@ -1,6 +1,6 @@
 package chien.myweb.calibration.enity;
 
-public class ResponseData {
+public class Calibration {
 	
 	private String calibrate_date;
 	private Double specification;
@@ -11,10 +11,10 @@ public class ResponseData {
 	private String humidity;
 	private String result;
 		
-	public ResponseData() {
+	public Calibration() {
 	}
 
-	public ResponseData(String calibrate_date, Double specification, Double uSL, Double lSL,  Double value,
+	public Calibration(String calibrate_date, Double specification, Double uSL, Double lSL,  Double value,
 			String temperature, String humidity, String result) {
 		this.calibrate_date = calibrate_date;
 		this.specification = specification;

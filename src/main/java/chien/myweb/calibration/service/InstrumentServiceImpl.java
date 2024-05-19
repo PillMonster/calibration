@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.InstrumentDao;
 import chien.myweb.calibration.dao.PersonDao;
-import chien.myweb.calibration.dao.ResponseDataDao;
+import chien.myweb.calibration.dao.CalibrationDao;
 import chien.myweb.calibration.dao.SpecDao;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.Person;
 import chien.myweb.calibration.enity.RequestData;
-import chien.myweb.calibration.enity.ResponseData;
+import chien.myweb.calibration.enity.Calibration;
 import chien.myweb.calibration.enity.Spec;
 
 @Service
@@ -33,8 +33,6 @@ public class InstrumentServiceImpl implements InstrumentService{
 	SpecService specService;
 	@Autowired
 	CalibrationService calibrationService;
-	@Autowired
-	ResponseDataDao responseDataDao;
 	
 	// ========== 新增 ==========
 	@Override
