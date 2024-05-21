@@ -28,9 +28,15 @@
 		</div>
        
         <div class="calibration-results">
-     
+     		
+     		
+     		
             <h3>2023-07-18 校準</h3>
-            <table>
+            
+            <div class="calibrationTableDiv" id="calibrationTableDiv1"></div>
+           
+     		
+            <!--<table>
                 <thead>
                     <tr>
                         <th>規範</th>
@@ -72,8 +78,14 @@
                     </tr>
                 </tbody>
             </table>
+            -->
+            
             <h3>2024-01-18 校準</h3>
-            <table>
+            
+            <div class="calibrationTableDiv" id="calibrationTableDiv2"></div>
+     		<div class="calibrationTableDiv" id="calibrationTableDiv3"></div>
+     		<div class="calibrationTableDiv" id="calibrationTableDiv4"></div>
+            <!--<table>
                 <thead>
                     <tr>
                         <th>規範</th>
@@ -114,7 +126,8 @@
                         <td>149.98</td>
                     </tr>
                 </tbody>
-            </table>
+            </table>-->
+            
         </div>
 </div>
 
@@ -135,14 +148,60 @@
 	    	console.log(data);
 	    	//updateData(data);	
 	    	var number = data[0].instrumentInfo.number;
-	    	console.log(number);
+	
+	    	var specification = data[0].calibrationResult[0][0].specification
+	    	
+	    	console.log("specification: " + specification);
+	    	
 	    	document.getElementById("number").innerHTML = number;
-	    	console.log(document.getElementById("number").value);
+	    	
+	    	var dateLen = data[0].calibrationResult.length;
+	    	console.log(data[0].calibrationResult.length);
+	    	for(var i = 1; i <= data[0].calibrationResult.length; i++){
+	    		console.log(i);
+	    		updateData(data, i); // i 為不同校驗日期批次
+	    	}
+	    	
 	    },
 	    error :function(errorMsg) {
 	        alert("資料庫沒有內容。");
 	    }
 	});
+	
+	
+	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的table上
+	function updateData(data, dateLen){
+		
+		
+		var speclen = data[0].calibrationResult[0].length;
+		
+		
+		var innerTable = "";
+		innerTable += "<div style='text-align: center;'>";
+		
+		innerTable += "<table border='1' class='styled-table' style='margin-left: auto; margin-right: auto;'>";
+		innerTable += "<thead>";
+		innerTable += "<tr><td>校驗規格</td><td>規格上限</td><td>規格下限</td><td>測量值</td><td>溫度 (°C)</td><td>濕度 (%)</td><td>結果</td>";
+		innerTable += "</thead>";
+		innerTable += "<tbody>";
+		
+		for (var i = 0; i < speclen; i++) {
+			innerTable += "<tr class='active-row'>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].specification + "</td>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].usl + "</td>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].lsl + "</td>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].value + "</td>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].temperature + "</td>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].humidity + "</td>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].result  + "</td>";
+		}
+		innerTable += "</tr>";
+		innerTable += "</tbody>";
+		innerTable += "</table>";
+		innerTable += "</div>";
+		document.getElementById("calibrationTableDiv"+dateLen).innerHTML = innerTable;
+		
+	}
 
 </script>
 
