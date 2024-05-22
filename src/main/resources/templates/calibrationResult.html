@@ -10,29 +10,29 @@
 <div id="header"></div>
 
 <div class="container">
-        <h1>器具校驗結果</h1> 
+        <h1 class="h1">器具校驗結果</h1> 
     
 		<div class="instrument-info">
 			
 			<div class="instrument-info-left">
 				<label for="number">器具編號：</label><span id="number"></span><br>
-		        <label for="number">器具名稱：</label><span id="name"></span><br>
-				<label for="number">廠牌型式：</label><span id="type"></span><br>
-				<label for="number">校驗特性：</label><span id="characteristic"></span><br>
+		        <label for="name">器具名稱：</label><span id="name"></span><br>
+				<label for="type">廠牌型式：</label><span id="type"></span><br>
+				<label for="characteristic">校驗特性：</label><span id="characteristic"></span><br>
 			</div>
 				
 			<div class="instrument-info-center">
-				<label for="number">校驗單位：</label><span id="unit"></span><br>
-		        <label for="number">校驗週期：</label><span id="cycle"></span><br>
-				<label for="number">校驗類型：</label><span id="calibrate_type"></span><br>
-				<label for="number">校驗地點：</label><span id="calibrate_localation"></span><br>
+				<label for="unit">校驗單位：</label><span id="unit"></span><br>
+		        <label for="cycle">校驗週期：</label><span id="cycle"></span><br>
+				<label for="calibrate_type">校驗類型：</label><span id="calibrate_type"></span><br>
+				<label for="calibrate_localation">校驗地點：</label><span id="calibrate_localation"></span><br>
 			</div>
 			
 			<div class="instrument-info-right">
-				<label for="number">校驗月份：</label><span id="calibrate_month"></span><br>
-		        <label for="number">上次校驗日期：</label><span id="last_calibrate_date"></span><br>
-				<label for="number">母儀編號：</label><span id="mother_instrument_number"></span><br>
-				<label for="number">校驗人員：</label><span id="calibrate_person"></span><br>
+				<label for="calibrate_month">校驗月份：</label><span id="calibrate_month"></span><br>
+		        <label for="last_calibrate_date">上次校驗日期：</label><span id="last_calibrate_date"></span><br>
+				<label for="mother_instrument_number">母儀編號：</label><span id="mother_instrument_number"></span><br>
+				<label for="calibrate_person">校驗人員：</label><span id="calibrate_person"></span><br>
 			</div>
 
 		</div>
@@ -55,16 +55,8 @@
 	    async:true,//true為非同步
 	    success:function (data) {//接收後端來的資料
 	    	console.log(data);
-	    	//updateData(data);	
-	    	var number = data[0].instrumentInfo.number;
-	    	var name = data[0].instrumentInfo.name;
-	
-	    	var specification = data[0].calibrationResult[0][0].specification
 	    	
-	    	console.log("specification: " + specification);
-	    	
-	    	document.getElementById("number").innerHTML = number;
-	    	document.getElementById("name").innerHTML = name;
+	    	updateInfo(data);
 	    	
 	    	var dateLen = data[0].calibrationResult.length;
 
@@ -78,23 +70,35 @@
 	    }
 	});
 	
+	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的span上
+	function updateInfo(data){
+
+    	document.getElementById("number").innerHTML = data[0].instrumentInfo.number;
+    	document.getElementById("name").innerHTML = data[0].instrumentInfo.name;
+    	document.getElementById("type").innerHTML = data[0].instrumentInfo.type;
+    	document.getElementById("characteristic").innerHTML = data[0].instrumentInfo.characteristic;
+    	document.getElementById("unit").innerHTML = data[0].instrumentInfo.unit;
+    	document.getElementById("cycle").innerHTML = data[0].instrumentInfo.cycle;
+    	document.getElementById("calibrate_type").innerHTML = data[0].instrumentInfo.calibrate_type;
+    	document.getElementById("calibrate_localation").innerHTML = data[0].instrumentInfo.calibrate_localation;
+    	document.getElementById("calibrate_month").innerHTML = data[0].instrumentInfo.calibrate_month;
+    	document.getElementById("last_calibrate_date").innerHTML = data[0].instrumentInfo.last_calibrate_date; 
+    	document.getElementById("mother_instrument_number").innerHTML = data[0].instrumentInfo.mother_instrument_number;
+	}
 	
 	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的table上
 	function updateData(data, dateLen){
 		
-		/* data[0] -> 第一把器具
-			data[0].calibrationResult[0] -> 第一把器具、第一次校驗日期
-			data[0].calibrationResult[0][0] -> 第一把器具、第一次校驗日期、第一項規格
-			data[0].calibrationResult[0][0].calibrate_date; -> 第一把器具、第一次校驗日期、第一項規格、取得校驗日期
-		*/ 
+		// data[0].calibrationResult[0][0].calibrate_date; -> 第一把器具、第一次校驗日期、第一項規格、取得校驗日期
+	
 		var speclen = data[0].calibrationResult[0].length; 
 		var calibrate_date = data[0].calibrationResult[dateLen][0].calibrate_date; 
 		const resultsContainer = document.getElementById("calibration-results"); // 父容器
 		
 		var innerTable = "";
-		innerTable += "<h3>" + calibrate_date + " 校驗</h3>";
-		innerTable += "<div style='text-align: center;'>";
 		
+		innerTable += "<div style='text-align: center;'>";
+		innerTable += "<h3 class='h3'>" + calibrate_date + " 校驗</h3>";
 		innerTable += "<table border='1' class='styled-table' style='margin-left: auto; margin-right: auto;'>";
 		innerTable += "<thead>";
 		innerTable += "<tr><td>校驗規格</td><td>規格上限</td><td>規格下限</td><td>測量值</td><td>溫度 (°C)</td><td>濕度 (%)</td><td>結果</td>";

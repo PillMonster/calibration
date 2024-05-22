@@ -20,7 +20,7 @@ body {
      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
      border-radius: 8px;*/
      
-    width: 80%;
+    width: 60%;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
@@ -28,18 +28,24 @@ body {
     border-radius: 8px;
 }
 
-h1, {
+.h1 {
     text-align: center;
     color: #444;
 }
 
+.h3 {
+	text-align: left;
+	margin: 20px 0px 10px 280px;  /* 上 右 下 左 */
+}
+
 .instrument-info, .calibration-results {
      margin-bottom: 20px;
+    
  }
  
 .instrument-info {
     display: flex;
-    /*flex-wrap: wrap;*/
+    
     max-width: 800px; /* 設定最大寬度 */
     margin: 0 auto; /* 左右置中 */
 	font-size: 18px; /* 將文字大小設置為 16px */
@@ -47,25 +53,25 @@ h1, {
 }
 
 .instrument-info-left {
-	border: 1px solid #868687;
+	/*border: 1px solid #868687;*/
 	float:left;
     width: 300px;
-    margin: 10px 10px 20px 0px;  /* 上 右 下 左 */
+    margin: 10px 10px 10px 0px;  /* 上 右 下 左 */
 }
 
 .instrument-info-center {
-	border: 1px solid #868687;
+	/*border: 1px solid #868687;*/
 	float:left;
     width: 300px;
-    margin: 10px 10px 20px 0px;  /* 上 右 下 左 */
+    margin: 10px 10px 10px 0px;  /* 上 右 下 左 */
     /*text-align: center; /* 將表頭置中 */
 }
 
 .instrument-info-right {
-	border: 1px solid #868687;
+	/*border: 1px solid #868687;*/
 	float:right;
     width: 300px;
-    margin: 10px 10px 20px 0px;  /* 上 右 下 左 */
+    margin: 10px 10px 10px 0px;  /* 上 右 下 左 */
 }
 
 /*
@@ -74,8 +80,8 @@ h1, {
      margin: 5px 0px;
 }*/
 
-.calibration-results table {
-     width: 80%;
+.styled-table {
+     width: 60%;
      border-collapse: collapse;
      text-align: center;
 }
