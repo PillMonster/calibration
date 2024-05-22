@@ -39,17 +39,40 @@ h1, {
  
 .instrument-info {
     display: flex;
-    flex-wrap: wrap;
+    /*flex-wrap: wrap;*/
     max-width: 800px; /* 設定最大寬度 */
     margin: 0 auto; /* 左右置中 */
 	font-size: 18px; /* 將文字大小設置為 16px */
 
 }
 
+.instrument-info-left {
+	border: 1px solid #868687;
+	float:left;
+    width: 300px;
+    margin: 10px 10px 20px 0px;  /* 上 右 下 左 */
+}
+
+.instrument-info-center {
+	border: 1px solid #868687;
+	float:left;
+    width: 300px;
+    margin: 10px 10px 20px 0px;  /* 上 右 下 左 */
+    /*text-align: center; /* 將表頭置中 */
+}
+
+.instrument-info-right {
+	border: 1px solid #868687;
+	float:right;
+    width: 300px;
+    margin: 10px 10px 20px 0px;  /* 上 右 下 左 */
+}
+
+/*
 .instrument-info p {
      flex: 1 1 30%;
      margin: 5px 0px;
-}
+}*/
 
 .calibration-results table {
      width: 80%;
