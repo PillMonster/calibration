@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>編輯器具</title>
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/createInstrumentStyle.css">
+</head>
+<body>
+<div id="header"></div>
+
+
+
+<div class="form-container">	
+
+	<form id="instrumentForm">
+	
+		<div style="text-align: center;"><h2 class="form-header">編輯器具</h2></div>
+		
+		<div style="display: flex;"> 
+		
+			<div class="form-container-left">
+			
+				<label for="number">器具編號：</label>
+	           	<input type="text" class="input-instrument" id="number" name="number" required><br>
+	
+	           	<label for="name">器具名稱：</label>
+	           	<input type="text" class="input-instrument" id="name" name="name" required><br>
+	
+	           	<label for="type">廠牌型式：</label>
+	           	<input type="text" class="input-instrument" id="type" name="type" required><br>
+	
+	           	<label for="characteristic">校驗特性：</label>
+	           	<input type="text" class="input-instrument" id="characteristic" name="characteristic" required><br>
+	
+	           	<label for="unit">校驗單位：</label>
+	           	<input type="text" class="input-instrument" id="unit" name="unit" required><br>
+	
+	           	<label for="cycle">校驗週期：</label>
+	           	<select class="select-instrument" name="cycle" id=cycle>
+	           		<option>6個月</option>
+				    <option>12個月</option>
+				    <option>24個月</option>
+	           	</select><br>
+	
+	           	<label for="calibrate_type">校驗類型：</label>
+	           	<select class="select-instrument" name="calibrate_type" id=calibrate_type>
+	           		<option>內校</option>
+				    <option>外校</option>
+				    <option>遊校</option>
+	           	</select><br>
+	
+	           	<label for="calibrate_localation">校驗地點：</label>
+	           	<input type="text" class="input-instrument"  id="calibrate_localation" name="calibrate_localation" required><br>
+				
+				<div class="multipleSelectionDiv">
+	           		
+	           		<span><label for="calibrate_month">校驗月份：</label></span>
+	           		      
+	           		<div class="selectBoxDiv" onclick="showCheckboxes('monthCheckBoxesDiv')">
+						<select class="select-instrument" name="calibrate_month" id=calibrate_month>
+							<option></option>
+						</select>
+						<div class="overSelectDiv"></div>
+					</div>
+			
+					<div id="monthCheckBoxesDiv">
+						<label><input type="checkbox" id="monthSelectAll" value="全選" onchange="toggleCheckboxes('month', 'monthSelectAll'); textCheckboxes();">全選</label><br>
+						<label><input type="checkbox" name="month" id="month1" value="1" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">1</label><br>
+						<label><input type="checkbox" name="month" id="month2" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">2</label><br>
+						<label><input type="checkbox" name="month" id="month3" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">3</label><br>
+						<label><input type="checkbox" name="month" id="month4" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">4</label><br>
+						<label><input type="checkbox" name="month" id="month5" value="5" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">5</label><br>
+						<label><input type="checkbox" name="month" id="month6" value="6" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">6</label><br>
+						<label><input type="checkbox" name="month" id="month7" value="7" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">7</label><br>
+						<label><input type="checkbox" name="month" id="month8" value="8" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">8</label><br>
+						<label><input type="checkbox" name="month" id="month9" value="9" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">9</label><br>
+						<label><input type="checkbox" name="month" id="month10" value="10" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">10</label><br>
+						<label><input type="checkbox" name="month" id="month11" value="11" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">11</label><br>
+						<label><input type="checkbox" name="month" id="month12" value="12" onchange="checkSelectAll('month', 'monthSelectAll'); textCheckboxes(); ">12</label><br>
+					</div>
+					
+	           	</div><br>
+	           
+	           	<!--  <label for="calibrate_month">校驗月份：</label>
+	           	<select class="select-instrument" name="calibrate_month" id=calibrate_month>
+	           		<option>1月</option>	<option>2月</option><option>3月</option><option>4月</option><option>5月</option><option>6月</option>
+					<option>7月</option>	<option>8月</option><option>9月</option><option>10月</option><option>11月</option><option>12月</option>
+	           	</select><br>-->
+	           	    
+				<label for="last_calibrate_date">校驗日期：</label>
+				<input type="date" class="datepicker" id="last_calibrate_date" name="last_calibrate_date" required><br>
+	           
+	           	<label for="mother_instrument_number">母儀編號：</label>
+	           	<input type="text" class="input-instrument" id="mother_instrument_number" name="mother_instrument_number" required>	 <br>    		
+			
+			</div>
+			
+			<div class="form-container-center">
+				
+				<div style="text-align: right;"><button class="create-button" onclick="addRow()">新增規格</button></div>
+				<table id="specTable" class="styled-table">
+					<thead>
+					    <tr class="row">
+					      <th class="table-cell">校驗規格</th>
+					      <th class="table-cell">上公差</th>
+					      <th class="table-cell">下公差</th>
+					      <th class="table-cell">規格上限</th>
+					      <th class="table-cell">規格下限</th>
+					      <th class="table-cell">操作</th>
+					    </tr>
+				  	</thead>
+				  	<tbody>
+					    <tr class="row">
+					      <td class="table-cell"><input type="text" id="row1-1" onblur="calculateRow(this)" class="input-spec" required></td>
+					      <td class="table-cell"><input type="text" id="row1-2" onblur="calculateRow(this)" class="input-spec"></td>
+					      <td class="table-cell"><input type="text" id="row1-3" onblur="calculateRow(this)" class="input-spec"></td>
+					      <td class="table-cell"><input type="text" id="row1-4" class="input-spec" required></td>
+					      <td class="table-cell"><input type="text" id="row1-5" class="input-spec" required></td>
+					      <td class="table-cell"><button class="delete-button" onclick="deleteRow(this)">刪除</button></td>
+					    </tr>
+				  </tbody>
+				</table>
+	
+			</div>
+			
+			<div class="form-container-right">
+			
+				<label for="custos">保管人員：</label>
+	           	<select class="select-instrument" name="custos" id=custos></select><br>
+	           	
+	           	<label for="custosLeader">保管主管：</label>
+	           	<select class="select-instrument" name="custosLeader" id=custosLeader></select><br>
+	
+	           	<label for="checker">校驗人員：</label>
+	           	<select class="select-instrument" name="checker" id=checker></select><br>	
+	           	
+	           	<label for="checkerLeader">校驗主管：</label>
+	           	<select class="select-instrument" name="checkerLeader" id=checkerLeader></select><br>	
+	           	<div style="text-align: center;"><a href="/person/create">找不到名子?</a></div>
+	
+			</div>
+		
+		</div>
+		
+		<div class="button-container">
+	    	<button type="submit" class="submit-button">編輯</button>
+			<input type='button' class="back-button" onclick="location.href='./crud'" value="回上頁">
+   		</div>
+		
+	</form>
+
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $("#header").load("/instrument/header.html");
+	  
+	});
+	
+	$.ajax({
+	    type:"GET",//請求方式
+	    url:"/crud/instrumentNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
+	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+	    async:true,//true為非同步
+	    success:function (data) {//接收後端來的資料
+	    	console.log(data);
+	    	populateDropdown(data);
+	    },
+	    error :function(errorMsg) {
+	        alert("請求後端資料失敗！(/crud/instruments)");
+	    }
+	});
+	
+	var urlParams = new URLSearchParams(window.location.search); // 獲取當前頁面的URL中的查詢參數
+	var id = urlParams.get("id"); // 獲取ID參數的值
+	console.log("get edit'id: " + id);
+	$.ajax({
+	    type:"GET",//請求方式
+	    url:"/crud/instrumentInfo/" + id,//url代表向後端發送請求 (後端需有標註@GetMapping("/instrument{id}")的方法)
+	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+	    async:true,//true為非同步
+	    success:function (data) {//接收後端來的資料
+	    	
+			const instrumentList = data.instrument;
+			const personList = data.persons;
+	    	const specList = data.spec;	
+	    	
+	    	for (let i = 0; i < instrumentList.length; i++) {
+	    		console.log(instrumentList[i]);
+	    	}
+	    	
+	    	for (let i = 0; i < personList.length; i++) {
+	    		
+	    		if (personList[i].identity === "保管人員"){
+	
+	    			let selectElement = document.getElementById("custos");
+	    			let username = personList[i].username;
+	    		
+	    			for (let i = 0; i < selectElement.options.length; i++) {
+	    			    if (selectElement.options[i].value === username) {
+	    			        selectElement.selectedIndex = i;
+	    			        break; // 找到匹配值后立即退出循环
+	    			    }
+	    			}
+	    	        
+	    		}
+	    		else if (personList[i].identity === "保管主管"){
+	    			
+	    			let selectElement = document.getElementById("custosLeader");
+	    			let username = personList[i].username;
+	    		
+	    			for (let i = 0; i < selectElement.options.length; i++) {
+	    			    if (selectElement.options[i].value === username) {
+	    			        selectElement.selectedIndex = i;
+	    			        break; // 找到匹配值后立即退出循环
+	    			    }
+	    			}
+	    			
+	    		}
+	    		else if (personList[i].identity === "校驗人員"){
+	    			
+	    			let selectElement = document.getElementById("checker");
+	    			let username = personList[i].username;
+	    		
+	    			for (let i = 0; i < selectElement.options.length; i++) {
+	    			    if (selectElement.options[i].value === username) {
+	    			        selectElement.selectedIndex = i;
+	    			        break; // 找到匹配值后立即退出循环
+	    			    }
+	    			}
+	        
+	    		}
+	    		else {
+	    			
+	    			let selectElement = document.getElementById("checkerLeader");
+	    			let username = personList[i].username;
+	    		
+	    			for (let i = 0; i < selectElement.options.length; i++) {
+	    			    if (selectElement.options[i].value === username) {
+	    			        selectElement.selectedIndex = i;
+	    			        break; // 找到匹配值后立即退出循环
+	    			    }
+	    			}	
+	    	        
+	    		}	
+	    	}
+	    	
+	    	var table = document.getElementById("specTable");
+		    var tbody = table.getElementsByTagName("tbody")[0];
+		    var rows = tbody.getElementsByTagName("tr");
+		    
+		    decimalNum = countDecimalDigits(specList[0].usl);
+		    
+		    function countDecimalDigits(number) { 
+	    	    if (Math.floor(number) === number) {
+	    	        return 0; // 整数，没有小数位数
+	    	    }
+	    	    return number.toString().split(".")[1].length || 0; // 透拓split分割小數點，取得數組第二個元素(小數點後面)的長度
+	    	}
+
+	    	for (let i = 0; i < specList.length; i++) {
+	    		//console.log(specList[i]);
+
+		      	var row = rows[i];
+		      	var cells = row.getElementsByTagName("input");
+		      	cells[0].value = specList[i].specification;
+		      	cells[1].value = (specList[i].usl - specList[i].specification).toFixed(decimalNum);
+		      	cells[2].value = (specList[i].specification - specList[i].lsl).toFixed(decimalNum);
+		      	cells[3].value = specList[i].usl;
+		      	cells[4].value = specList[i].lsl;
+		    	
+		      	if (i != specList.length -1){ // 滿足條件就不新增行
+	    			addRow();
+	    		}
+	    	}    	
+
+	    	document.getElementById("number").value = instrumentList[0].number;
+	    	document.getElementById("name").value = instrumentList[0].name;
+	    	document.getElementById("type").value = instrumentList[0].type;
+	    	document.getElementById("characteristic").value = instrumentList[0].characteristic;
+	    	document.getElementById("unit").value = instrumentList[0].unit;
+	    	document.getElementById("cycle").value = instrumentList[0].cycle +"個月";
+	    	document.getElementById("calibrate_type").value = instrumentList[0].calibrate_type;
+	    	document.getElementById("calibrate_localation").value = instrumentList[0].calibrate_localation;
+	    	//document.getElementById("calibrate_month").value = instrumentList[0].calibrate_month + "月";
+	    	document.getElementById("last_calibrate_date").value = instrumentList[0].last_calibrate_date;
+	    	document.getElementById("mother_instrument_number").value = instrumentList[0].mother_instrument_number;
+			
+	    	editCheckboxes(instrumentList[0].calibrate_month); 
+	    	//console.log(instrumentList[0].calibrate_month);
+	        
+	    },
+	    error :function(errorMsg) {
+	        alert("請求後端資料失敗！(personId)");
+	    }
+	});
+	
+	document.getElementById("instrumentForm").addEventListener("submit", function(event) {
+	        
+		event.preventDefault();// 如果需要阻止實際的表單提交，可以取消事件
+		
+		var jsonArray = new Array();
+		var calibrate_month = new Array(); // 建立初始陣列, 存放選取後的校驗月份
+	    var spec = new Array();
+	    var USL = new Array();
+	    var LSL = new Array()
+		
+	    var number = document.getElementById("number").value;
+	    var name = document.getElementById("name").value;
+	    var type = document.getElementById("type").value;
+	    var characteristic = document.getElementById("characteristic").value;
+	    var unit = document.getElementById("unit").value;
+	    var cycle = document.getElementById("cycle").value;
+	    var calibrate_type = document.getElementById("calibrate_type").value;
+	    var calibrate_localation = document.getElementById("calibrate_localation").value;
+	    //var calibrate_month = document.getElementById("calibrate_month").value;
+	    var last_calibrate_date = document.getElementById("last_calibrate_date").value;    
+	    var mother_instrument_number = document.getElementById("mother_instrument_number").value;
+	    
+	 	// ========== 從month的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var monthDiv = document.getElementById("monthCheckBoxesDiv");
+		var monthChecks = monthDiv.querySelectorAll("input[type='checkbox']");
+
+        for (var i = 1; i < monthChecks.length; i++){ // 0為全選, 故重1開始
+        	if (monthChecks[i].checked == true){
+        		calibrate_month.push(monthChecks[i].value);
+        	}
+        }
+		console.log("選取的校驗月份: " + calibrate_month);
+	    
+	    var custos = document.getElementById("custos").value;
+	    var custosLeader = document.getElementById("custosLeader").value;
+	    var checker = document.getElementById("checker").value;
+	    var checkerLeader = document.getElementById("checkerLeader").value;
+	    
+		var table = document.getElementById("specTable");
+	    var tbody = table.getElementsByTagName("tbody")[0];
+	    var rows = tbody.getElementsByTagName("tr");
+
+	    for (var i = 0; i < rows.length; i++) {
+	      	var row = rows[i];
+	      	var cells = row.getElementsByTagName("input");
+	      	spec.push(cells[0].value);
+	      	USL.push(cells[3].value);
+	      	LSL.push(cells[4].value);	
+		}
+	    
+	    var instrumentData = {
+	    	"number": number,
+	    	"name": name,
+	    	"type": type,
+	    	"characteristic": characteristic,
+	    	"unit": unit,
+	    	"cycle": cycle,
+	    	"calibrate_type": calibrate_type,
+	    	"calibrate_localation": calibrate_localation,
+	    	"calibrate_month": calibrate_month,
+	    	"last_calibrate_date": last_calibrate_date,
+	    	"mother_instrument_number": mother_instrument_number,
+	    	"custos": custos,
+        	"custosLeader": custosLeader,
+        	"checker": checker,
+        	"checkerLeader": checkerLeader,
+        	"specification": spec,
+        	"usl": USL,
+        	"lsl": LSL
+        	
+		};
+	    
+ 		jsonString = JSON.stringify(instrumentData) //轉成json格式
+    	//console.log(jsonString);
+	    
+	    $.ajax({
+		    type: "PUT", // 後端的要有標註PutMapping的方法
+		    url: "/crud/instrument/" + id,
+		    cache: false,
+		    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
+		    contentType: "application/json",
+		    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
+		    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+		    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
+		    	console.log(response)
+		    	alert("更新成功!!");
+		    },
+		    error: function(xhr, status, error) {
+		    	alert(xhr.responseText);
+		    }
+	  	});
+   
+  	});
+	
+	// 用於填充下拉選單的函數
+	function populateDropdown(data) {
+		
+		// 添加至下拉選單的資料
+		const custosList = data.custos;
+		const custosLeaderList = data.custosLeader;
+		const checkerList = data.checker;
+		const checkerLeaderList = data.checkerLeader;
+		
+		// 選擇下拉選單元素
+	  	const custosSelect = document.getElementById("custos");
+	  	const custosLeaderSelect = document.getElementById("custosLeader");
+	  	const checkerSelect = document.getElementById("checker");
+	  	const checkerLeaderSelect = document.getElementById("checkerLeader");
+	  	
+	  	// 清空現有選項
+	  	custosSelect.innerHTML = "";
+	  	custosLeaderSelect.innerHTML = "";
+	  	checkerSelect.innerHTML = "";
+	  	checkerLeaderSelect.innerHTML = "";
+	  	
+	  	for (let i = 0; i < custosList.length; i++) {
+	      	const custosOption = document.createElement("option"); // 創建新的選項元素
+	      	custosOption.text = custosList[i]; 
+	      	custosSelect.appendChild(custosOption); // 將選項添加至下拉選單
+	  	}
+	  	
+	  	for (let i = 0; i < custosLeaderList.length; i++) {
+	      	const custosLeaderOption = document.createElement("option"); // 創建新的選項元素
+	      	custosLeaderOption.text = custosLeaderList[i]; 
+	      	custosLeaderSelect.appendChild(custosLeaderOption); // 將選項添加至下拉選單
+	  	}	
+	  	
+	  	for (let i = 0; i < checkerList.length; i++) {
+	      	const checkerOption = document.createElement("option"); // 創建新的選項元素
+	      	checkerOption.text = checkerList[i]; 
+	      	checkerSelect.appendChild(checkerOption); // 將選項添加至下拉選單
+	  	}
+	  	
+	  	for (let i = 0; i < checkerLeaderList.length; i++) {
+	      	const checkerLeaderOption = document.createElement("option"); // 創建新的選項元素
+	      	checkerLeaderOption.text = checkerLeaderList[i]; 
+	      	checkerLeaderSelect.appendChild(checkerLeaderOption); // 將選項添加至下拉選單
+	  	}
+	}
+	
+	var rowCounter = 2;
+	
+	function addRow() {
+		var table = document.getElementById("specTable");
+	    var tbody = table.getElementsByTagName('tbody')[0];
+	    var newRow = tbody.insertRow();
+
+	    for (var i = 0; i < 5; i++) {
+	    	var cell = newRow.insertCell(i);  // 新增的表格行(row)中插入一個新的列(column)，cell變數為單元格
+	      	var input = document.createElement("input"); // 創建了一個新的 input 元素
+	      	input.type = "text";
+	      	input.classList.add("input-spec");
+	      	var inputId = "row" + rowCounter + "-" + (i + 1);
+	      	input.id = inputId;
+
+	     	// 添加事件監聽器
+	        if (i < 3) {
+	          input.setAttribute("onblur", "calculateRow(this)");
+	        }
+	     	
+	     	if (i == 0 || i == 3 || i ==4){
+	     		input.setAttribute("required", "true"); // 將這行添加到 input 中
+	     	}
+	      	
+	      	cell.appendChild(input); // 把 input 元素附加到該列的單元格中
+	    }
+		
+	    var deleteButton = document.createElement("button");
+	    deleteButton.innerHTML = "刪除";
+	    deleteButton.classList.add("delete-button");
+	    deleteButton.onclick = function() {
+	    	deleteRow(this);
+	    };
+
+	    newRow.insertCell().appendChild(deleteButton);
+	 
+	    rowCounter++; // 增加行數計數
+	}
+
+	function deleteRow(button) {
+		/*
+		1. button 是在點擊事件中傳遞進來的按鈕元素。
+		2. button.parentNode 表示按鈕的父元素，也就是該按鈕所在的單元格 (td)。
+		3. 再次使用 .parentNode 取得這個單元格的父元素，即整個表格行 (tr)。
+		4. row.parentNode 取得表格行 (tr) 的父元素，即表格的 <tbody> 部分。
+		5. .removeChild(row) 移除 <tbody> 中的子元素 row，也就是移除整個表格行。
+		*/
+	    var row = button.parentNode.parentNode; 
+	    row.parentNode.removeChild(row);
+	    rowCounter--; // 刪除行數計數
+	}
+	
+	// ========== 焦點事件 ==========
+	function calculateRow(input) {
+	    var row = input.parentNode.parentNode;
+	    var cells = row.getElementsByTagName("input");
+	    // 這是將 input 元素的值轉換為浮點數。parseFloat 函數嘗試將字符串轉換為浮點數，如果無法轉換，如果轉換失敗，則使用預設值 0
+	    var value1 = parseFloat(cells[0].value) || 0;
+	    var value2 = parseFloat(cells[1].value) || 0;
+	    var value3 = parseFloat(cells[2].value) || 0;
+	    
+	    cells[3].value = value1 + value2;
+	    cells[4].value = value1 - value3;
+	}
+	
+	// ========== 點選全選時,取得所有checkbox內容值 ==========
+	function toggleCheckboxes(selectCheckName, selectCheckAll) {
+		var checkboxes = document.getElementsByName(selectCheckName);
+        var selectAllCheckbox = document.getElementById(selectCheckAll);    
+
+        for (var i = 0; i < checkboxes.length; i++) {
+        	checkboxes[i].checked = selectAllCheckbox.checked;
+        }
+    }
+	 
+	// ========== 當全選checked時, 任一取消checkbox的內容值, 則全選也會被取消 ===========
+	function checkSelectAll(selectCheckName, selectCheckAll) {
+		var checkboxes = document.getElementsByName(selectCheckName);
+		var selectAllCheckbox = document.getElementById(selectCheckAll);
+		var allChecked = true;
+
+		for (var i = 0; i < checkboxes.length; i++) {
+			if (!checkboxes[i].checked) {
+				allChecked = false;
+				break;
+			}
+		}
+		selectAllCheckbox.checked = allChecked;
+	}
+	
+	var show = true;
+
+	function showCheckboxes(selectCheckBox) {
+		
+		let checkboxes = document.getElementById(selectCheckBox);
+		
+		if (checkboxes.style.display == "block"){
+			show = false;
+		}
+		else{
+			show = true;
+		}
+		
+		if (show) {
+			checkboxes.style.display = "block";	
+			show = false;
+		} else {
+			checkboxes.style.display = "none";
+			show = true;
+		}
+	}
+
+	// ========== 當下拉選單的月份checked時, 挑出放入下拉選單的文字內 ===========
+	function textCheckboxes(){
+     	// 選擇下拉選單元素
+	  	const calibrate_month = document.getElementById("calibrate_month");
+
+        // ========== 從month的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var monthDiv = document.getElementById("monthCheckBoxesDiv");
+		var monthChecks = monthDiv.querySelectorAll("input[type='checkbox']");
+		var option = document.createElement("option");
+		
+		calibrate_month.innerHTML = ""; // 清空現有選項
+		
+        for (var i = 1; i < monthChecks.length; i++){ // 0為全選, 故重1開始
+        	if (monthChecks[i].checked == true){
+        		
+        		//console.log(monthChecks[i].value);
+        		option.text += monthChecks[i].value + ",";
+        	}
+        }
+   	 	calibrate_month.appendChild(option); // 將選項添加至下拉選單
+	}
+	
+	// ========== 當下拉選單的月份checked時, 挑出放入下拉選單的文字內 ===========
+	function editCheckboxes(monthChecks){ // monthChecks為後端傳來的月份，此月份是創建儀器時當初設定的日期
+
+	  	const calibrate_month = document.getElementById("calibrate_month"); // 取得下拉選單元素
+	  	calibrate_month.innerHTML = ""; // 清空現有選項    	
+   
+		var option = document.createElement("option");	// 創建<option>元素
+   
+   	 	calibrate_month.appendChild(option); // 將<option>元素添加至下拉選單
+   	 	option.text = monthChecks; // 後端傳來的月份，添加至下拉選單裡(框框內文字)
+   	 	
+   		// ========== 從month的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+   	 	var checkSplit = monthChecks.split(",");
+		for (var i=0; i<checkSplit.length; i++){ // 取得每一個核選方塊
+			document.getElementById("month"+checkSplit[i]).checked = true; // 後端傳來的月份，讓它核選
+		}
+	}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>器具校驗結果</title>
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/calibrationResultStyle.css">
+</head>
+<body>
+<div id="header"></div>
+
+<div class="container">
+        <h1>器具校驗結果</h1> 
+    
+		<div class="instrument-info">
+			<strong>編號:</strong><p id=number></p>
+			<p><strong>名稱:</strong> 游標卡尺</p>
+			<p><strong>類型:</strong> Mitutoyo 200mm</p>
+			<p><strong>特性:</strong> 長度</p>
+			<p><strong>單位:</strong> mm</p>
+			<p><strong>週期:</strong> 6個月</p>
+			<p><strong>校準類型:</strong> 內校</p>
+			<p><strong>校準位置:</strong> BQC</p>
+			<p><strong>校準月份:</strong> 1, 6</p>
+			<p><strong>上次校準日期:</strong> 2024-01-18</p>
+			<p><strong>母儀器編號:</strong> 41QBB99303F</p>
+			<p><strong>校驗人員:</strong> 李大同</p>
+		</div>
+       
+        <div class="calibration-results">
+     		
+     		
+     		
+            <h3>2023-07-18 校準</h3>
+            
+            <div class="calibrationTableDiv" id="calibrationTableDiv1"></div>
+           
+     		
+            <!--<table>
+                <thead>
+                    <tr>
+                        <th>規範</th>
+                        <th>測量值</th>
+                        <th>溫度 (°C)</th>
+                        <th>濕度 (%)</th>
+                        <th>結果</th>
+                        <th>上限規範 (USL)</th>
+                        <th>下限規範 (LSL)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>20</td>
+                        <td>20.01</td>
+                        <td>24.2</td>
+                        <td>54.5%</td>
+                        <td>合格</td>
+                        <td>20.02</td>
+                        <td>19.98</td>
+                    </tr>
+                    <tr>
+                        <td>50</td>
+                        <td>50</td>
+                        <td>24.2</td>
+                        <td>54.5%</td>
+                        <td>合格</td>
+                        <td>50.02</td>
+                        <td>49.98</td>
+                    </tr>
+                    <tr>
+                        <td>150</td>
+                        <td>150.01</td>
+                        <td>24.2</td>
+                        <td>54.5%</td>
+                        <td>合格</td>
+                        <td>150.02</td>
+                        <td>149.98</td>
+                    </tr>
+                </tbody>
+            </table>
+            -->
+            
+            <h3>2024-01-18 校準</h3>
+            
+            <div class="calibrationTableDiv" id="calibrationTableDiv2"></div>
+     		<div class="calibrationTableDiv" id="calibrationTableDiv3"></div>
+     		<div class="calibrationTableDiv" id="calibrationTableDiv4"></div>
+            <!--<table>
+                <thead>
+                    <tr>
+                        <th>規範</th>
+                        <th>測量值</th>
+                        <th>溫度 (°C)</th>
+                        <th>濕度 (%)</th>
+                        <th>結果</th>
+                        <th>上限規範 (USL)</th>
+                        <th>下限規範 (LSL)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>20</td>
+                        <td>20.01</td>
+                        <td>23.7</td>
+                        <td>56.3%</td>
+                        <td>合格</td>
+                        <td>20.02</td>
+                        <td>19.98</td>
+                    </tr>
+                    <tr>
+                        <td>50</td>
+                        <td>50.01</td>
+                        <td>23.7</td>
+                        <td>56.3%</td>
+                        <td>合格</td>
+                        <td>50.02</td>
+                        <td>49.98</td>
+                    </tr>
+                    <tr>
+                        <td>150</td>
+                        <td>150</td>
+                        <td>23.7</td>
+                        <td>56.3%</td>
+                        <td>合格</td>
+                        <td>150.02</td>
+                        <td>149.98</td>
+                    </tr>
+                </tbody>
+            </table>-->
+            
+        </div>
+</div>
+
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+	    $("#header").load("/instrument/header.html");
+	
+	});
+	
+	//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
+	$.ajax({
+	    type:"GET",//請求方式
+	    url:"/calibration/calibrationResult",//url代表向後端發送請求 (後端需有標註@GetMapping("calibration/calibrationResult")的方法)
+	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法，或回傳方法型態為ResponseEntity<?>)
+	    async:true,//true為非同步
+	    success:function (data) {//接收後端來的資料
+	    	console.log(data);
+	    	//updateData(data);	
+	    	var number = data[0].instrumentInfo.number;
+	
+	    	var specification = data[0].calibrationResult[0][0].specification
+	    	
+	    	console.log("specification: " + specification);
+	    	
+	    	document.getElementById("number").innerHTML = number;
+	    	
+	    	var dateLen = data[0].calibrationResult.length;
+	    	console.log(data[0].calibrationResult.length);
+	    	for(var i = 1; i <= data[0].calibrationResult.length; i++){
+	    		console.log(i);
+	    		updateData(data, i); // i 為不同校驗日期批次
+	    	}
+	    	
+	    },
+	    error :function(errorMsg) {
+	        alert("資料庫沒有內容。");
+	    }
+	});
+	
+	
+	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的table上
+	function updateData(data, dateLen){
+		
+		
+		var speclen = data[0].calibrationResult[0].length;
+		
+		
+		var innerTable = "";
+		innerTable += "<div style='text-align: center;'>";
+		
+		innerTable += "<table border='1' class='styled-table' style='margin-left: auto; margin-right: auto;'>";
+		innerTable += "<thead>";
+		innerTable += "<tr><td>校驗規格</td><td>規格上限</td><td>規格下限</td><td>測量值</td><td>溫度 (°C)</td><td>濕度 (%)</td><td>結果</td>";
+		innerTable += "</thead>";
+		innerTable += "<tbody>";
+		
+		for (var i = 0; i < speclen; i++) {
+			innerTable += "<tr class='active-row'>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].specification + "</td>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].usl + "</td>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].lsl + "</td>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].value + "</td>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].temperature + "</td>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].humidity + "</td>";
+			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].result  + "</td>";
+		}
+		innerTable += "</tr>";
+		innerTable += "</tbody>";
+		innerTable += "</table>";
+		innerTable += "</div>";
+		document.getElementById("calibrationTableDiv"+dateLen).innerHTML = innerTable;
+		
+	}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>編輯人員</title>
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/createPersonStyle.css">
+</head>
+<body>
+<div id="header"></div>
+
+
+<div class="form-container">
+	
+	<h2 class="form-header">編輯人員</h2>
+	
+	
+	<form id="personForm" action="/crud/createPerson" method="POST">
+		
+		<div class="form-container-in">
+			<label for="job_number">工號：</label>
+	 		<input type="text" id="job_number" name="job_number" required><br>
+	
+	 		<label for="username">姓名：</label>
+	  		<input type="text" id="username" name="username" required><br>
+	  		
+	  		<label for="department">部門：</label>
+	  		<select name="department" id=department>
+				<option>BRS</option>
+				<option>BMS1</option>
+				<option>BQCG</option>
+				<option>BQC1</option>
+				<option>BQC2</option>
+				<option>BQC3</option>
+				<option>BQC4</option>
+				<option>BF4</option>
+				<option>BPEG</option>
+				<option>BECG</option>
+				<option>BPSG</option>
+				<option>BPMG</option>		
+			</select><br>
+	
+			<label for="position">階級：</label>
+			<select name="position" id=position>
+				<option>專員</option>
+				<option>課長</option>
+			</select><br>		
+			
+			<label for="identity">身份：</label>
+			<select name="identity" id=identity>
+				<option>保管人員</option>
+				<option>保管主管</option>
+				<option>校驗人員</option>
+				<option>校驗主管</option>
+			</select><br>	
+			
+			<label for="email">信箱：</label>
+			<input type="email" id="email" name="email" required><br>
+	
+	  		<label for="password">密碼：</label>
+			<input type="password" id="password" name="password" disabled required><br>
+	
+	 		<label for="confirmPassword">確認密碼：</label>
+	  		<input type="password" id="confirmPassword" name="confirmPassword" disabled required><br>
+	  		
+  		</div>
+  		
+  		<div class="button-container">
+    		<button type="submit">編輯</button>
+	    </div>
+	    <div class="button-container">
+	    	<input type='button' onclick="location.href='./crud'" value="回上頁">
+  		</div>
+  		
+	</form>
+	
+</div>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $("#header").load("/instrument/header.html");
+	  
+	});
+	
+	var urlParams = new URLSearchParams(window.location.search); // 獲取當前頁面的URL中的查詢參數
+	var id = urlParams.get("id"); // 獲取ID參數的值
+
+	$.ajax({
+	    type:"GET",//請求方式
+	    url:"/crud/person/" + id,//url代表向後端發送請求 (後端需有標註@GetMapping("/personId{id}")的方法)
+	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+	    async:true,//true為非同步
+	    success:function (data) {//接收後端來的資料
+	    	console.log("取得成功, Person物件的id為: " + data.id);	
+
+	    	document.getElementById("job_number").value = data.job_number;
+	    	document.getElementById("username").value = data.username;
+	    	document.getElementById("department").value = data.department;
+	    	document.getElementById("position").value = data.position;
+	    	document.getElementById("identity").value = data.identity;
+	    	document.getElementById("email").value = data.email;
+	    	document.getElementById("password").value = data.password;
+	    	document.getElementById("confirmPassword").value = data.password;   	
+
+	    },
+	    error :function(errorMsg) {
+	        alert("請求後端資料失敗！(personId)");
+	    }
+	});
+	
+	
+	// 在文件載入完畢後執行的函數
+    document.addEventListener("DOMContentLoaded", function() {
+        // 取得下拉選單和文字輸入欄位的元素
+        var identityElement = document.getElementById("identity");
+        var passwordElement = document.getElementById("password");
+        var confirmPasswordElement = document.getElementById("confirmPassword");
+        
+        // 監聽下拉選單的變動事件
+        identityElement.addEventListener("change", function() {
+            // 如果選擇了特定項目，則啟用/禁用文字輸入欄位
+            if (identityElement.value == "保管人員" || identityElement.value == "保管主管"){
+            	passwordElement.disabled = true; // 禁用
+            	confirmPasswordElement.disabled = true; // 禁用
+            } else {
+            	passwordElement.disabled = false; // 啟用
+            	confirmPasswordElement.disabled = false; // 啟用
+            }
+        });
+    });
+	
+    document.getElementById("personForm").addEventListener("submit", function(event) {
+        // ...
+        // 如果需要阻止實際的表單提交，可以取消事件
+        event.preventDefault();
+
+     	// 取得表單輸入後的內容
+    	var rowData = { // key開頭不能為大寫, 否則後端接收會為null
+			"job_number": document.getElementById("job_number").value,
+			"username": document.getElementById("username").value,
+			"department": document.getElementById("department").value,
+			"position": document.getElementById("position").value,
+			"identity": document.getElementById("identity").value,
+			"email": document.getElementById("email").value,
+			"password": document.getElementById("password").value,
+			"confirmPassword": document.getElementById("confirmPassword").value,
+		};
+    	console.log(rowData);
+		jsonString = JSON.stringify(rowData); //轉成json格式
+        
+        $.ajax({
+		    type: "PUT", // 後端的要有標註PutMapping的方法
+		    url: "/crud/person/" + id,
+		    cache: false,
+		    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
+		    contentType: "application/json",
+		    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
+		    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+		    success: function(message) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
+		    	alert(message);
+		    },
+		    error: function(xhr, status, error) {
+		    	alert(xhr.responseText);
+		    }
+	  	});
+    });
+	
+</script>
+
+</body>
+</html>
