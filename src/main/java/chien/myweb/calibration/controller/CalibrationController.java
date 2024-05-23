@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
+import chien.myweb.calibration.enity.Person;
 import chien.myweb.calibration.enity.RequestData;
 import chien.myweb.calibration.enity.Calibration;
 import chien.myweb.calibration.service.CalibrationService;
 import chien.myweb.calibration.service.DataService;
+import chien.myweb.calibration.service.InstrumentPersonService;
 import chien.myweb.calibration.service.InstrumentService;
 import chien.myweb.calibration.service.InstrumentSpecDataService;
 
@@ -33,6 +35,8 @@ public class CalibrationController {
 	DataService dataService;
 	@Autowired
 	InstrumentService instrumentService;
+	@Autowired
+	InstrumentPersonService instrumentPersonService;
 	
 	@PostMapping("/prepCalibrations") // 新增
 	public ResponseEntity<?> executeCalibration(@RequestBody Data request){
@@ -80,5 +84,49 @@ public class CalibrationController {
 	
 		return ResponseEntity.ok().body(cablibrationResultMap);
 	}
+	
+	/*@GetMapping("/calibrationResult/{id}")  
+	public ResponseEntity<String> getCalibrationResult(@PathVariable("id") Long id){
+		
+		List<Person> personDB = instrumentPersonService.findPersonByInstrumentId(id);
+		
+		Optional<Person> personOp = personDB.stream()
+				.filter(p -> p.getId().equals(id))
+				.findFirst();
+
+		if(personOp.isPresent()){
+			Person person = personOp.get();
+			String username = person.getUsername();
+				
+			return ResponseEntity.ok().body(username); 
+		}
+		else{
+			System.out.println("沒有此器具");
+	        return ResponseEntity.notFound().build();
+	    }
+	}*/
+	
+	
+	@GetMapping("/calibrationPerson/{id}")  
+	public ResponseEntity<String> getCalibrationPerson(@PathVariable("id") Long id){
+		
+		List<Person> personDB = instrumentPersonService.findPersonByInstrumentId(id);
+		
+		Optional<Person> personOp = personDB.stream()
+				.filter(p -> p.getId().equals(id))
+				.findFirst();
+
+		if(personOp.isPresent()){
+			Person person = personOp.get();
+			String username = person.getUsername();
+				
+			return ResponseEntity.ok().body(username); 
+		}
+		else{
+			System.out.println("沒有此校驗人員");
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+	
 
 }
