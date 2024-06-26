@@ -34,8 +34,8 @@ public class CalibrationServiceImpl implements CalibrationService{
 	@Autowired
 	CalibrationDao calibrationDao;
 	
-	@Override
-	public List<Map> findCalibrationResult() {  // 查詢待校驗器具	
+	/*@Override
+	public List<Map> findCalibrationResult() {  // 查詢所有儀器校驗結果		
 		
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); // 日期格式
 		
@@ -87,7 +87,70 @@ public class CalibrationServiceImpl implements CalibrationService{
 		}
 		
 		return cablibrationResultList;	
+	}*/
+	
+	@Override
+	public Map<String, Object> findCalibrationResult(Long id) {  // 查詢單一儀器校驗結果	
+		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); // 日期格式
+		Instrument instrument = new Instrument();
+		
+		// ===== 取得儀器資訊 =====
+		List<Instrument> instrumentDB = instrumentDao.findByInstrumentId(id);
+
+		Optional<Instrument> instrumentOp = instrumentDB.stream()
+				.filter(p -> p.getId().equals(id))
+				.findFirst();
+
+		if(instrumentOp.isPresent()){
+			instrument = instrumentOp.get();
+		}
+		else{
+			System.out.println("沒有此儀器或量具");
+	    }
+        
+			
+		ArrayList calibrationDataByDateList = new ArrayList<>(); // List初始化，存放多個校驗日期之校驗結果
+		Map<String, Object> instrumentResultMap = new LinkedHashMap<>();	// Map初始化，存放一個器具的資訊及校驗結果，Linked為先進先出排列
+
+		List<Date> reponseDate = calibrationDao.findDistinctCalibrateDateByInstrumentId(id);
+		Collections.sort(reponseDate); 
+		
+        for (Date d : reponseDate) {
+        	
+        	String calibrateDate  = df.format(d); // date轉換為String
+        	
+        	// 取出資料庫的內容，存放在Object類別的reponseObject
+        	List<Object[]> reponseObject = calibrationDao.findDistinctByInstrumentIdAndCalibrateDate(id, calibrateDate);
+        	
+        	
+        	Calibration calibrationDataObj = new Calibration(); // 物件初始化，存放一個物件
+        	ArrayList calibrationDataList = new ArrayList<>(); // List初始化，存放多個物件
+        	
+            for (Object[] object : reponseObject ) {
+
+            	String date  = df.format(object[0]);
+            	Double spec  = (Double)object[1];
+            	Double usl = (Double)object[2];
+            	Double lsl = (Double)object[3];
+            	Double value = (Double)object[4];
+            	String temp = (String)object[5];
+            	String humidity = (String)object[6];
+            	String result = (String)object[7];
+
+            	calibrationDataObj = new Calibration(date, spec, usl, lsl, value, temp, humidity, result); // 單一物件(一個規格)注入建構元
+            	calibrationDataList.add(calibrationDataObj); // 多個物件(不同規格)放入一個List(一個日期)
+            }
+            calibrationDataByDateList.add(calibrationDataList); // 多個List(多個日期)放入一個List
+	
+			instrumentResultMap.put("instrumentInfo", instrument); // 一個儀器資訊(Object)
+			instrumentResultMap.put("calibrationResult", calibrationDataByDateList); // 多個校驗結果
+
+		}
+		
+		return instrumentResultMap;	
 	}
+	
 	
 	@Override
 	public List<Instrument> findPrepInstruments() {  // 查詢待校驗器具

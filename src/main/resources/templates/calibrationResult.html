@@ -49,10 +49,14 @@
 	
 	});
 	
+	var urlParams = new URLSearchParams(window.location.search); // 獲取當前頁面的URL中的查詢參數
+	var id = urlParams.get("id"); // 獲取ID參數的值
+	console.log("get instrument 'id: " + id);
+	
 	//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
 	$.ajax({
 	    type:"GET",//請求方式
-	    url:"/calibration/calibrationResult",//url代表向後端發送請求 (後端需有標註@GetMapping("calibration/calibrationResult")的方法)
+	    url:"/calibration/calibrationResult/" + id,//url代表向後端發送請求 (後端需有標註@GetMapping("calibration/calibrationResult")的方法)
 	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法，或回傳方法型態為ResponseEntity<?>)
 	    async:true,//true為非同步
 	    success:function (data) {//接收後端來的資料
@@ -60,8 +64,8 @@
 	    	
 	    	updateInfo(data);
 	 	
-	    	var dateLen = data[0].calibrationResult.length;
-
+	    	var dateLen = data.calibrationResult.length;
+			console.log("dateLen: " + dateLen);
 	    	for(var i = 0; i < dateLen; i++){
 	    		updateData(data, i); // i 為不同校驗日期批次
 	    	}
@@ -75,19 +79,19 @@
 	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的span上
 	function updateInfo(data){
 	
-    	document.getElementById("number").innerHTML = data[0].instrumentInfo.number;
-    	document.getElementById("name").innerHTML = data[0].instrumentInfo.name;
-    	document.getElementById("type").innerHTML = data[0].instrumentInfo.type;
-    	document.getElementById("characteristic").innerHTML = data[0].instrumentInfo.characteristic;
-    	document.getElementById("unit").innerHTML = data[0].instrumentInfo.unit;
-    	document.getElementById("cycle").innerHTML = data[0].instrumentInfo.cycle;
-    	document.getElementById("calibrate_type").innerHTML = data[0].instrumentInfo.calibrate_type;
-    	document.getElementById("calibrate_localation").innerHTML = data[0].instrumentInfo.calibrate_localation;
-    	document.getElementById("calibrate_month").innerHTML = data[0].instrumentInfo.calibrate_month;
-    	document.getElementById("last_calibrate_date").innerHTML = data[0].instrumentInfo.last_calibrate_date; 
-    	document.getElementById("mother_instrument_number").innerHTML = data[0].instrumentInfo.mother_instrument_number;
+    	document.getElementById("number").innerHTML = data.instrumentInfo.number;
+    	document.getElementById("name").innerHTML = data.instrumentInfo.name;
+    	document.getElementById("type").innerHTML = data.instrumentInfo.type;
+    	document.getElementById("characteristic").innerHTML = data.instrumentInfo.characteristic;
+    	document.getElementById("unit").innerHTML = data.instrumentInfo.unit;
+    	document.getElementById("cycle").innerHTML = data.instrumentInfo.cycle;
+    	document.getElementById("calibrate_type").innerHTML = data.instrumentInfo.calibrate_type;
+    	document.getElementById("calibrate_localation").innerHTML = data.instrumentInfo.calibrate_localation;
+    	document.getElementById("calibrate_month").innerHTML = data.instrumentInfo.calibrate_month;
+    	document.getElementById("last_calibrate_date").innerHTML = data.instrumentInfo.last_calibrate_date; 
+    	document.getElementById("mother_instrument_number").innerHTML = data.instrumentInfo.mother_instrument_number;
     	
-    	var id = data[0].instrumentInfo.id; // 取得該儀器的id
+    	var id = data.instrumentInfo.id; // 取得該儀器的id
     	
     	//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得該儀器的校驗人員)
     	$.ajax({ 
@@ -120,8 +124,9 @@
 		
 		// data[0].calibrationResult[0][0].calibrate_date; -> 第一把器具、第一次校驗日期、第一項規格、取得校驗日期
 	
-		var speclen = data[0].calibrationResult[0].length; 
-		var calibrate_date = data[0].calibrationResult[dateLen][0].calibrate_date; 
+		var speclen = data.calibrationResult[dateLen].length; 
+		var calibrate_date = data.calibrationResult[dateLen][0].calibrate_date;
+
 		const resultsContainer = document.getElementById("calibration-results"); // 父容器
 		
 		var innerTable = "";
@@ -136,13 +141,13 @@
 		
 		for (var i = 0; i < speclen; i++) {
 			innerTable += "<tr class='active-row'>";
-			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].specification + "</td>";
-			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].usl + "</td>";
-			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].lsl + "</td>";
-			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].value + "</td>";
-			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].temperature + "</td>";
-			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].humidity + "</td>";
-			innerTable += "<td>" + data[0].calibrationResult[dateLen][i].result  + "</td>";
+			innerTable += "<td>" + data.calibrationResult[dateLen][i].specification + "</td>";
+			innerTable += "<td>" + data.calibrationResult[dateLen][i].usl + "</td>";
+			innerTable += "<td>" + data.calibrationResult[dateLen][i].lsl + "</td>";
+			innerTable += "<td>" + data.calibrationResult[dateLen][i].value + "</td>";
+			innerTable += "<td>" + data.calibrationResult[dateLen][i].temperature + "</td>";
+			innerTable += "<td>" + data.calibrationResult[dateLen][i].humidity + "</td>";
+			innerTable += "<td>" + data.calibrationResult[dateLen][i].result  + "</td>";
 		}
 		innerTable += "</tr>";
 		innerTable += "</tbody>";
@@ -154,6 +159,7 @@
         div.id = "calibrationTableDiv" + dateLen;
         div.innerHTML = innerTable; // 將數據插入到div中
         resultsContainer.appendChild(div); // 將div插入到父容器中
+        
 		
 	}
 

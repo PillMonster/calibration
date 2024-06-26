@@ -8,7 +8,7 @@ import chien.myweb.calibration.enity.Instrument;
 
 public interface CalibrationService{
 	
-	List<Map> findCalibrationResult(); // 查詢校驗結果
+	Map<String, Object> findCalibrationResult(Long id); // 查詢校驗結果
 		
 	List<Instrument> findPrepInstruments(); // 查詢待校驗器具
 

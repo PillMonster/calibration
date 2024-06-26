@@ -238,6 +238,12 @@
     	});	
     }
 	
+	function redirectToResultPage(button) {
+		
+		var id = $(button).data("id");
+		console.log(id);
+		window.location.href = "../calibration/result?id=" +id;
+    };
 	
 	function redirectToEditPage(button) {
 		
@@ -454,7 +460,7 @@
 		//table title
 		innerTable += "<thead>";
 		innerTable += "<tr><td>器具編號</td><td>器具名稱</td><td>廠牌型式</td><td>校驗特性</td><td>校驗單位</td>" +
-						"<td>校驗週期</td><td>校驗類型</td><td>校驗地點</td><td>校驗月份</td><td>上次校驗時間</td><td>母儀編號</td><td colspan='2'>操作</td>";
+						"<td>校驗週期</td><td>校驗類型</td><td>校驗地點</td><td>校驗月份</td><td>上次校驗時間</td><td>母儀編號</td><td colspan='3'>操作</td>";
 		innerTable += "</thead>";
 		innerTable += "<tbody>";
 		for (var i = 0; i < data.length; i++) {
@@ -471,7 +477,8 @@
 			innerTable += "<td>" + data[i].last_calibrate_date + "</td>";
 			innerTable += "<td>" + data[i].mother_instrument_number + "</td>";
 			
-			innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='redirectToEditPage(this)'>編輯</button>" + "</td>";
+			innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='redirectToResultPage(this)'>校驗結果</button>" + "</td>";
+			innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='redirectToEditPage(this)'>修改</button>" + "</td>";
 			innerTable += "<td>" + "<button class='delete-button' data-id=" + data[i].id + " onclick='deleteFun(this)'>刪除</button>" + "</td>";
 		}
 		innerTable += "</tr>";

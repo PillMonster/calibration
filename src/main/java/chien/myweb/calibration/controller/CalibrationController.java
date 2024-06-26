@@ -77,34 +77,21 @@ public class CalibrationController {
 		}
 	}
 	
-	@GetMapping("/calibrationResult")  
+	/*@GetMapping("/calibrationResult")  
 	public ResponseEntity<List<Map>> getCalibrationResult(){
 		
 		List<Map> cablibrationResultMap = calibrationService.findCalibrationResult();
 	
 		return ResponseEntity.ok().body(cablibrationResultMap);
-	}
-	
-	/*@GetMapping("/calibrationResult/{id}")  
-	public ResponseEntity<String> getCalibrationResult(@PathVariable("id") Long id){
-		
-		List<Person> personDB = instrumentPersonService.findPersonByInstrumentId(id);
-		
-		Optional<Person> personOp = personDB.stream()
-				.filter(p -> p.getId().equals(id))
-				.findFirst();
-
-		if(personOp.isPresent()){
-			Person person = personOp.get();
-			String username = person.getUsername();
-				
-			return ResponseEntity.ok().body(username); 
-		}
-		else{
-			System.out.println("沒有此器具");
-	        return ResponseEntity.notFound().build();
-	    }
 	}*/
+	
+	@GetMapping("/calibrationResult/{id}")  
+	public ResponseEntity<Map<String, Object>> getCalibrationResult(@PathVariable("id") Long id){
+		
+		Map<String, Object> cablibrationResultMap = calibrationService.findCalibrationResult(id);
+		
+		return ResponseEntity.ok().body(cablibrationResultMap);
+	}
 	
 	
 	@GetMapping("/calibrationPerson/{id}")  
