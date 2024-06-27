@@ -57,6 +57,18 @@
 	background-color: #2980b9;
 }
 
+.result-button{
+	background-color:#229954 ;
+	color:white;
+	font-weight:bold;
+	font-size:14px;
+	text-align:center;
+	padding: 3px 5px;
+	border-width:1px;
+	border-color:#9cf #159 #159 #9cf;
+	width: 80px;
+}
+
 .edit-button{
 	background-color:#008CBA;
 	color:white;
@@ -105,7 +117,7 @@
 
 .styled-table th,
 .styled-table td {
-    padding: 10px 5px;
+    padding: 5px 1px;
     text-align: center;
 }
 
