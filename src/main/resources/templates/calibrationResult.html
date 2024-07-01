@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>器具校驗結果</title>
 	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/calibrationResultStyle.css">
 </head>
 <body>
@@ -12,34 +13,42 @@
 
 
 <div class="container">
-        <h1 class="h1">器具校驗結果</h1> 
-    
-		<div class="instrument-info">
-			
-			<div class="instrument-info-left">
-				<label for="number">器具編號：</label><span id="number"></span><br>
-		        <label for="name">器具名稱：</label><span id="name"></span><br>
-				<label for="type">廠牌型式：</label><span id="type"></span><br>
-				<label for="characteristic">校驗特性：</label><span id="characteristic"></span><br>
-			</div>
-				
-			<div class="instrument-info-center">
-				<label for="unit">校驗單位：</label><span id="unit"></span><br>
-		        <label for="cycle">校驗週期：</label><span id="cycle"></span><br>
-				<label for="calibrate_type">校驗類型：</label><span id="calibrate_type"></span><br>
-				<label for="calibrate_localation">校驗地點：</label><span id="calibrate_localation"></span><br>
-			</div>
-			
-			<div class="instrument-info-right">
-				<label for="calibrate_month">校驗月份：</label><span id="calibrate_month"></span><br>
-		        <label for="last_calibrate_date">上次校驗日期：</label><span id="last_calibrate_date"></span><br>
-				<label for="mother_instrument_number">母儀編號：</label><span id="mother_instrument_number"></span><br>
-				<label for="calibrate_person">校驗人員：</label><span id="calibrate_person"></span><br>
-			</div>
-
+	<h1 class="h1">器具校驗結果</h1> 
+   
+	<div class="instrument-info">
+		
+		<div class="instrument-info-left">
+			<label for="number">器具編號：</label><span id="number"></span><br>
+	        <label for="name">器具名稱：</label><span id="name"></span><br>
+			<label for="type">廠牌型式：</label><span id="type"></span><br>
+			<label for="characteristic">校驗特性：</label><span id="characteristic"></span><br>
 		</div>
-       
-        <div class="calibration-results" id="calibration-results"></div>
+			
+		<div class="instrument-info-center">
+			<label for="unit">校驗單位：</label><span id="unit"></span><br>
+	        <label for="cycle">校驗週期：</label><span id="cycle"></span><br>
+			<label for="calibrate_type">校驗類型：</label><span id="calibrate_type"></span><br>
+			<label for="calibrate_localation">校驗地點：</label><span id="calibrate_localation"></span><br>
+		</div>
+		
+		<div class="instrument-info-right">
+			<label for="calibrate_month">校驗月份：</label><span id="calibrate_month"></span><br>
+	        <label for="last_calibrate_date">上次校驗日期：</label><span id="last_calibrate_date"></span><br>
+			<label for="mother_instrument_number">母儀編號：</label><span id="mother_instrument_number"></span><br>
+			<label for="calibrate_person">校驗人員：</label><span id="calibrate_person"></span><br>
+		</div>
+
+	</div>
+      
+    <div class="calibration-results" id="calibration-results"></div>
+        
+	<div class='chart-container'>
+	
+		<h2 style="width:500px;">25mm</h2>
+		<div id="linechart" style="height:250px; width:100%; max-width:500px; "></div>
+		
+	</div>
+        
 </div>
 
 <script type="text/javascript">
@@ -68,12 +77,29 @@
 			console.log("dateLen: " + dateLen);
 	    	for(var i = 0; i < dateLen; i++){
 	    		updateData(data, i); // i 為不同校驗日期批次
-	    	}
+	    	}	
+	    	
 	    	
 	    },
 	    error :function(errorMsg) {
 	        alert("資料庫沒有內容。");
 	    }
+	});
+	
+	google.charts.load('current', {packages: ['corechart', 'line']}); // 加载 Google Charts 庫
+	google.charts.setOnLoadCallback(function() {
+		// 使用 jQuery.ajax 异步获取数据
+		$.ajax({
+			type:"GET",//請求方式
+		    url:"/calibration/calibrationResult",//url代表向後端發送請求 (後端需有標註@GetMapping("calibration/calibrationResult")的方法)
+		    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法，或回傳方法型態為ResponseEntity<?>)
+		    async:true,//true為非同步
+		    success:function (data) {//接收後端來的資料
+    	  		updateChart(data)
+    	  	},
+    	  	error: function(xhr, status, error) {
+    		}
+    	});	
 	});
 	
 	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的span上
@@ -162,6 +188,128 @@
         
 		
 	}
+	
+	
+	// ========== lint chart ==========
+   	function updateChart(data){
+
+        var dataArray = [ ["x_axix", "value"] ]; // 建立數據表存放變數
+        
+   		
+        try{
+   
+       		var x_axix = data[0].calibrationResult[0][0].calibrate_date;
+	   		var value = data[0].calibrationResult[0][0].value;
+	   		console.log(x_axix);
+	   		console.log(value);
+	   		dataArray.push([x_axix, value]);
+        	
+        }catch(error){
+        	console.log("沒有校驗數值");
+        }
+        
+        //console.log("mA_value: " + mA_value);
+        //console.log("mA minValue: " + minValue);
+        
+        /*function getBaseLog(x, y) { // 計算log函數的值
+			return Math.log(y) / Math.log(x);
+		}
+	  	var xbaseline = getBaseLog(100, minValue); // (base, log value)*/
+
+	  	
+	  	var data = google.visualization.arrayToDataTable(dataArray);
+
+        // 創建折線圖對象
+        var options = {
+        	
+            curveType: "none", // 折線平滑曲線
+            legend: "none", // 取消圖例
+                
+			titleTextStyle: {
+            	fontSize: 14, // 設置標題字體大小
+            	bold: true, // 設置標題為粗體
+            	italic: false // 設置標題為斜體
+            },
+ 
+            hAxis: { // 設置 x 軸
+            	title: "date",
+           
+                titleTextStyle: {
+	                fontSize: 16, // 設置 x 軸標題字體大小
+	                bold: true, // 設置 x 軸標題為粗體
+	                italic: false, // 設置 x 軸標體為斜體
+                },
+                textStyle: {
+                    fontSize: 14, // 設定 x 軸刻度字體大小
+                },
+            	gridlines: {
+            		color: 'transparent' // 取消 x 軸網格
+            	},
+            	baseline: 0,
+            	format: '#', // 取消 x 軸小數點,
+            	
+            },
+            
+            vAxis: { // 設置 y 軸
+            	title: "mm",
+            	
+                titleTextStyle: {
+	                fontSize: 16, // 設置 y 軸標題字體大小
+	                bold: true, // 設置 y 軸標題為粗體
+	                italic: false, // 設置 y 軸標體為斜體
+                },
+                textStyle: {
+                    fontSize: 14, // 設定 y 軸刻度字體大小
+                },
+
+				gridlines: {
+                	color: 'transparent' // 取消 y 軸網格
+                },
+                //baseline: minValue - xbaseline, // 設置基礎線條
+                /*viewWindow: {
+                    min: minValue - xbaseline -0.01,   // Y 軸最小值
+                    //max: 2.0  // Y 軸最大值
+                },*/
+            },
+            
+
+            series: {
+                0: {
+                  pointShape: 'circle', // 設置樣本點為圓形
+                  pointSize: 8 // 設置樣本點的大小
+                },
+            },
+
+            chartArea: {
+                width: '75%', // 圖表區域的寬度
+                height: '70%', // 圖表區域的高度
+               	left: 50, // 左邊距 (越小越靠近左邊)
+               	top: 20, // 上邊距
+               	right: 20, // 右邊距
+               	bottom: 50, // 下邊距
+                   border: {
+                   	top: true,
+                   	right: true,
+                   	bottom: true,
+                   	left: true
+                  }
+            },
+            
+            tooltip: {
+            	textStyle: {
+                	fontSize: 14, // 设置提示框文字大小
+                	bold: true    // 设置文字为粗体
+             	},
+            },
+  
+            //fontName: 'Arial', // 設置字體	
+           	//focusTarget: 'category' 
+        		
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('linechart'));
+        chart.draw(data, options); // 渲染折線圖
+   	}
 
 </script>
 
