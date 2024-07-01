@@ -62,31 +62,35 @@
 	var id = urlParams.get("id"); // 獲取ID參數的值
 	console.log("get instrument 'id: " + id);
 	
-	//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
-	$.ajax({
-	    type:"GET",//請求方式
-	    url:"/calibration/calibrationResult/" + id,//url代表向後端發送請求 (後端需有標註@GetMapping("calibration/calibrationResult")的方法)
-	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法，或回傳方法型態為ResponseEntity<?>)
-	    async:true,//true為非同步
-	    success:function (data) {//接收後端來的資料
-	    	console.log(data);
-	    	
-	    	updateInfo(data);
-	 	
-	    	var dateLen = data.calibrationResult.length;
-			console.log("dateLen: " + dateLen);
-	    	for(var i = 0; i < dateLen; i++){
-	    		updateData(data, i); // i 為不同校驗日期批次
-	    	}	
-	    	
-	    	
-	    },
-	    error :function(errorMsg) {
-	        alert("資料庫沒有內容。");
-	    }
+	google.charts.load('current', {packages: ['corechart', 'line']}); // 加载 Google Charts 庫
+	google.charts.setOnLoadCallback(function() {
+		//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
+		$.ajax({
+		    type:"GET",//請求方式
+		    url:"/calibration/calibrationResult/" + id,//url代表向後端發送請求 (後端需有標註@GetMapping("calibration/calibrationResult")的方法)
+		    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法，或回傳方法型態為ResponseEntity<?>)
+		    async:true,//true為非同步
+		    success:function (data) {//接收後端來的資料
+		    	console.log(data);
+		    	
+		    	updateInfo(data);
+		 	
+		    	var dateLen = data.calibrationResult.length;
+				console.log("dateLen: " + dateLen);
+		    	for(var i = 0; i < dateLen; i++){
+		    		updateData(data, i); // i 為不同校驗日期批次
+		    		updateChart(data, dateLen);
+		    	}	
+		    	
+		    	
+		    },
+		    error :function(errorMsg) {
+		        alert("資料庫沒有內容。");
+		    }
+		});
 	});
 	
-	google.charts.load('current', {packages: ['corechart', 'line']}); // 加载 Google Charts 庫
+	/*google.charts.load('current', {packages: ['corechart', 'line']}); // 加载 Google Charts 庫
 	google.charts.setOnLoadCallback(function() {
 		// 使用 jQuery.ajax 异步获取数据
 		$.ajax({
@@ -100,7 +104,7 @@
     	  	error: function(xhr, status, error) {
     		}
     	});	
-	});
+	});*/
 	
 	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的span上
 	function updateInfo(data){
@@ -191,15 +195,15 @@
 	
 	
 	// ========== lint chart ==========
-   	function updateChart(data){
+   	function updateChart(data, dateLen){
 
         var dataArray = [ ["x_axix", "value"] ]; // 建立數據表存放變數
         
    		
         try{
    
-       		var x_axix = data[0].calibrationResult[0][0].calibrate_date;
-	   		var value = data[0].calibrationResult[0][0].value;
+       		var x_axix = data.calibrationResult[dateLen][0].calibrate_date;
+	   		var value = data.calibrationResult[dateLen][i].value
 	   		console.log(x_axix);
 	   		console.log(value);
 	   		dataArray.push([x_axix, value]);
