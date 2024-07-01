@@ -17,7 +17,7 @@ body {
 	display: flex; /* 裡面每一個div可以上下左右排列 */
     justify-content: space-between;
 	
-    width: 1300px;
+    width: 1220px;
     margin: 20px auto;
     background-color: #fff;
     border-radius: 5px;
@@ -29,14 +29,14 @@ body {
 .form-container-left {
 	/*border: 1px solid #868687;*/
 	float:left;
-    width: 300px;
+    width: 350px;
     margin: 0px 10px;
 }
 
 .form-container-center {
 	/*border: 1px solid #868687;*/
 	float:left;
-    width: 600px;
+    width: 550px;
     margin: 0px 30px 10px 0px;  /* 上 右 下 左 */
     text-align: center; /* 將表頭置中 */
 }
@@ -44,8 +44,8 @@ body {
 .form-container-right {
 	/*border: 1px solid #868687;*/
 	float:right;
-    width: 300px;
-    margin: 0px 10px;
+    width: 250px;
+    margin: 0px 20px;
 }
 
 /* ===== 按鈕的容器 ===== */
@@ -108,7 +108,7 @@ label {
   	border: 1px solid #ccc;
   	border-radius: 4px;
     font-size: 14px; /* 調整日期選擇器的字號 */
-    width: 51%; /* 縮短日期選擇器的寬度 */    
+    width: 50%; /* 縮短日期選擇器的寬度 */    
 } 
 
 /* ===== 按鈕的樣式 ===== */
@@ -251,11 +251,11 @@ label {
 }
 
 .selectBoxDiv select {
-	width: 160px;
+	width: 185px;
 	font-size:14px;
 	font-weight: bold;
 	padding: 4px;
-	margin-right: 55px;
+	margin-right: 50px;
 	/*border: 1px solid #868687;*/
 	border-radius: 4px; /* 圓角 8 像素 */
 	line-height: 1.2; /* 調整行高 */
