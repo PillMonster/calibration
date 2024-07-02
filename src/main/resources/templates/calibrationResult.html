@@ -76,12 +76,15 @@
 		    	updateInfo(data);
 		 	
 		    	var dateLen = data.calibrationResult.length;
+		    	var specLen = data.calibrationResult[0].length;
 				console.log("dateLen: " + dateLen);
+				console.log("specLen: " + specLen);
+				
 		    	for(var i = 0; i < dateLen; i++){
 		    		updateData(data, i); // i 為不同校驗日期批次
-		    		updateChart(data, dateLen);
+		    		
 		    	}	
-		    	
+		    	updateChart(data, dateLen);
 		    	
 		    },
 		    error :function(errorMsg) {
@@ -193,20 +196,26 @@
 		
 	}
 	
-	
 	// ========== lint chart ==========
    	function updateChart(data, dateLen){
 
-        var dataArray = [ ["x_axix", "value"] ]; // 建立數據表存放變數
-        
-   		
+        var dataArray = [ ["x_axix", "value", "usl", "lsl"] ]; // 建立數據表存放變數
+        var x_axix = "";
+        var value = "";
+        var usl = "";
+        var lsl = "";
+		      
         try{
    
-       		var x_axix = data.calibrationResult[dateLen][0].calibrate_date;
-	   		var value = data.calibrationResult[dateLen][i].value
-	   		console.log(x_axix);
-	   		console.log(value);
-	   		dataArray.push([x_axix, value]);
+            for(var i = 0; i < dateLen; i++){
+            	
+            	x_axix = data.calibrationResult[i][0].calibrate_date;
+            	value = data.calibrationResult[i][0].value - data.calibrationResult[i][0].specification;
+            	usl = data.calibrationResult[i][0].usl - data.calibrationResult[i][0].specification;
+            	lsl = data.calibrationResult[i][0].lsl - data.calibrationResult[i][0].specification;
+	   		
+    	   		dataArray.push([x_axix, value, usl, lsl]);    	
+            }	   		
         	
         }catch(error){
         	console.log("沒有校驗數值");
@@ -220,8 +229,11 @@
 		}
 	  	var xbaseline = getBaseLog(100, minValue); // (base, log value)*/
 
+	  	var xbaseline = -(Math.abs(value) + Math.abs(lsl));
+	  	console.log("xbaseline:" + xbaseline);
 	  	
 	  	var data = google.visualization.arrayToDataTable(dataArray);
+	  	
 
         // 創建折線圖對象
         var options = {
@@ -269,19 +281,21 @@
 				gridlines: {
                 	color: 'transparent' // 取消 y 軸網格
                 },
-                //baseline: minValue - xbaseline, // 設置基礎線條
-                /*viewWindow: {
-                    min: minValue - xbaseline -0.01,   // Y 軸最小值
+                baseline: xbaseline, // 設置基礎線條
+                viewWindow: {
+                    min: xbaseline,   // Y 軸最小值
                     //max: 2.0  // Y 軸最大值
-                },*/
+                },
             },
             
 
             series: {
                 0: {
-                  pointShape: 'circle', // 設置樣本點為圓形
-                  pointSize: 8 // 設置樣本點的大小
+                	pointShape: 'circle', // 設置樣本點為圓形
+                  	pointSize: 8 // 設置樣本點的大小
                 },
+                1: { color: 'red' },
+                2: { color: 'red' },
             },
 
             chartArea: {
@@ -313,7 +327,10 @@
 
         var chart = new google.visualization.LineChart(document.getElementById('linechart'));
         chart.draw(data, options); // 渲染折線圖
+ 
+        
    	}
+	
 
 </script>
 
