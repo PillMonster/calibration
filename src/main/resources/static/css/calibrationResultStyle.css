@@ -34,8 +34,10 @@ body {
 }
 
 .h3 {
+	width: 90%;
 	text-align: left;
-	margin: 20px 0px 10px 280px;  /* 上 右 下 左 */
+	margin: 20px 40px 10px 40px;  /* 上 右 下 左 */
+	/*border: 1px solid #868687;*/
 }
 
 .instrument-info, .calibration-results {
@@ -83,7 +85,8 @@ body {
 .styled-table {
      width: 90%;
      border-collapse: collapse;
-     text-align: center;
+     /*text-align: center;*/
+     margin: 0px 40px 10px 40px;  /* 上 右 下 左 */
 }
 
 .calibration-results th, .calibration-results td {
