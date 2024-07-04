@@ -42,11 +42,9 @@
       
     <div class="calibration-results" id="calibration-results"></div>
         
-	<div class='chart-container'>
-	
+	<div class="chart-container" id="chart-container">
 		<!--  <h3 style="width:500px; text-align:center;">25mm</h3>
-		<div id="linechart" style="height:250px; width:100%; max-width:500px; "></div>-->
-		
+		<div id="linechart" style="height:250px; width:100%; max-width:500px; "></div>-->	
 	</div>
         
 </div>
@@ -207,7 +205,8 @@
         var value = "";
         var usl = "";
         var lsl = "";
-        var spec = ""
+        var spec = "";
+        var min = 0;
 		      
         try{
    
@@ -217,14 +216,16 @@
             	value = data.calibrationResult[i][specLen].value - data.calibrationResult[i][specLen].specification;
             	usl = data.calibrationResult[i][specLen].usl - data.calibrationResult[i][specLen].specification;
             	lsl = data.calibrationResult[i][specLen].lsl - data.calibrationResult[i][specLen].specification;
-	   		
+            	console.log(value);
+            	
+ 
     	   		dataArray.push([x_axix, value, usl, lsl]);    	
             }	   		
         	
         }catch(error){
         	console.log("沒有校驗數值");
         }
-
+		
 	  	var xbaseline = -(Math.abs(value) + Math.abs(lsl));
 	  	console.log("xbaseline:" + xbaseline);
 	  	
@@ -322,24 +323,29 @@
         };
         
 		const chartContainer = document.getElementById("chart-container"); // 父容器
-		
-		//var innerTable = "";
-
-		//innerTable += "<h3 style='width:500px; text-align:center;'>" + spec + "mm</h3>";
-		
-		const div = document.createElement("div");
-		div.className = "linechartDiv";
-        div.id = "linechartDiv" + specLen;
-        div.style.height = "250px";
-        div.style.width = "100%";
 
 
-        //div.innerHTML = innerTable; // 將數據插入到div中
-        chartContainer.appendChild(div); // 將div插入到父容器中
+     	// 創建一個 H3 元素
+        const h3Element = document.createElement("h3");
+        // 設置 H3 元素的文本內容
+        h3Element.textContent = spec + "mm";
+        h3Element.style.width = "100%";
+        h3Element.style.textAlign = "center";
+        h3Element.style.marginTop = "50px"; // 設置上方間距為20像素
 
+		const divElement = document.createElement("div");
+		divElement.className = "linechartDiv";
+        divElement.id = "linechartDiv" + specLen;
+        divElement.style.height = "250px";
+        divElement.style.width = "100%";
+        
+
+        chartContainer.appendChild(h3Element); // 將div插入到父容器中
+        chartContainer.appendChild(divElement); // 將div插入到父容器中
+        
+        
         var chart = new google.visualization.LineChart(document.getElementById("linechartDiv" + specLen));
         chart.draw(data, options); // 渲染折線圖
- 
         
    	}
 	
