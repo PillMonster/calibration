@@ -207,26 +207,39 @@
         var lsl = "";
         var spec = "";
         var min = 0;
+        var xbaseline = "";
 		      
         try{
    
             for(var i = 0; i < dateLen; i++){
+            	
             	spec = data.calibrationResult[i][specLen].specification;
             	x_axix = data.calibrationResult[i][specLen].calibrate_date;
             	value = data.calibrationResult[i][specLen].value - data.calibrationResult[i][specLen].specification;
             	usl = data.calibrationResult[i][specLen].usl - data.calibrationResult[i][specLen].specification;
             	lsl = data.calibrationResult[i][specLen].lsl - data.calibrationResult[i][specLen].specification;
-            	console.log(value);
             	
+            	// 判斷每筆資料並取得最小值
+            	if ( value < min) {
+            		min = value;
+            	}
+            	
+            	console.log(value);     	
  
-    	   		dataArray.push([x_axix, value, usl, lsl]);    	
+    	   		dataArray.push([x_axix, value, usl, lsl]); 
             }	   		
         	
         }catch(error){
         	console.log("沒有校驗數值");
         }
 		
-	  	var xbaseline = -(Math.abs(value) + Math.abs(lsl));
+        // 建立基礎線規則
+        if (min < lsl){
+        	xbaseline = min + (lsl / 2);
+        } else {
+        	xbaseline = lsl + (lsl / 2);
+        }
+	  	//xbaseline = -(Math.abs(value) + Math.abs(lsl));
 	  	console.log("xbaseline:" + xbaseline);
 	  	
 	  	var data = google.visualization.arrayToDataTable(dataArray);
@@ -323,7 +336,7 @@
         };
         
 		const chartContainer = document.getElementById("chart-container"); // 父容器
-
+		
 
      	// 創建一個 H3 元素
         const h3Element = document.createElement("h3");
@@ -337,7 +350,9 @@
 		divElement.className = "linechartDiv";
         divElement.id = "linechartDiv" + specLen;
         divElement.style.height = "250px";
-        divElement.style.width = "100%";
+        divElement.style.width = "80%";
+        divElement.style.textAlign = "center";
+        divElement.style.margin = '0 auto'; // 水平置中
         
 
         chartContainer.appendChild(h3Element); // 將div插入到父容器中
