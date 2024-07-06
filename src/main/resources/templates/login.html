@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>登入</title>
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/login.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+
+<div id="header"></div>
+
+<main>
+	<p id="messagePlaceholder"></p>
+	
+	<div class="container">
+		<div class="wrapper">
+	
+		    <form id="loginForm">
+		    
+		      <div class="field email">
+		        <div class="input-area">
+		          <input type="text" name="account" id="account" placeholder="請輸入您的帳號">
+		          <i class="icon fas fa-user"></i>
+		        </div>
+		      </div>
+		      
+		      <div class="field password">
+		        <div class="input-area">
+		          <input type="password" name="password" id="password" placeholder="請輸入您的密碼">
+		          <i class="icon fas fa-lock"></i>
+		        </div>
+		      </div>
+		      
+		      <div class="pass-txt"><a href="/calibration/person/getPassword">忘記密碼?</a></div>
+		      
+		      <input type="submit" value="Login">
+		      
+		    </form>
+		    
+		    <div class="sign-txt">沒有帳號? <a href="/calibration/person/create">現在註冊</a></div>
+		    
+		</div>
+	</div>
+</main>
+	
+<script type="text/javascript">
+
+	$(document).ready(function(){
+	    $("#header").load("/instrument/header.html");	
+	});
+	
+	
+	document.getElementById("loginForm").addEventListener("submit", function(event) {
+		// 防止表單的預設提交行為
+	    event.preventDefault();
+
+	 	// 取得表單更新後的內容
+    	var rowData = { // key開頭不能為大寫, 否則後端接收會為null
+			'account': document.getElementById("account").value,
+			'password': document.getElementById("password").value,
+		};
+    	console.log(rowData);
+		jsonString = JSON.stringify(rowData); //轉成json格式
+        
+		// Send the table data to the server
+		$.ajax({
+		    type: "POST",
+		    url: "/calibration/login",
+		    cache: false,
+		    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
+		    contentType: "application/json",
+		    dateType: "json",
+		    data: jsonString,
+		    success: function(data) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
+		    	/*if (data.identity == "管理員") {
+                    window.location.href = "/welcome";
+                }else{
+                	window.location.href = "/home";
+                }*/
+		    },
+		    error: function(xhr, status, error) {
+		    	alert(xhr.responseText);
+		    }
+	  	}); // ajax method end*/
+  		
+	}); // addEventListener method end
+</script>
+
+</body>

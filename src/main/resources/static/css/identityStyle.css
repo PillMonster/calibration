@@ -1,0 +1,76 @@
+/* 基本排版樣式 */
+
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+}
+
+label {
+  font-weight: bold;
+}
+
+input {
+  display: block;
+  width: 95%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"] {
+  background-color: #fff;
+}
+
+
+/* 驗證碼圖片 */
+img.captcha-image {
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* 按鈕風格 */
+button {
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  width: 48%; /* 將寬度設為 48% 以兩個按鈕並排 */
+  text-transform: uppercase;
+}
+
+
+/* 換一張按鈕風格 */
+button[type="button"].refresh-captcha { 
+  height: 40px;
+  background-color: #6A5ACD;
+  color: #fff;
+}
+
+/* 提交按鈕風格 */
+button[type="submit"] {
+  background-color: #3CB371;
+  color: #fff;
+}
+
+/* 上一頁按鈕風格 */
+button[type="button"].go-back {
+  color: #6A5ACD;
+  border:1px #003C9D solid;
+}
+
+.flex-container {
+  display: flex; /* 並排 */
+  flex-direction: row  /* 橫向排列 */ 
+}
+

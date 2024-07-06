@@ -93,22 +93,7 @@
 		    }
 		});
 	});
-	
-	/*google.charts.load('current', {packages: ['corechart', 'line']}); // 加载 Google Charts 庫
-	google.charts.setOnLoadCallback(function() {
-		// 使用 jQuery.ajax 异步获取数据
-		$.ajax({
-			type:"GET",//請求方式
-		    url:"/calibration/calibrationResult",//url代表向後端發送請求 (後端需有標註@GetMapping("calibration/calibrationResult")的方法)
-		    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法，或回傳方法型態為ResponseEntity<?>)
-		    async:true,//true為非同步
-		    success:function (data) {//接收後端來的資料
-    	  		updateChart(data)
-    	  	},
-    	  	error: function(xhr, status, error) {
-    		}
-    	});	
-	});*/
+
 	
 	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的span上
 	function updateInfo(data){

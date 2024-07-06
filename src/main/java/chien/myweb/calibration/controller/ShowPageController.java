@@ -5,20 +5,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/calibration")
 public class ShowPageController {
 	
-	@GetMapping("/calibration/result")
+	@GetMapping("/instrument/result")
 	public String showCalibrationResult() {
 		return "calibrationResult";
 	}
 	
 	
-	@GetMapping("calibration/prep")
+	@GetMapping("instrument/prep")
 	public String showCalibrationPrep() {
 		return "calibrationPrep";
 	}
 	
-	@GetMapping("calibration/execute")
+	@GetMapping("instrument/execute")
 	public String showCalibrationExecute() {
 		return "calibrationExecute";
 	}
@@ -51,5 +52,15 @@ public class ShowPageController {
 	@GetMapping("/person/edit")
 	public String showEditPersons() {
 		return "editPerson";
+	}
+	
+	@GetMapping("/person/login")
+	public String showLoginPage() {
+		return "login";
+	}
+	
+	@GetMapping("/person/getPassword")
+	public String showGetPasswordPage() {
+		return "getPassword";
 	}
 }

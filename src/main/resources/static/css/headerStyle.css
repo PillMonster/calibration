@@ -3,59 +3,60 @@
 --------------------------------------------------------------*/
 /* 重置一些默認樣式 */
 body, h1, h2, h3, h4, h5, h6, p, ul, li {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 body {
-  font-family: Arial, sans-serif;
+	font-family: Arial, sans-serif;
 }
 
 header {
-
-  background: #333333; /* 使用灰黑深色系列的背景 */
-  padding: 10px;
-  color: #fff; /* 文字顏色改為白色 */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* 添加陰影效果 */
-  border-radius: 5px; /* 添加圓角效果 */
-  display: flex; /* 使用 Flexbox 佈局 */
-  justify-content: space-between; /* 將元素分散對齊，使標誌和導航在一行內 */
-  align-items: center; /* 將元素垂直居中對齊 */
+	background: #333333; /* 使用灰黑深色系列的背景 */
+	padding: 10px;
+	color: #fff; /* 文字顏色改為白色 */
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* 添加陰影效果 */
+	border-radius: 5px; /* 添加圓角效果 */
+	display: flex; /* 使用 Flexbox 佈局 */
+	justify-content: space-between; /* 將元素分散對齊，使標誌和導航在一行內 */
+	align-items: center; /* 將元素垂直居中對齊 */
 }
 
 .logo h1 {
-  font-size: 30px;
+ 	font-size: 30px;
 }
+
 /*
 nav {
   margin-top: 60px;
 }*/
 
 nav ul {
-  list-style: none;
-  display: flex; /* 使用 Flexbox 佈局 */
+	list-style: none;
+	display: flex; /* 使用 Flexbox 佈局 */
 }
 
 nav ul li {
-  margin-right: 20px;
-}
-
-nav ul li:last-child {
-  margin-right: 0; /* 移除最後一個選單項目的右邊距 */
+	margin-right: 20px;
 }
 
 nav ul li a {
-  color: #fff; /* 文字顏色改為白色 */
-  text-decoration: none;
-  padding: 5px 10px;
-  border-radius: 3px; /* 添加圓角效果，使連結看起來更具互動性 */
-  border: 2px solid transparent; /* 添加邊框並預設為透明 */
-  transition: border-color 0.3s ease-in-out; /* 添加過渡效果 */
+	color: #fff; /* 文字顏色改為白色 */
+	text-decoration: none;
+	padding: 5px 10px;
+	border-radius: 3px; /* 添加圓角效果，使連結看起來更具互動性 */
+	border: 2px solid transparent; /* 添加邊框並預設為透明 */
+	transition: border-color 0.3s ease-in-out; /* 添加過渡效果 */
 }
 
 nav ul li a:hover {
-  background-color: #ff8c00; /* 滑鼠懸停時的背景顏色為橘黃色 */
-  border-color: #ff8c00; /* 滑鼠懸停時的邊框顏色為橘黃色 */
+	background-color: #ff8c00; /* 滑鼠懸停時的背景顏色為橘黃色 */
+	border-color: #ff8c00; /* 滑鼠懸停時的邊框顏色為橘黃色 */
+}
+
+.right {
+    margin-right: 0;
+    margin-left: auto; /* 將最後一個 li 元素推到最右邊  */
 }
 
 
@@ -105,3 +106,4 @@ nav ul li a:hover {
     text-decoration: none;
     background-color: #e0e0e0;
 }
+
