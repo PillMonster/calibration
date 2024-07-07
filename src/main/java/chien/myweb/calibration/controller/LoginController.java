@@ -2,7 +2,13 @@ package chien.myweb.calibration.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
@@ -16,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import chien.myweb.calibration.enity.Person;
 import chien.myweb.calibration.enity.PersonInfo;
 import chien.myweb.calibration.service.IdentityService;
 import chien.myweb.calibration.service.LoginService;
+import chien.myweb.calibration.service.PersonService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,57 +40,108 @@ import jakarta.servlet.http.HttpSession;
 public class LoginController implements HttpSessionAttributeListener{
 	
 	@Autowired
-	private LoginService loginService;	
+	private LoginService loginService;
+	@Autowired
+	private PersonService personService;
 	@Autowired
 	private IdentityService identityService;
 	//@Autowired
 	//private EmailService emailService;
 	
 	@PostMapping("/login")
-	public void login(@RequestBody PersonInfo personInfo,  HttpServletResponse response) throws ServletException {
+	public ResponseEntity<?> login(@RequestBody PersonInfo requestInfo,  HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException {
 		
-		String account = personInfo.getAccount();
-		String password = personInfo.getPassword();
+		String action = request.getParameter("action");
+		String account = requestInfo.getAccount();
+		String password = requestInfo.getPassword();
 
 		System.out.println("account: " + account);
 		System.out.println("password: " + password);
-		/*if("login".equals(action) && account.trim().length()>0 && password.trim().length()>0){
+		
+		if("login".equals(action) && account.trim().length()>0 && password.trim().length()>0){
 			
 			account = account.trim();
 			password = password.trim();
 			
-			if(userMap.get(account) != null && userMap.get(account).equals(password)){
-				String pw = userMap.get(account);
-				System.out.println("登入成功!!!!密碼: " + pw);
+			List<Person> personDB = personService.findPersonByJobNumberAbdPassword(account, password);
+			
+			Optional<Person> personOp = personDB.stream()
+					.filter(p -> p.getJob_number().equals(requestInfo.getAccount()) && p.getPassword().equals(requestInfo.getPassword()))
+					.findFirst();
+			
+			if(personOp.isPresent()){
+				Person person = personOp.get();
 				
 				PersonInfo personInfo = new PersonInfo();
-				personInfo.setAccount(account.trim().toLowerCase());
+				personInfo.setAccount(person.getJob_number().trim());
 				personInfo.setIp(request.getRemoteAddr());
 				personInfo.setLoginDate(new Date());
 				
+				
+				// 以key-value方式存入HTTP session，此時會啟動listener，並且呼叫attributeAdded方法
 				session.setAttribute("personInfo", personInfo);
 				
-				response.sendRedirect(response.encodeRedirectURL(request.getRequestURI()));
-		
+				System.out.println("登入成功，歡迎 " + person.getUsername());
+				System.out.println("您的IP為 " + personInfo.getIp());
+				System.out.println("登入時間為 " + personInfo.getLoginDate());
+				
+				return ResponseEntity.ok().body(personInfo); 
 			}
 			else{
-				System.out.println("=====找不到帳戶名稱或密碼錯誤=====");
-				
-				response.sendRedirect(response.encodeRedirectURL(request.getRequestURI()));
-			}
-			
-			
-			return;
-		}
-		else if("logout".equals(action)){
-			
+				System.out.println("=====帳號或密碼錯誤=====");
+		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("帳號或密碼錯誤");
+		    }
+
+		} else if("logout".equals(action)){
+			System.out.println("登出成功");
 			session.removeAttribute("personInfo");
 			
-			response.sendRedirect(response.encodeRedirectURL(request.getRequestURI()));
-			return;
-		}*/
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("您已經登出");
+		}
+		return null;
 		
 	}
+	
+	@GetMapping("/logout")
+	public ResponseEntity<?> loginout(HttpServletRequest request, HttpSession session){
+		
+		String action = request.getParameter("action");
+	
+		if("logout".equals(action)){
+			System.out.println("您已經登出");
+			session.removeAttribute("personInfo");
+			return ResponseEntity.ok().body("您已經登出"); 
+		}else {
+			return ResponseEntity.ok().body("登入中"); 
+		}
+			
+	}
+	
+	
+	@GetMapping("/login/sessionAttributes")
+	public ResponseEntity<?> getSessionAttributes(HttpSession session) {
+	    
+		Map<String, Object> response = new HashMap<>();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 日期格式
+		
+		PersonInfo personInfo = (PersonInfo)session.getAttribute("personInfo");
+		
+		
+		if (personInfo != null) {
+			
+			String userName = personService.findJobnumber(personInfo.getAccount()).get(0).getUsername();
+			
+			response.put("account", personInfo.getAccount());
+		    response.put("userName", userName);
+		    response.put("ip", personInfo.getIp());
+		    response.put("loginDate", df.format(personInfo.getLoginDate()));
+
+		    System.out.println(personInfo.getAccount());
+		    
+		    return ResponseEntity.ok().body(response);
+		}else {return ResponseEntity.ok().body("Session 已過期");}
+
+    }
 	
 	@GetMapping("/login/getIdentity")
     public ResponseEntity<ServletOutputStream> showIdentity(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

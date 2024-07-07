@@ -41,7 +41,7 @@ public class PersonServiceImpl implements PersonService{
 				.findFirst();
 		
 		if(personOp.isPresent()){
-			
+
 			Person updatePerson = personOp.get();
 			updatePerson.setJob_number(person.getJob_number());
 			updatePerson.setUsername(person.getUsername());
@@ -133,6 +133,11 @@ public class PersonServiceImpl implements PersonService{
 		List<String> checkerLeader = personDao.findPersonByCheckerLeader();
 		Collections.sort(checkerLeader, (s1, s2) -> s1.compareTo(s2));
 		return checkerLeader;
+	}
+	
+	@Override
+	public List<Person> findPersonByJobNumberAbdPassword(String job_number, String password) {
+		return personDao.findPersonByJobNumberAbdPassword(job_number, password);
 	}
 	
 	@Override

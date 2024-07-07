@@ -51,8 +51,8 @@ public class LoginService implements HttpSessionAttributeListener{
 				
 				System.out.println("帳號: " + oldPersonInfo.getAccount() + " 在" + oldPersonInfo.getIp() + "已經登入，該登入將被迫下線。");
 				
-				// 從session物件中，取得該key(personInfo)所對應的value(session物件)，並移除該session物件，亦即上一個時間點登入的相同帳號
-				// 透過listener，移除的時候會呼叫attributeRemoved方法
+				// 從HTTP session中，取得該key(personInfo)所對應的屬性(personInfo物件)，並移除該屬性，亦即上一個時間點登入的相同帳號
+				// 當Http session中有被移除時，此時會啟動listener，並呼叫attributeRemoved方法
 				session.removeAttribute("personInfo");
 				session.setAttribute("msg", "您的帳號已經在其他機器上登入，您被迫下線。");// 設定session，可作為前端接收訊息之用途
 			}

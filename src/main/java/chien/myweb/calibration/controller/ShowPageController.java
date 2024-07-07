@@ -59,6 +59,11 @@ public class ShowPageController {
 		return "login";
 	}
 	
+	@GetMapping("/person/login/success")
+	public String showLoginSuccessPage() {
+		return "loginSuccess";
+	}
+	
 	@GetMapping("/person/getPassword")
 	public String showGetPasswordPage() {
 		return "getPassword";

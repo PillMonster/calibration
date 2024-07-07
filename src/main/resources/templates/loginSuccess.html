@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>登入成功</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+<div id="header"></div>
+<h2 id="title"></h2>
+<p id="userName"></p>
+<p id="loginDate"></p>
+<p id="ip"></p>
+
+
+<script type="text/javascript">
+
+	
+	$(document).ready(function(){
+	    $("#header").load("/instrument/header.html");	
+	    
+	 	// 取得session中的訊息
+        $.ajax({
+            url: "/calibration/login/sessionAttributes",
+            type: "GET",
+            dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+            contentType: "json",
+    	    async:true,//true為非同步
+            success: function(response) {
+            	console.log("工號: " + response.account);
+            	console.log("姓名: " + response.userName);
+                console.log("ip: " + response.ip);
+                console.log("登入: " + response.loginDate);
+                $("#title").text("登入成功!!");
+                $("#userName").text("歡迎，" + response.userName);
+                $("#loginDate").text("您登入時間為 " + response.loginDate);
+                $("#ip").text("您IP為 " + response.ip);
+               
+                
+            },
+            error: function(xhr, status, error) {
+            	window.location.href = "/calibration/person/login";
+            }
+        });
+	});
+	
+
+    
+	
+
+</script>
+
+</body>

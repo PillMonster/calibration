@@ -68,6 +68,9 @@ public class PersonController {
 		String confirmPassword = person.getConfirmPassword();
 		String identity = person.getIdentity();
 		
+		System.out.println("取得id為: " + person.getId());
+		System.out.println("取得姓名為: " + person.getUsername());
+		System.out.println("取得工號為: " + person.getJob_number());
 		if( personService.validateAccount_number(job_number) == false){
 			System.out.println("工號必須為英文或數字，不得包含任何符號。");
 			return new ResponseEntity<String>("工號必須為英文或數字，不得包含任何符號。", HttpStatus.OK);

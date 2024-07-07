@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>登入</title>
-	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/login.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
@@ -68,13 +69,16 @@
 		// Send the table data to the server
 		$.ajax({
 		    type: "POST",
-		    url: "/calibration/login",
+		    url: "/calibration/login?action=login",
 		    cache: false,
 		    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
 		    contentType: "application/json",
 		    dateType: "json",
 		    data: jsonString,
 		    success: function(data) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
+		    	
+		    	// 登录成功后跳转到成功页面
+                window.location.href = "/calibration/person/login/success";
 		    	/*if (data.identity == "管理員") {
                     window.location.href = "/welcome";
                 }else{
@@ -82,7 +86,7 @@
                 }*/
 		    },
 		    error: function(xhr, status, error) {
-		    	alert(xhr.responseText);
+		    	alert("登入失敗: " + xhr.responseText);
 		    }
 	  	}); // ajax method end*/
   		
