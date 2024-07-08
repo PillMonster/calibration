@@ -141,6 +141,11 @@ public class PersonServiceImpl implements PersonService{
 	}
 	
 	@Override
+	public String findIdentityByPersonId(Long id) {
+		return personDao.findIdentityByPersonId(id);
+	}
+	
+	@Override
 	public Map<String, Set<String>> findPersonAllNoRepeat() {
 		
 		Map<String, Set<String>> personMap = new HashMap<>();

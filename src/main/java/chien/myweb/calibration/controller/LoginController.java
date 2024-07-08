@@ -80,6 +80,7 @@ public class LoginController implements HttpSessionAttributeListener{
 				
 				// 以key-value方式存入HTTP session，此時會啟動listener，並且呼叫attributeAdded方法
 				session.setAttribute("personInfo", personInfo);
+				session.setMaxInactiveInterval(60);
 				
 				System.out.println("登入成功，歡迎 " + person.getUsername());
 				System.out.println("您的IP為 " + personInfo.getIp());
@@ -125,20 +126,24 @@ public class LoginController implements HttpSessionAttributeListener{
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 日期格式
 		
 		PersonInfo personInfo = (PersonInfo)session.getAttribute("personInfo");
-		
-		
+	
 		if (personInfo != null) {
 			
 			String userName = personService.findJobnumber(personInfo.getAccount()).get(0).getUsername();
+			Long id = personService.findPersonIdByUsername(userName);
+			String identity = personService.findIdentityByPersonId(id);
 			
+			response.put("id", id);
 			response.put("account", personInfo.getAccount());
 		    response.put("userName", userName);
+		    response.put("identity", identity);
 		    response.put("ip", personInfo.getIp());
 		    response.put("loginDate", df.format(personInfo.getLoginDate()));
 
-		    System.out.println(personInfo.getAccount());
+		    //System.out.println(personInfo.getAccount());
 		    
 		    return ResponseEntity.ok().body(response);
+		    
 		}else {return ResponseEntity.ok().body("Session 已過期");}
 
     }

@@ -20,7 +20,7 @@
 		<span id="name"></span>
 		<div class="dropdown-content" >
 			
-			<a>個人資訊</a>
+			<a id="personInfo-link" href="#">個人資訊</a>
         	<a id="logout-link" href="/calibration/logout?action=logout">登出</a>
 	   	</div>
    	</div>
@@ -40,6 +40,8 @@
 
 <script type="text/javascript">
 
+	var id = ""
+	
 	$(document).ready(function() {
 		// Send the table data to the server
 		$.ajax({
@@ -49,7 +51,15 @@
             contentType: "json",
     	    async:true,//true為非同步
             success: function(response) {
+				
+            	id = response.id;
 
+                // 取得超連結元素
+                var link = document.getElementById("personInfo-link");
+
+                // 設置超連結的href屬性，包含動態的id值
+                link.href = "/calibration/person/edit?id=" + id;
+            	
                 var username = response.userName;
                 
                 if (username == null) {	
@@ -65,27 +75,28 @@
 	  	}); // ajax method end
 	});
 	
+	
 	 $(document).ready(function() {
-         // 给<a>标签绑定点击事件
+		// 給<a>標籤绑定點擊事件
          $("a#logout-link").click(function(event) {
-             event.preventDefault(); // 阻止默认的链接跳转行为
+             event.preventDefault(); // 阻止默認的鏈結跳轉行為
 			 console.log($(this).attr("href"));
-             // 发送 AJAX 请求
+
              $.ajax({
-                 url: $(this).attr("href"), // 获取链接的href属性作为请求的URL
+                 url: $(this).attr("href"), // 獲取連接的href屬性作為請求的URL
                  type: "GET", // 请求类型为GET
     
                  success: function(response) {
                 	 window.location.href = "/calibration/person/login";
-                     // 在这里可以处理成功登出后的逻辑，例如重新导航到登录页面或刷新页面等
                  },
                  error: function(xhr, status, error) {
                      console.log("登出失败:", error);
-                     // 处理登出失败的情况
                  }
              });
          });
      });
+	 
+	 
 
 </script>
 

@@ -29,6 +29,7 @@
             contentType: "json",
     	    async:true,//true為非同步
             success: function(response) {
+            	
             	console.log("工號: " + response.account);
             	console.log("姓名: " + response.userName);
                 console.log("ip: " + response.ip);
@@ -37,8 +38,7 @@
                 $("#userName").text("歡迎，" + response.userName);
                 $("#loginDate").text("您登入時間為 " + response.loginDate);
                 $("#ip").text("您IP為 " + response.ip);
-               
-                
+                    
             },
             error: function(xhr, status, error) {
             	window.location.href = "/calibration/person/login";

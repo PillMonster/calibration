@@ -57,6 +57,9 @@ public interface PersonService {
 	// 查詢(透過工號和密碼)
 	List<Person> findPersonByJobNumberAbdPassword(String job_number, String password);
 	
+	//查詢身份 (by ID)
+	String findIdentityByPersonId(Long id);
+	
 	// 查詢不重複的內容
 	Map<String, Set<String>>  findPersonAllNoRepeat();
 	
@@ -69,8 +72,4 @@ public interface PersonService {
 	// email驗證
     boolean validateEmail(String email);
 
-	
-
-	
-	
 }

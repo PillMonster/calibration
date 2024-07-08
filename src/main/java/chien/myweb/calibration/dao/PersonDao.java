@@ -56,4 +56,7 @@ public interface PersonDao extends JpaRepository<Person, Long>{
     @Query(value = "SELECT * FROM persons WHERE job_number = ?1 AND password = ?2", nativeQuery = true) // 查詢(透過工號和密碼)
     List<Person> findPersonByJobNumberAbdPassword(String job_number, String password);
     
+    @Query(value = "SELECT identity FROM persons WHERE person_id = ?1", nativeQuery = true)  //查詢身份 (by ID)
+    String findIdentityByPersonId(Long id);
+    
 }
