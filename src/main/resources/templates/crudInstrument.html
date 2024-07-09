@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>器具增刪改查</title>
+	<title>器具管理</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/crudStyle.css">
 </head>
@@ -129,10 +129,12 @@
 </div>
 <div class="rightDiv">
 	<!--  <div class="createButtonDiv"><button type="submit" class="create-button">新增器具</button></div>-->
-	<div class="createButtonDiv"><a href="/instrument/create" class="create-button">新增器具</a></div>
+	<div class="createButtonDiv"><a href="/calibration/instrument/create" class="create-button">新增器具</a></div>
 	<div class="instrumentTableDiv" id="instrumentTableDiv"></div>
 </div>
 <script type="text/javascript">
+	
+	
 	
 	$(document).ready(function(){
 	    $("#header").load("/instrument/header.html");
@@ -219,7 +221,7 @@
 	// 自訂submitForm()方法, 使用者依條件選取，並搭配ajax將表單內容傳送到後端
     function submitForm() {
     	//var formData = $("#checkForm").serialize(); // $("#checkForm") ->取得表單元素id的值, serialize() ->並將其序列化轉為字串
-
+		
 		var jsonString = getChecked(); // 取得選取後的json資料
 		//console.log(jsonString);
     	$.ajax({
@@ -239,43 +241,55 @@
     }
 	
 	function redirectToResultPage(button) {
-		
+
 		var id = $(button).data("id");
 		console.log(id);
 		window.location.href = "/calibration/instrument/result?id=" +id;
+		
     };
 	
 	function redirectToEditPage(button) {
 		
-		var id = $(button).data("id");
-		console.log(id);
-		window.location.href = "edit?id=" +id;
+		if ( identityHeader == "校驗人員") {
+			var id = $(button).data("id");
+			console.log(id);
+			window.location.href = "edit?id=" +id;
+		}
+		else {
+			alert("此功能需要校驗人員身分才可使用。")
+		}
     };
     
     function deleteFun(button) {
-		var result = confirm("確認刪除該紀錄?");
-    	    
-		if (result == true) {
-			var id = $(button).data("id");
-			console.log(id);
-
-			$.ajax({
-				type: "DELETE", // 後端的要有標註DeleteMapping的方法
-   	 	    	url: "/crud/instrument/" + id, 
-   	 	    	async:false,//true為非同步
-   	 	    	success: function(message) {  		
-   	 	      		//window.location.reload(); // 刪除成功後會刷新葉面
-   	 	      		alert(message);
-   	 	      		ajaxMethod();	
-   	 	    	},
-   	 	    	error: function(xhr, status, error) {
-   	 	    		alert("刪除失敗");
-   	 	    	}
-   	    	}); 
-    	        
+		
+		if ( identityHeader == "校驗人員") {
+    	
+			var result = confirm("確認刪除該紀錄?");
+	    	    
+			if (result == true) {
+				var id = $(button).data("id");
+				console.log(id);
+	
+				$.ajax({
+					type: "DELETE", // 後端的要有標註DeleteMapping的方法
+	   	 	    	url: "/crud/instrument/" + id, 
+	   	 	    	async:false,//true為非同步
+	   	 	    	success: function(message) {  		
+	   	 	      		//window.location.reload(); // 刪除成功後會刷新葉面
+	   	 	      		alert(message);
+	   	 	      		ajaxMethod();	
+	   	 	    	},
+	   	 	    	error: function(xhr, status, error) {
+	   	 	    		alert("刪除失敗");
+	   	 	    	}
+	   	    	}); 
+	    	        
+			} else {
+				return false;
+			}
 		} else {
-			return false;
-		}
+			alert("此功能需要校驗人員身分才可使用。")
+		}	
     }
 	
 	

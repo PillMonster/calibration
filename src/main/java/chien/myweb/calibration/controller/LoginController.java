@@ -126,6 +126,7 @@ public class LoginController implements HttpSessionAttributeListener{
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 日期格式
 		
 		PersonInfo personInfo = (PersonInfo)session.getAttribute("personInfo");
+		String msg = (String)session.getAttribute("msg");
 	
 		if (personInfo != null) {
 			
@@ -139,6 +140,7 @@ public class LoginController implements HttpSessionAttributeListener{
 		    response.put("identity", identity);
 		    response.put("ip", personInfo.getIp());
 		    response.put("loginDate", df.format(personInfo.getLoginDate()));
+		    response.put("msg", msg);
 
 		    //System.out.println(personInfo.getAccount());
 		    

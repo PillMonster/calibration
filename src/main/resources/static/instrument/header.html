@@ -17,7 +17,7 @@
 <header id="header">
 	
 	 <div class="dropdown">
-		<span id="name"></span>
+		<span id="nameHeader"></span> <!-- header裡面的id元素名稱，不可與其它的javascript程式內一樣，否則會讀取到這個元素的值 -->
 		<div class="dropdown-content" >
 			
 			<a id="personInfo-link" href="#">個人資訊</a>
@@ -40,7 +40,10 @@
 
 <script type="text/javascript">
 
-	var id = ""
+	var idHeader = ""
+	var msgHeader = "";
+	var identityHeader = "";
+	let inactivityTimeout;
 	
 	$(document).ready(function() {
 		// Send the table data to the server
@@ -52,13 +55,13 @@
     	    async:true,//true為非同步
             success: function(response) {
 				
-            	id = response.id;
+            	idHeader = response.id;
 
                 // 取得超連結元素
                 var link = document.getElementById("personInfo-link");
 
                 // 設置超連結的href屬性，包含動態的id值
-                link.href = "/calibration/person/edit?id=" + id;
+                link.href = "/calibration/person/edit?id=" + idHeader;
             	
                 var username = response.userName;
                 
@@ -66,7 +69,8 @@
                 	
 		    	}	
 		    	else {
-		    		$("#name").text("Welcome, " + username);
+		    		const nameSpan = document.getElementById("nameHeader");
+		    		nameSpan.innerText = "Welcome, " + username;
 		    	}
 		    },
 		    error: function(xhr, status, error) {
@@ -84,19 +88,66 @@
 
              $.ajax({
                  url: $(this).attr("href"), // 獲取連接的href屬性作為請求的URL
-                 type: "GET", // 请求类型为GET
+                 type: "GET", 
     
                  success: function(response) {
                 	 window.location.href = "/calibration/person/login";
                  },
                  error: function(xhr, status, error) {
-                     console.log("登出失败:", error);
+                     console.log("登出失敗:", error);
                  }
              });
          });
      });
 	 
+	function forloopSessionValue(){
+		 
+		$.ajax({
+			type: "GET",
+			url: "/calibration/login/sessionAttributes",
+			dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+			contentType: "json",
+		 	async:true,//true為非同步
+			success: function(response) {
+				identityHeader = response.identity;
+		        console.log("identityHeader: " + identityHeader);
+
+			},
+			error: function(xhr, status, error) {
+				    	//alert(xhr.responseText);
+			}
+		}); // ajax method end	 
+	 }
+	
+	function autoLogout(){
+		$.ajax({
+	        url: "/calibration/logout?action=logout", // 獲取連接的href屬性作為請求的URL
+	        type: "GET",
+	        success: function(response) {
+	        },
+	        error: function(xhr, status, error) {
+	        }
+	    });
+	}
+	
+	
+	// 監聽用户交互事件，重置自動动登出定時器
+    function resetInactivityTimeout() {
+        clearTimeout(inactivityTimeout);
+        inactivityTimeout = setTimeout(autoLogout, 60000); // 60秒無操作後自動登出
+        identityHeader = "";
+    }
+
+    // 监听各种用户交互事件
+    ['click', 'mousemove', 'keydown', 'scroll'].forEach(event => {
+    	window.addEventListener(event, resetInactivityTimeout);
+    });
 	 
+	
+    setInterval(forloopSessionValue, 1000); //使用 setInterval 每隔1秒獲取一次session值
+	forloopSessionValue(); // 初次調用
+	
+    resetInactivityTimeout(); // 初始化自動登出定時器
 
 </script>
 
