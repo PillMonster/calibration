@@ -23,15 +23,18 @@
 </div>
 
 <div class="rightDiv">
-	<div class="createButtonDiv"><a href="/calibration/person/create" class="create-button">新增人員</a></div>
+	<div class="createButtonDiv"><a href="#" class="create-button" id="createLink">新增人員</a></div>
 	<div class="personTableDiv" id="personTableDiv"></div>
 </div>
 
 <script type="text/javascript">
+
 	$(document).ready(function(){
 	    $("#header").load("/instrument/header.html");	
 	    ajaxMethod();
 	});
+	
+	var identity = "";
 	
 	
 	function ajaxMethod(){
@@ -124,15 +127,60 @@
 		});	
 	}
 	
+	
+	// 向後端取得session的值
+    function getSessionValue(){  
+		 
+		$.ajax({
+			type: "GET",
+			url: "/calibration/login/sessionAttributes",
+			dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+			contentType: "json",
+		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
+			success: function(response) {
+				identity = response.identity;
+			},
+			error: function(xhr, status, error) {
+				    	//alert(xhr.responseText);
+			}
+		}); // ajax method end	 
+	 }
+	
+	// 點擊的連結需要根據條件決定是否跳轉或者顯示警告
+    document.getElementById("createLink").addEventListener("click", function() {
+    	
+    	getSessionValue(); 
+    	
+    	if ( identity == "校驗人員") { 
+            window.location.href = "/calibration/person/create";
+        } else {
+            alert("此功能需要校驗人員身分才可使用。");
+        }
+    });
+	
 	function redirectToEditPage(button) {
 		
-		var id = $(button).data("id");
-		console.log(id);
-		window.location.href = "edit?id=" +id;
+		getSessionValue(); 
+    	console.log("identity: " + identity);
+		
+		if ( identity == "校驗人員") {
+			var id = $(button).data("id");
+			console.log(id);
+			window.location.href = "edit?id=" +id;
+		}
+		else {
+			alert("此功能需要校驗人員身分才可使用。")
+		}
     };
     
     function deleteFun(button) {
-    	 var result = confirm("確認刪除該紀錄?");
+    	
+    	getSessionValue(); 
+    	console.log("identity: " + identity);
+    	
+    	if ( identity == "校驗人員") {
+ 
+    		var result = confirm("確認刪除該紀錄?");
     	    
     	    if (result == true) {
     	        var id = $(button).data("id");
@@ -155,6 +203,9 @@
     	    } else {
     	        return false;
     	    }
+    	} else {
+			alert("此功能需要校驗人員身分才可使用。")
+		}
     }
     
 	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的table上

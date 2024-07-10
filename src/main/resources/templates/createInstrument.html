@@ -145,7 +145,7 @@
 		
 		<div class="button-container">
 	    	<button type="submit" class="submit-button">新增</button>
-			<input type='button' class="back-button" onclick="location.href='/instrument/crud'" value="回上頁">
+			<input type='button' class="back-button" onclick="location.href='/calibration/instrument/crud'" value="回上頁">
    		</div>
 		
 	</form>
@@ -156,8 +156,30 @@
 	
 	$(document).ready(function(){
 	    $("#header").load("/instrument/header.html");
-
+  		
+	    var identity = "";
+	    
+	 	// 向後端取得session的值
+	 	$.ajax({
+			type: "GET",
+			url: "/calibration/login/sessionAttributes",
+			dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+			contentType: "json",
+		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
+			success: function(response) {
+				identity = response.identity;
+			},
+			error: function(xhr, status, error) {
+				    	//alert(xhr.responseText);
+			}
+		}); // ajax method end	 
+		console.log("identity: " + identity);
+		if ( identity != "校驗人員"){
+			alert("您沒有權限訪問此頁面，請重新登入。")
+			window.location.href = "/calibration/person/login";
+		}
 	});
+
 	
 	$.ajax({
 	    type:"GET",//請求方式
@@ -173,7 +195,8 @@
 	    }
 	});
 	
-	// 当页面从隐藏状态变为可见状态时执行 AJAX 函数
+	
+	
     document.addEventListener("visibilitychange", function() {
         if (document.visibilityState === 'visible') {
         	$.ajax({
