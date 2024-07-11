@@ -71,11 +71,37 @@
 		
 	}
 	
+	// 向後端取得session的值
+    function getSessionValue(){  
+		 
+		$.ajax({
+			type: "GET",
+			url: "/calibration/login/sessionAttributes",
+			dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+			contentType: "json",
+		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
+			success: function(response) {
+				identity = response.identity;
+			},
+			error: function(xhr, status, error) {
+				    	//alert(xhr.responseText);
+			}
+		}); // ajax method end	 
+	}
+	
 	function calibrationPage(button) {
 		
-		var id = $(button).data("id");
-		console.log(id);
-		window.location.href = "execute?id=" +id;
+		getSessionValue(); 
+    	
+    	if ( identity == "校驗人員") { 
+    		var id = $(button).data("id");
+    		console.log(id);
+    		window.location.href = "execute?id=" +id;
+        } else {
+            alert("此功能需要校驗人員身分才可使用。");
+        }
+		
+		
     };
 
 </script>

@@ -78,8 +78,31 @@
 
 
 <script type="text/javascript">
+
 	$(document).ready(function(){
 	    $("#header").load("/instrument/header.html");
+	    
+		var identity = "";
+	    
+	 	// 向後端取得session的值
+	 	$.ajax({
+			type: "GET",
+			url: "/calibration/login/sessionAttributes",
+			dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+			contentType: "json",
+		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
+			success: function(response) {
+				identity = response.identity;
+			},
+			error: function(xhr, status, error) {
+				    	//alert(xhr.responseText);
+			}
+		}); // ajax method end	 
+		console.log("identity: " + identity);
+		if ( identity != "校驗人員"){
+			alert("您沒有權限訪問此頁面，請重新登入。")
+			window.location.href = "/calibration/person/login";
+		}
 	  
 	});
 	
@@ -130,40 +153,72 @@
         });
     });
 	
+	var identity = "";
+	console.log("identity: " + identity);
+	// 向後端取得session的值
+    function getSessionValue(){  
+		 
+		$.ajax({
+			type: "GET",
+			url: "/calibration/login/sessionAttributes",
+			dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+			contentType: "json",
+		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
+			success: function(response) {
+				identity = response.identity;
+			},
+			error: function(xhr, status, error) {
+				    	//alert(xhr.responseText);
+			}
+		}); // ajax method end	 
+	 }
+	
     document.getElementById("personForm").addEventListener("submit", function(event) {
-        // ...
-        // 如果需要阻止實際的表單提交，可以取消事件
-        event.preventDefault();
-
-     	// 取得表單輸入後的內容
-    	var rowData = { // key開頭不能為大寫, 否則後端接收會為null
-			"job_number": document.getElementById("job_number").value,
-			"username": document.getElementById("username").value,
-			"department": document.getElementById("department").value,
-			"position": document.getElementById("position").value,
-			"identity": document.getElementById("identity").value,
-			"email": document.getElementById("email").value,
-			"password": document.getElementById("password").value,
-			"confirmPassword": document.getElementById("confirmPassword").value,
-		};
-    	console.log(rowData);
-		jsonString = JSON.stringify(rowData); //轉成json格式
-        
-        $.ajax({
-		    type: "PUT", // 後端的要有標註PutMapping的方法
-		    url: "/crud/person/" + id,
-		    cache: false,
-		    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
-		    contentType: "application/json",
-		    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
-		    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
-		    success: function(message) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
-		    	alert(message);
-		    },
-		    error: function(xhr, status, error) {
-		    	alert(xhr.responseText);
-		    }
-	  	});
+    	console.log("identity: " + identity);
+		getSessionValue(); 
+    	
+    	if ( identity == "校驗人員") { 
+    		console.log("identity: " + identity);
+	        // 如果需要阻止實際的表單提交，可以取消事件
+	        event.preventDefault();
+	
+	     	// 取得表單輸入後的內容
+	    	var rowData = { // key開頭不能為大寫, 否則後端接收會為null
+				"job_number": document.getElementById("job_number").value,
+				"username": document.getElementById("username").value,
+				"department": document.getElementById("department").value,
+				"position": document.getElementById("position").value,
+				"identity": document.getElementById("identity").value,
+				"email": document.getElementById("email").value,
+				"password": document.getElementById("password").value,
+				"confirmPassword": document.getElementById("confirmPassword").value,
+			};
+	    	console.log(rowData);
+			jsonString = JSON.stringify(rowData); //轉成json格式
+	        
+	        $.ajax({
+			    type: "PUT", // 後端的要有標註PutMapping的方法
+			    url: "/crud/person/" + id,
+			    cache: false,
+			    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
+			    contentType: "application/json",
+			    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
+			    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+			    success: function(message) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
+			    	console.log(message)
+			    	alert("人員更新成功!!");
+			    },
+			    error: function(xhr, status, error) {
+			    	alert("更新失敗: " + xhr.responseText);
+			    }
+		  	});
+			
+    	} else {
+    		console.log("identity: " + identity);
+            alert("此功能需要校驗人員身分才可使用。");
+            window.location.href = "/calibration/person/crud";
+        }
+			
     });
 	
 </script>
