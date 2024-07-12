@@ -71,6 +71,8 @@
 		
 	}
 	
+	var identity = "";
+	
 	// 向後端取得session的值
     function getSessionValue(){  
 		 
@@ -99,6 +101,7 @@
     		window.location.href = "execute?id=" +id;
         } else {
             alert("此功能需要校驗人員身分才可使用。");
+            window.location.href = "/calibration/instrument/prep";
         }
 		
 		

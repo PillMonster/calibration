@@ -15,7 +15,7 @@
 	<h2 class="form-header">編輯人員</h2>
 	
 	
-	<form id="personForm" action="/crud/createPerson" method="POST">
+	<form id="personForm">
 		
 		<div class="form-container-in">
 			<label for="job_number">工號：</label>
@@ -154,7 +154,7 @@
     });
 	
 	var identity = "";
-	console.log("identity: " + identity);
+	
 	// 向後端取得session的值
     function getSessionValue(){  
 		 
@@ -166,6 +166,7 @@
 		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
 			success: function(response) {
 				identity = response.identity;
+				
 			},
 			error: function(xhr, status, error) {
 				    	//alert(xhr.responseText);
@@ -174,10 +175,11 @@
 	 }
 	
     document.getElementById("personForm").addEventListener("submit", function(event) {
-    	console.log("identity: " + identity);
+    
 		getSessionValue(); 
     	
     	if ( identity == "校驗人員") { 
+    		
     		console.log("identity: " + identity);
 	        // 如果需要阻止實際的表單提交，可以取消事件
 	        event.preventDefault();
@@ -193,8 +195,9 @@
 				"password": document.getElementById("password").value,
 				"confirmPassword": document.getElementById("confirmPassword").value,
 			};
-	    	console.log(rowData);
+	    	
 			jsonString = JSON.stringify(rowData); //轉成json格式
+			//console.log(jsonString);
 	        
 	        $.ajax({
 			    type: "PUT", // 後端的要有標註PutMapping的方法
@@ -214,7 +217,6 @@
 		  	});
 			
     	} else {
-    		console.log("identity: " + identity);
             alert("此功能需要校驗人員身分才可使用。");
             window.location.href = "/calibration/person/crud";
         }
