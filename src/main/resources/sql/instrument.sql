@@ -15,21 +15,22 @@ CREATE TABLE instrument (
   last_calibrate_date DATE COMMENT '上次校驗時間',
   mother_instrument_number VARCHAR(32) COMMENT '母儀編號',
   is_calibration VARCHAR(32) COMMENT '是否校驗完成',
+  is_sign VARCHAR(32) COMMENT '是否簽名完成',
   PRIMARY KEY (instrument_id)
 );
 
 INSERT INTO instrument (number, name, type, characteristic, unit, cycle, 
 						calibrate_type, calibrate_localation, calibrate_month, 
-                        last_calibrate_date, mother_instrument_number, is_calibration) 
+                        last_calibrate_date, mother_instrument_number, is_calibration, is_sign) 
 		VALUES ('CQ119', '游標卡尺', 'Mitutoyo 200mm', '長度', 'mm', 6, 
-				'內校', 'BQC', '1,6', '2024-1-18', '41QBB99303F', 'N');
+				'內校', 'BQC', '1,6', '2024-1-18', '41QBB99303F', 'N', 'N');
 INSERT INTO instrument (number, name, type, characteristic, unit, cycle, 
 						calibrate_type, calibrate_localation, calibrate_month, 
-                        last_calibrate_date, mother_instrument_number, is_calibration) 
+                        last_calibrate_date, mother_instrument_number, is_calibration, is_sign) 
 		VALUES ('CQ219', '游標卡尺', 'Mitutoyo 200mm', '長度', 'mm', 6, 
-				'內校', 'BQC', '1,6', '2024-1-18', '41QBB99303F', 'N');
+				'內校', 'BQC', '1,6', '2024-1-18', '41QBB99303F', 'N', 'N');
 INSERT INTO instrument (number, name, type, characteristic, unit, cycle, 
 						calibrate_type, calibrate_localation, calibrate_month, 
-                        last_calibrate_date, mother_instrument_number, is_calibration) 
+                        last_calibrate_date, mother_instrument_number, is_calibration, is_sign) 
 		VALUES ('CQ318', '游標卡尺', 'Mitutoyo 200mm', '長度', 'mm', 6, 
-				'內校', 'BQC', '1,6', '2024-1-18', '41QBB99303F', 'N');
+				'內校', 'BQC', '1,6', '2024-1-18', '41QBB99303F', 'N', 'N');

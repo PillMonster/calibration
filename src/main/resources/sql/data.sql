@@ -13,4 +13,4 @@ CREATE TABLE data (
 );
 INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 20.01, '合格', '2024-1-18', '24.2', '54.5%');
 INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 50.00, '合格', '2024-1-18', '24.2', '54.5%');
-INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 150.01, '合格', '2024-1-18', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 100.01, '合格', '2024-1-18', '24.2', '54.5%');

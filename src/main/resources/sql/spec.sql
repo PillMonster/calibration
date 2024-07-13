@@ -11,4 +11,4 @@ CREATE TABLE spec (
 );
 INSERT INTO spec ( specification, USL, LSL) VALUES ( 20.0, 20.02, 19.98);
 INSERT INTO spec ( specification, USL, LSL) VALUES ( 50.0, 50.02, 49.98);
-INSERT INTO spec ( specification, USL, LSL) VALUES ( 150.0, 150.02, 149.98);
+INSERT INTO spec ( specification, USL, LSL) VALUES ( 100.0, 100.02, 99.98);
