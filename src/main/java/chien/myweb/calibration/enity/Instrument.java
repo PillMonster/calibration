@@ -62,6 +62,9 @@ public class Instrument {
 	@Column(name = "is_calibration")
 	private String is_calibration;
 	
+	@Column(name = "is_sign")
+	private String is_sign;
+
 	public Long getId() {
 		return id;
 	}
@@ -164,6 +167,14 @@ public class Instrument {
 
 	public void setIs_calibration(String is_calibration) {
 		this.is_calibration = is_calibration;
+	}
+	
+	public String getIs_sign() {
+		return is_sign;
+	}
+
+	public void setIs_sign(String is_sign) {
+		this.is_sign = is_sign;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)

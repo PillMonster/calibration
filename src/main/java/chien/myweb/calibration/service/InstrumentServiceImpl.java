@@ -55,13 +55,15 @@ public class InstrumentServiceImpl implements InstrumentService{
 		instrument.setCalibrate_month(calibrate_month);
 		instrument.setLast_calibrate_date(request.getLast_calibrate_date());
 		instrument.setMother_instrument_number(request.getMother_instrument_number());
+		instrument.setIs_calibration("N");
+		instrument.setIs_sign("N");
 		
-		boolean isOverdue = calibrationService.findIsCalibration(instrument);
+		/*boolean isOverdue = calibrationService.findIsCalibration(instrument);
 		if (isOverdue == true) {
 			instrument.setIs_calibration("Y");
 		}else {
 			instrument.setIs_calibration("N");
-		}
+		}*/
 		
 		List<Person> custos = personDao.findByUsername(request.getCustos());
 		List<Person> custosLeader = personDao.findByUsername(request.getCustosLeader());
@@ -189,7 +191,7 @@ public class InstrumentServiceImpl implements InstrumentService{
 	        
 	        // ===== spec service =====
 	        
-	        // 取得該儀器當前的person id
+	        // 取得該儀器當前的spec id
  			Set<Long> currentSpecIds = updateInstrument.getSpec().stream()
  						                .map(Spec::getId)
  						                .collect(Collectors.toSet());

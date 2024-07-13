@@ -80,7 +80,7 @@ public class LoginController implements HttpSessionAttributeListener{
 				
 				// 以key-value方式存入HTTP session，此時會啟動listener，並且呼叫attributeAdded方法
 				session.setAttribute("personInfo", personInfo);
-				session.setMaxInactiveInterval(60);
+				session.setMaxInactiveInterval(1800); // 30分鐘
 				
 				System.out.println("登入成功，歡迎 " + person.getUsername());
 				System.out.println("您的IP為 " + personInfo.getIp());
@@ -94,7 +94,7 @@ public class LoginController implements HttpSessionAttributeListener{
 		    }
 
 		} else if("logout".equals(action)){
-			System.out.println("登出成功");
+			
 			session.removeAttribute("personInfo");
 			
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("您已經登出");
@@ -109,11 +109,11 @@ public class LoginController implements HttpSessionAttributeListener{
 		String action = request.getParameter("action");
 	
 		if("logout".equals(action)){
-			System.out.println("您已經登出");
+			System.out.println("您已經登出。");
 			session.removeAttribute("personInfo");
-			return ResponseEntity.ok().body("您已經登出"); 
+			return ResponseEntity.ok().body("您已經登出。"); 
 		}else {
-			return ResponseEntity.ok().body("登入中"); 
+			return ResponseEntity.ok().body("您已登入。"); 
 		}
 			
 	}
