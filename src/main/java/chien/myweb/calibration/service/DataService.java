@@ -23,5 +23,7 @@ public interface DataService {
     
     //查詢全部
     List<Data> findDataAll();
-
+    
+    // 查詢data的id，透過instrument id 與 instrument.last_calibrate_date = data.calibrate_date
+    List<Long> findDataIdForSomeDate(Long instrument_id, String last_calibrate_date);
 }

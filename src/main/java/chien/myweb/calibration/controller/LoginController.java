@@ -20,12 +20,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import chien.myweb.calibration.enity.Person;
 import chien.myweb.calibration.enity.PersonInfo;
+import chien.myweb.calibration.service.EmailService;
 import chien.myweb.calibration.service.IdentityService;
-import chien.myweb.calibration.service.LoginService;
 import chien.myweb.calibration.service.PersonService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
@@ -40,13 +41,11 @@ import jakarta.servlet.http.HttpSession;
 public class LoginController implements HttpSessionAttributeListener{
 	
 	@Autowired
-	private LoginService loginService;
-	@Autowired
 	private PersonService personService;
 	@Autowired
 	private IdentityService identityService;
-	//@Autowired
-	//private EmailService emailService;
+	@Autowired
+	private EmailService emailService;
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody PersonInfo requestInfo,  HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException {
@@ -163,8 +162,7 @@ public class LoginController implements HttpSessionAttributeListener{
         return new ResponseEntity<ServletOutputStream>(outStream, HttpStatus.OK);
     }
 	
-	/*@PostMapping("/sendMail")
-	@ResponseBody
+	@PostMapping("/login/sendMail")
     public ResponseEntity<String> sendMail(@RequestBody Map<String, String> requestForm, HttpServletRequest request) {
 		
     	System.out.println("您輸入的信箱: " + requestForm.get("email"));
@@ -178,12 +176,12 @@ public class LoginController implements HttpSessionAttributeListener{
     	if( email != null && email.trim().length()>0 && // 判斷是否為空的信箱
     		captcha != null && captcha.trim().length()>0) { // 判斷是否為空的驗證碼
     		 
-    		if ( userService.validateEmail(email) == false ){  // 判斷信箱格式
+    		if ( personService.validateEmail(email) == false ){  // 判斷信箱格式
 				System.out.println("不符合e-mail格式。");
 				return ResponseEntity.ok().body("不符合e-mail格式。");
 			}
     		
-    		if ( userService.validateAccount_number(captcha) == false ) { // 判斷驗證碼格式
+    		if ( personService.validateAccount_number(captcha) == false ) { // 判斷驗證碼格式
     			System.out.println("驗證碼格式須為英文及數字。");
     			return ResponseEntity.ok().body("驗證碼格式須為英文及數字。");
     		}
@@ -203,6 +201,6 @@ public class LoginController implements HttpSessionAttributeListener{
     		return ResponseEntity.ok().body("您沒有輸入，請再輸入一次。");
     	}
 		
-    }*/
+    }
 	    
 }

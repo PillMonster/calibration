@@ -1,5 +1,9 @@
 package chien.myweb.calibration.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,11 +17,13 @@ import org.springframework.stereotype.Service;
 import chien.myweb.calibration.dao.InstrumentDao;
 import chien.myweb.calibration.dao.PersonDao;
 import chien.myweb.calibration.dao.CalibrationDao;
+import chien.myweb.calibration.dao.DataDao;
 import chien.myweb.calibration.dao.SpecDao;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.Person;
 import chien.myweb.calibration.enity.RequestData;
 import chien.myweb.calibration.enity.Calibration;
+import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Spec;
 
 @Service
@@ -31,6 +37,8 @@ public class InstrumentServiceImpl implements InstrumentService{
 	SpecDao specDao;
 	@Autowired
 	SpecService specService;
+	@Autowired
+	DataDao dataDao;
 	@Autowired
 	CalibrationService calibrationService;
 	
@@ -114,6 +122,7 @@ public class InstrumentServiceImpl implements InstrumentService{
 		Set<Long> newPersonIds = new TreeSet<>(); // 宣告Set集合: 存放更新後人員的id
 		Set<Long> newSpecIds = new TreeSet<>(); // 宣告Set集合: 存放更新後規格的id
 		List<Instrument> instrumentDB = findInstrumentById(id);	 // 透過前端得到儀器id, 並取得該儀器的物件
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		
 		Optional<Instrument> instrumentOp = instrumentDB.stream() 
 				.filter(p -> p.getId().equals(id))
@@ -124,6 +133,26 @@ public class InstrumentServiceImpl implements InstrumentService{
 			Instrument updateInstrument = instrumentOp.get(); // 取得當前id的儀器
 			
 			// ===== instrument update service =====
+			
+			// ===== 取得當前儀器對應的data id的進行日期更新 =====
+			String befCalibrateDate = updateInstrument.getLast_calibrate_date().format(formatter); // 轉換字串格式
+			String afferCalibrateDate = request.getLast_calibrate_date().format(formatter);
+			
+			System.out.println("befCalibrateDate: " + befCalibrateDate);
+			System.out.println("afferCalibrateDate: " + afferCalibrateDate);
+			
+			List<Long> dataIdByCalibrateDate = dataDao.findDataIdForSomeDate(id, befCalibrateDate); // 取得修改前日期下的data_id
+			
+			for (Long dataId : dataIdByCalibrateDate) {
+	
+				List<Data> dataList = dataDao.findByDataId(dataId);
+				Data dataObj = dataList.get(0);
+				//System.out.println(dataObj.getId());
+				dataObj.setCalibrate_date(afferCalibrateDate); // 設定修改後日期的data object
+				dataDao.save(dataObj); // 這裡使用 save 進行更新
+			}
+			
+			
 			String cycle = request.getCycle().replaceAll("[^0-9]", "");
 			List<String> calibrate_month_list = request.getCalibrate_month();
 			String calibrate_month = String.join(",", calibrate_month_list);
@@ -140,6 +169,7 @@ public class InstrumentServiceImpl implements InstrumentService{
 			updateInstrument.setCalibrate_month(calibrate_month);
 			updateInstrument.setLast_calibrate_date(request.getLast_calibrate_date());
 			updateInstrument.setMother_instrument_number(request.getMother_instrument_number());
+		
 			
 			// ===== person update service =====
 			// 取得該儀器當前的person id

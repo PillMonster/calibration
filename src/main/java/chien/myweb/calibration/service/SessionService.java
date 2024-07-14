@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSessionAttributeListener;
 import jakarta.servlet.http.HttpSessionBindingEvent;
 
 @Component
-public class LoginService implements HttpSessionAttributeListener{
+public class SessionService implements HttpSessionAttributeListener{
 	
 	Log log = LogFactory.getLog(this.getClass());
 	

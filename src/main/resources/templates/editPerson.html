@@ -82,6 +82,7 @@
 	$(document).ready(function(){
 	    $("#header").load("/instrument/header.html");
 	    
+	    var loginId = "";
 		var identity = "";
 	    
 	 	// 向後端取得session的值
@@ -92,6 +93,7 @@
 			contentType: "json",
 		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
 			success: function(response) {
+				loginId = response.id;
 				identity = response.identity;
 			},
 			error: function(xhr, status, error) {
@@ -99,11 +101,26 @@
 			}
 		}); // ajax method end	 
 		console.log("identity: " + identity);
-		if ( identity != "校驗人員"){
-			alert("您沒有權限訪問此頁面，請重新登入。")
-			window.location.href = "/calibration/person/login";
+		console.log("loginId: " + loginId + " ,id: " + id);
+		
+		if ( identity != "校驗人員" ){
+			
+			if ( loginId != id ) {
+				alert("您沒有權限訪問此頁面，請重新登入。")
+				window.location.href = "/calibration/person/login";
+			}
 		}
-	  
+  		
+		if ( identity == "校驗人員" ) {
+			var identityElement = document.getElementById("identity");
+			identityElement.disabled = false; // 啟用
+		}
+		else{
+			var identityElement = document.getElementById("identity");
+    		identityElement.disabled = true; // 啟用	
+			
+		}	
+  
 	});
 	
 	var urlParams = new URLSearchParams(window.location.search); // 獲取當前頁面的URL中的查詢參數
@@ -116,7 +133,7 @@
 	    async:true,//true為非同步
 	    success:function (data) {//接收後端來的資料
 	    	console.log("取得成功, Person物件的id為: " + data.id);	
-
+	    
 	    	document.getElementById("job_number").value = data.job_number;
 	    	document.getElementById("username").value = data.username;
 	    	document.getElementById("department").value = data.department;
@@ -124,34 +141,13 @@
 	    	document.getElementById("identity").value = data.identity;
 	    	document.getElementById("email").value = data.email;
 	    	document.getElementById("password").value = data.password;
-	    	document.getElementById("confirmPassword").value = data.password;   	
+	    	document.getElementById("confirmPassword").value = data.password;
 
 	    },
 	    error :function(errorMsg) {
 	        alert("請求後端資料失敗！(personId)");
 	    }
 	});
-	
-	
-	// 在文件載入完畢後執行的函數
-    document.addEventListener("DOMContentLoaded", function() {
-        // 取得下拉選單和文字輸入欄位的元素
-        var identityElement = document.getElementById("identity");
-        var passwordElement = document.getElementById("password");
-        var confirmPasswordElement = document.getElementById("confirmPassword");
-        
-        // 監聽下拉選單的變動事件
-        identityElement.addEventListener("change", function() {
-            // 如果選擇了特定項目，則啟用/禁用文字輸入欄位
-            if (identityElement.value == "保管人員" || identityElement.value == "保管主管"){
-            	passwordElement.disabled = true; // 禁用
-            	confirmPasswordElement.disabled = true; // 禁用
-            } else {
-            	passwordElement.disabled = false; // 啟用
-            	confirmPasswordElement.disabled = false; // 啟用
-            }
-        });
-    });
 	
 	var identity = "";
 	

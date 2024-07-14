@@ -142,19 +142,15 @@ public class PersonController {
 	    }
 	}
 	
-	@GetMapping("/personPassword/{password}")  
-	public ResponseEntity<Person> getPersonPassWoed(@PathVariable("password") String password){
+	@GetMapping("/personPassword/{email}")  
+	public ResponseEntity<String> getPersonPassWoed(@PathVariable("email") String email){
 		
-		List<Person> personDB = personService.findPassword(password);	
+		String password = personService.findPasswordByEmail(email);	
 
-		Optional<Person> personOp = personDB.stream()
-				.filter(p -> p.getPassword().equals(password))
-				.findFirst();
-		
-		if(personOp.isPresent()){
-			Person person = personOp.get();
-			System.out.println(person.toString());
-			return ResponseEntity.ok().body(person); 
+		if(password != null){
+			
+			System.out.println(password);
+			return ResponseEntity.ok().body(password); 
 		}
 		else{
 			System.out.println("查詢不到人員密碼");

@@ -38,6 +38,9 @@ public interface PersonService {
 		
 	// 單一查詢(透過password)
 	List<Person> findPassword(String password);
+	
+	//透過email查詢密碼 (單一欄位)
+	String findPasswordByEmail(String email);
 		
 	// 查詢(全部)
 	List<Person> findPersonAll();

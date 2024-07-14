@@ -35,13 +35,13 @@ public class DataServiceImpl implements DataService{
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		
-		List<Data> newData = new ArrayList<>();	
+		List<Data> newData = new ArrayList<>();	// 用來存放更新後的數據初始List
 		
-		int listLength = request.getValueList().size();
+		int listLength = request.getValueList().size(); // 量測數據陣列長度大小
 		
-		int createResult = 0;
+		int createResult = 0; // 創建結果初始職
 		
-		//for (String i : request.getValueList()) {
+		// =====取得多個量測值 ====
 		for (int i=0;  i<listLength; i++) {	
 			
 			Data data = new Data();
@@ -86,11 +86,11 @@ public class DataServiceImpl implements DataService{
 				instrumentDao.save(updateInstrument); // 更新資料庫			
 			}
 			else{
-				System.out.println("新增儀器、規格、數據的關聯紀錄失敗。");
+				System.out.println("沒有此儀器或量具。");
 		    }
 		}
 		else {
-			System.out.println("沒有此儀器或量具");
+			System.out.println("新增儀器、規格、數據的關聯紀錄失敗。");
 		}
 		
 		return newData;
@@ -118,6 +118,12 @@ public class DataServiceImpl implements DataService{
 	public List<Data> findDataAll() {
 		// TODO Auto-generated method stub
 		return dataDao.findDataAll();
+	}
+	
+	@Override
+	public List<Long> findDataIdForSomeDate(Long instrument_id, String last_calibrate_date) {
+		// TODO Auto-generated method stub
+		return dataDao.findDataIdForSomeDate(instrument_id, last_calibrate_date);
 	}
 
 }

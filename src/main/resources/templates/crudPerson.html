@@ -34,6 +34,7 @@
 	    ajaxMethod();
 	});
 	
+	var loginId = "";
 	var identity = "";
 	
 	
@@ -138,7 +139,8 @@
 			contentType: "json",
 		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
 			success: function(response) {
-				identity = response.identity;
+				loginId = response.id;
+				identity = response.identity;		
 			},
 			error: function(xhr, status, error) {
 				    	//alert(xhr.responseText);
@@ -151,6 +153,7 @@
     	
     	getSessionValue(); 
     	
+    	// 判斷身分是否為校驗人員
     	if ( identity == "校驗人員") { 
             window.location.href = "/calibration/person/create";
         } else {
@@ -162,10 +165,13 @@
 		
 		getSessionValue(); 
     	console.log("identity: " + identity);
-		
-		if ( identity == "校驗人員") {
-			var id = $(button).data("id");
-			console.log(id);
+    	
+    	var id = $(button).data("id"); 
+    	console.log("loginId: " + loginId + " ,id: " + id);
+    	
+    	// 判斷身分是否為校驗人員，或登入的使用者是否與選擇的使用者id是否相同
+		if ( identity == "校驗人員" || loginId == id){ 
+			
 			window.location.href = "edit?id=" +id;
 		}
 		else {
@@ -178,6 +184,7 @@
     	getSessionValue(); 
     	console.log("identity: " + identity);
     	
+    	// 判斷身分是否為校驗人員
     	if ( identity == "校驗人員") {
  
     		var result = confirm("確認刪除該紀錄?");

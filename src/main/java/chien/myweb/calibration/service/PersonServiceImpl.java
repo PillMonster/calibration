@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.PersonDao;
@@ -100,6 +101,11 @@ public class PersonServiceImpl implements PersonService{
 	@Override
 	public List<Person> findByidentity(String identity) {
 		return personDao.findByidentity(identity);
+	}
+	
+	@Override
+	public String findPasswordByEmail(String email) {
+		return personDao.findPasswordByEmail(email);
 	}
 
 	@Override

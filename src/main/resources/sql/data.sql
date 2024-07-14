@@ -11,6 +11,23 @@ CREATE TABLE data (
   
   PRIMARY KEY (data_id)
 );
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 20.00, '合格', '2023-7-20', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 49.99, '合格', '2023-7-20', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 99.99, '合格', '2023-7-20', '24.2', '54.5%');
 INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 20.01, '合格', '2024-1-18', '24.2', '54.5%');
 INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 50.00, '合格', '2024-1-18', '24.2', '54.5%');
 INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 100.01, '合格', '2024-1-18', '24.2', '54.5%');
+
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 19.99, '合格', '2023-7-20', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 49.99, '合格', '2023-7-20', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 100.00, '合格', '2023-7-20', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 20.01, '合格', '2024-1-18', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 50.01, '合格', '2024-1-18', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 100.00, '合格', '2024-1-18', '24.2', '54.5%');
+
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 20.00, '合格', '2023-7-20', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 50.01, '合格', '2023-7-20', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 99.99, '合格', '2023-7-20', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 20.00, '合格', '2024-1-18', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 50.00, '合格', '2024-1-18', '24.2', '54.5%');
+INSERT INTO data ( value, result, calibrate_date, temperature, humidity) VALUES ( 99.99, '合格', '2024-1-18', '24.2', '54.5%');
