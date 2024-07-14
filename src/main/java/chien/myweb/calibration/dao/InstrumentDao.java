@@ -47,7 +47,10 @@ public interface InstrumentDao extends JpaRepository<Instrument, Long>{
     @Query(value = "SELECT DISTINCT calibrate_localation FROM instrument", nativeQuery = true) //查詢校驗地點(單一欄位)
     List<String> findInstrumentByLocalation();
     
-    @Query(value = "SELECT instrument_id FROM instrument", nativeQuery = true) //查詢校驗地點(單一欄位)
+    @Query(value = "SELECT instrument_id FROM instrument", nativeQuery = true) //查詢所有器具ID(單一欄位)
     List<Long> findInstrumentIds();
+    
+    @Query(value = "SELECT * FROM instrument WHERE is_calibration = 'Y' AND  is_sign = 'N';", nativeQuery = true) //查詢未簽核
+    List<Instrument> findSignByInstruments();
 
 }

@@ -36,8 +36,9 @@ public class CalibrationServiceImpl implements CalibrationService{
 	CalibrationDao calibrationDao;
 	
 	
+	// ========== 查詢單一儀器校驗結果 ==========
 	@Override
-	public Map<String, Object> findCalibrationResult(Long id) {  // 查詢單一儀器校驗結果	
+	public Map<String, Object> findCalibrationResult(Long id) {  
 		
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); // 日期格式
 		Instrument instrument = new Instrument();
@@ -99,10 +100,9 @@ public class CalibrationServiceImpl implements CalibrationService{
 	}
 	
 	
+	// ========== 查詢待校驗器具 ==========
 	@Override
-	public List<Instrument> findPrepInstruments() {  // 查詢待校驗器具
-		
-		
+	public List<Instrument> findPrepInstruments() {  
 		
 		List<Instrument> instrumentDB = instrumentDao.findInstruments();
 				
@@ -146,25 +146,25 @@ public class CalibrationServiceImpl implements CalibrationService{
             	Long cycle =  Long.parseLong(prep.getCycle()) * 30; // 取得此儀器的校驗週期
             	
                 // 計算日期相差的月份
-                long monthsDifference = ChronoUnit.MONTHS.between(lastCalibrateDate, currentDate);
+                //long monthsDifference = ChronoUnit.MONTHS.between(lastCalibrateDate, currentDate);
                 //System.out.println("儀器 " + number + " 的上次校驗日期與現在日期相差 " + monthsDifference + " 個月");
                 
                 LocalDate today = LocalDate.now();
                 long daysBetween = ChronoUnit.DAYS.between(lastCalibrateDate, today);
                 long dayDifferenc = cycle - daysBetween ;
                 
-                System.out.println("編號: " + number + ", 週期: " + cycle + ", 天數相差: " + daysBetween + ", 兩者相減: " + dayDifferenc);
-                // 檢查是否超過週期
-                //boolean isOverdue = monthsDifference >= cycle -1;
-                boolean isOverdue = dayDifferenc <= 30 ;
-                //System.out.println("編號: " + number + ", 離校驗日相差: " +  monthsDifference  + " 個月, 是否超過週期: " + isOverdue);
+                System.out.println("編號: " + number + ", 週期: " + cycle + "天, 上次校驗日今日相差: " + daysBetween + "天, 兩者相減: " + dayDifferenc);
                 
-                // 如果超過週期就回傳 true，否則回傳 false
+                // 檢查是否小於30天
+                boolean isOverdue = dayDifferenc <= 30 ;
+                
+                // 如果小於30天就回傳 true，否則回傳 false
                 if (isOverdue) {
-                	//prep.setIs_calibration("Y");
-                	//instrumentDao.save(prep); // 更新資料庫
+                	prep.setIs_calibration("N");
+                	prep.setIs_sign("N");
                     return isOverdue;
                 } else {
+                	
                     return isOverdue;
                 }	
             				
@@ -174,8 +174,16 @@ public class CalibrationServiceImpl implements CalibrationService{
 		return prepInstrument;	
 	}
 	
+	
+	// ========== 查詢待簽核器具 ==========
 	@Override
-	public boolean findIsCalibration(Instrument instrument) { // 新增儀器時，判斷器具是否過期
+	public List<Instrument> findPrepSignInstrument() {
+		return instrumentDao.findSignByInstruments();
+	}
+	
+	// ========== 新增儀器時，判斷器具是否過期 ==========
+	/*@Override
+	public boolean findIsCalibration(Instrument instrument) { 
 		
 		String number = instrument.getNumber(); // 取得此儀器的編號
     	
@@ -200,10 +208,12 @@ public class CalibrationServiceImpl implements CalibrationService{
             System.out.println("新增儀器編號: " + number + ", 儀器校驗未過期");
             return isOverdue;
         }	
-	}
+	}*/
 	
+	
+	// ========== 查詢所有儀器校驗結果 ==========
 	/*@Override
-	public List<Map> findCalibrationResult() {  // 查詢所有儀器校驗結果		
+	public List<Map> findCalibrationResult() {  		
 		
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); // 日期格式
 		

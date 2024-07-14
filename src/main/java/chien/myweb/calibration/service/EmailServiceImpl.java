@@ -32,7 +32,6 @@ public class EmailServiceImpl implements EmailService{
     public String sendSimpleMail(String email){
     	//String getPassword = "";
     	try {
-    		System.out.println("EmailService " + email);
     		String password = personService.findPasswordByEmail(email);	
 			System.out.println("您的密碼: " + password);	
             
@@ -45,9 +44,10 @@ public class EmailServiceImpl implements EmailService{
 	            mailMessage.setTo(email); // 寄到哪裡
 	            mailMessage.setSubject("您的會員密碼"); // 信件標題
 	            mailMessage.setText("您的密碼為: " + password); // 信件內容
-	
+
 	        	// Sending the mail
 	        	javaMailSender.send(mailMessage);
+	        	
 	        	return "已將密碼寄到您的信箱。";
         	
 	        // Catch block to handle the exceptions

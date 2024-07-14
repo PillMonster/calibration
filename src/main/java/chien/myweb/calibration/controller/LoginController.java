@@ -172,6 +172,7 @@ public class LoginController implements HttpSessionAttributeListener{
     	String email = requestForm.get("email");
     	String captcha = requestForm.get("captcha");
     	String ans = (String)request.getSession(true).getAttribute("ans"); // 從session裡取得驗證碼答案(一開始須將驗證碼存入session)
+    
     	
     	if( email != null && email.trim().length()>0 && // 判斷是否為空的信箱
     		captcha != null && captcha.trim().length()>0) { // 判斷是否為空的驗證碼

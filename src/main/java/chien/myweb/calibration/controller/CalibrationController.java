@@ -34,7 +34,8 @@ public class CalibrationController {
 	@Autowired
 	InstrumentPersonService instrumentPersonService;
 	
-	@PostMapping("/prepCalibrations") // 新增
+	// ===== 新增數據 (執行校驗) =====
+	@PostMapping("/prepCalibrations") 
 	public ResponseEntity<?> executeCalibration(@RequestBody Data request){
 			
 		System.out.println(request.toString());
@@ -54,8 +55,9 @@ public class CalibrationController {
 
 	}
 	
+	// ===== 取得待校驗器具 =====
 	@GetMapping("/prepCalibrations")  
-	public ResponseEntity<?> getPrepCalibrationList(){
+	public ResponseEntity<?> getPrepCalibration(){
 		
 		List<Instrument> instrumentDB = calibrationService.findPrepInstruments();
 		 
@@ -73,14 +75,7 @@ public class CalibrationController {
 		}
 	}
 	
-	/*@GetMapping("/calibrationResult")  
-	public ResponseEntity<List<Map>> getCalibrationResult(){
-		
-		List<Map> cablibrationResultMap = calibrationService.findCalibrationResult();
-	
-		return ResponseEntity.ok().body(cablibrationResultMap);
-	}*/
-	
+	// ===== 取得單一器具之校驗結果 =====
 	@GetMapping("/calibrationResult/{id}")  
 	public ResponseEntity<Map<String, Object>> getCalibrationResult(@PathVariable("id") Long id){
 		
@@ -89,7 +84,7 @@ public class CalibrationController {
 		return ResponseEntity.ok().body(cablibrationResultMap);
 	}
 	
-	
+	// ===== 透過器具id，取得對應的person =====
 	@GetMapping("/calibrationPerson/{id}")  
 	public ResponseEntity<String> getCalibrationPerson(@PathVariable("id") Long id){
 		
@@ -109,6 +104,26 @@ public class CalibrationController {
 			System.out.println("沒有此校驗人員");
 	        return ResponseEntity.notFound().build();
 	    }
+	}
+	
+	// ===== 取得待簽核之器具 =====
+	@GetMapping("/prepSign")  
+	public ResponseEntity<?> getPrepSignInstrument(){
+		
+		List<Instrument> instrumentDB = calibrationService.findPrepSignInstrument();
+		 
+		Optional<Instrument> instrumentOp = instrumentDB.stream().findAny();
+		
+		if (instrumentOp.isPresent()) {
+			
+			instrumentDB.forEach(item -> System.out.println(item.toString()));
+			
+			return ResponseEntity.ok().body(instrumentDB);
+		}
+		else {
+			System.out.println("目前沒有要簽核的器具"); 	
+			return ResponseEntity.ok().body("目前沒有要簽核的器具");
+		}
 	}
 	
 
