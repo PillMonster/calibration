@@ -8,6 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/calibration")
 public class ShowPageController {
 	
+	
+	@GetMapping("/sign/prep")
+	public String showSignPrep() {
+		return "signPrep";
+	}
+	
+	
 	@GetMapping("/instrument/result")
 	public String showCalibrationResult() {
 		return "calibrationResult";

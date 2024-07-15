@@ -97,7 +97,7 @@ body {
 }
 
 .calibration-results th {
-     background-color: #f2f2f2;
+     background-color: #04AA6D;
 }
 
 .calibration-results tr:nth-child(even) {

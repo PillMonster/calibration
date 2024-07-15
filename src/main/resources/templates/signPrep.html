@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>待簽核清單</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/crudStyle.css">
+</head>
+<body>
+<div id="header"></div>
+
+<div class="rightDiv">
+	<div class="instrumentTableDiv" id="instrumentTableDiv"></div>
+</div>
+
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+	    $("#header").load("/instrument/header.html");
+	
+	});
+	
+	//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
+	$.ajax({
+	    type:"GET",//請求方式
+	    url:"/calibration/prepSign",//url代表向後端發送請求 (後端需有標註@GetMapping("calibration/prepCalibrations")的方法)
+	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法，或回傳方法型態為ResponseEntity<?>)
+	    async:true,//true為非同步
+	    success:function (data) {//接收後端來的資料
+	    	console.log(data);
+	    	updateData(data);	
+	    },
+	    error :function(errorMsg) {
+	        alert("目前沒有要簽核的器具。");
+	    }
+	});
+	
+	
+	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的table上
+	function updateData(data){
+		var innerTable = "";
+		innerTable += "<div style='text-align: center;'>";
+		innerTable += "<table border='1' class='styled-table' style='margin-left: auto; margin-right: auto;'>";
+		//table title
+		innerTable += "<thead>";
+		innerTable += "<tr><td>器具編號</td><td>器具名稱</td><td>廠牌型式</td><td>校驗特性</td><td>校驗單位</td>" +
+						"<td>校驗週期</td><td>校驗類型</td><td>校驗地點</td><td>校驗月份</td><td>上次校驗時間</td><td>母儀編號</td><td>操作</td>";
+		innerTable += "</thead>";
+		innerTable += "<tbody>";
+		for (var i = 0; i < data.length; i++) {
+			innerTable += "<tr class='active-row'>";
+			innerTable += "<td>" + data[i].number + "</td>";
+			innerTable += "<td>" + data[i].name + "</td>";
+			innerTable += "<td>" + data[i].type + "</td>";
+			innerTable += "<td>" + data[i].characteristic + "</td>";
+			innerTable += "<td>" + data[i].unit + "</td>";
+			innerTable += "<td>" + data[i].cycle + "</td>";
+			innerTable += "<td>" + data[i].calibrate_type + "</td>";
+			innerTable += "<td>" + data[i].calibrate_localation + "</td>";
+			innerTable += "<td>" + data[i].calibrate_month + "</td>";
+			innerTable += "<td>" + data[i].last_calibrate_date + "</td>";
+			innerTable += "<td>" + data[i].mother_instrument_number + "</td>";
+			
+			innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='calibrationPage(this)'>簽核</button>" + "</td>";
+		}
+		innerTable += "</tr>";
+		innerTable += "</tbody>";
+		innerTable += "</table>";
+		innerTable += "</div>";
+		document.getElementById("instrumentTableDiv").innerHTML = innerTable;
+		
+	}
+	
+	var identity = "";
+	
+	// 向後端取得session的值
+    function getSessionValue(){  
+		 
+		$.ajax({
+			type: "GET",
+			url: "/calibration/login/sessionAttributes",
+			dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+			contentType: "json",
+		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
+			success: function(response) {
+				identity = response.identity;
+			},
+			error: function(xhr, status, error) {
+				    	//alert(xhr.responseText);
+			}
+		}); // ajax method end	 
+	}
+	
+	function calibrationPage(button) {
+		
+		getSessionValue(); 
+    	
+    	if ( identity == "校驗主管") { 
+    		var id = $(button).data("id");
+    		console.log(id);
+    		window.location.href = "execute?id=" +id;
+        } else {
+            alert("此功能需要校驗主管身分才可使用。");
+            window.location.href = "/calibration/sign/prep";
+        }
+		
+		
+    };
+
+</script>
+
+</body>
+</html>
