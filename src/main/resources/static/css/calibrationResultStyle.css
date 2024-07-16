@@ -34,9 +34,27 @@ body {
 }
 
 .h3 {
-	width: 90%;
+	width: 30%;
 	text-align: left;
-	margin: 20px 40px 10px 40px;  /* 上 右 下 左 */
+	/*margin: 20px 40px 10px 40px;  /* 上 右 下 左 */
+	border: 1px solid #868687;
+}
+
+.title-div{
+	width: 90%;
+	display: flex; /* 裡面每一個div可以上下左右排列 */
+	margin: 20px 40px 5px 40px;  /* 上 右 下 左 */
+}
+
+.date-span {
+	width: 100%;
+	text-align: left;
+	/*border: 1px solid #868687;*/
+}
+
+.temp-span{
+	width: 100%;
+	text-align: right;
 	/*border: 1px solid #868687;*/
 }
 
@@ -49,7 +67,7 @@ body {
     display: flex;
     
     max-width: 800px; /* 設定最大寬度 */
-    margin: 0 auto; /* 左右置中 */
+    margin: 0 auto; /* 左右置中 
 	font-size: 18px; /* 將文字大小設置為 16px */
 
 }

@@ -145,27 +145,38 @@
 	
 		var speclen = data.calibrationResult[dateLen].length; 
 		var calibrate_date = data.calibrationResult[dateLen][0].calibrate_date;
-
+		
 		const resultsContainer = document.getElementById("calibration-results"); // 父容器
 		
 		var innerTable = "";
 		
+		//<td>溫度 (°C)</td><td>濕度 (%)</td>
 		innerTable += "<div style='text-align: center;'>";
-		innerTable += "<h3 class='h3'>" + calibrate_date + " 校驗</h3>";
+		//innerTable += "<div><span><h3 class='h3'>" + calibrate_date + " 校驗</h3></span><span><h3>溫度22.2,濕度58%</h3></span></div>";
+		innerTable += "<div class='title-div'>";
+		innerTable += "<span class='date-span'><h3>" +  calibrate_date + " 校驗</h3></span>";
+		innerTable += "<span class='temp-span'>溫度" + data.calibrationResult[dateLen][0].temperature + " °C，";
+		innerTable += "濕度" + data.calibrationResult[dateLen][0].humidity + "</span></div>";
 		innerTable += "<table border='1' class='styled-table'>";
 		innerTable += "<thead bgcolor='#7FFFD4'>";
-		innerTable += "<tr><td>校驗規格</td><td>規格上限</td><td>規格下限</td><td>測量值</td><td>溫度 (°C)</td><td>濕度 (%)</td><td>結果</td>";
+		innerTable += "<tr><td>校驗規格</td><td>規格上限</td><td>規格下限</td><td>測量值</td><td>精度</td><td>誤差</td><td>校驗結果</td>";
 		innerTable += "</thead>";
 		innerTable += "<tbody>";
 		
 		for (var i = 0; i < speclen; i++) {
+			
+			var accuracy = data.calibrationResult[dateLen][i].specification - data.calibrationResult[dateLen][i].lsl;
+			var error = data.calibrationResult[dateLen][i].value - data.calibrationResult[dateLen][i].specification;
+					
+			var decimal = getDecimalPlaces(data.calibrationResult[dateLen][i].usl); // 取得小數位數
+
 			innerTable += "<tr class='active-row'>";
 			innerTable += "<td>" + data.calibrationResult[dateLen][i].specification + "</td>";
 			innerTable += "<td>" + data.calibrationResult[dateLen][i].usl + "</td>";
 			innerTable += "<td>" + data.calibrationResult[dateLen][i].lsl + "</td>";
 			innerTable += "<td>" + data.calibrationResult[dateLen][i].value + "</td>";
-			innerTable += "<td>" + data.calibrationResult[dateLen][i].temperature + "</td>";
-			innerTable += "<td>" + data.calibrationResult[dateLen][i].humidity + "</td>";
+			innerTable += "<td>&plusmn;" + accuracy.toFixed(decimal) + "</td>";
+			innerTable += "<td>" + error.toFixed(decimal) + "</td>";
 			innerTable += "<td>" + data.calibrationResult[dateLen][i].result  + "</td>";
 		}
 		innerTable += "</tr>";
@@ -180,6 +191,16 @@
         resultsContainer.appendChild(div); // 將div插入到父容器中
         
 		
+	}
+	
+	// ========== 取得小數位數 ==========
+	function getDecimalPlaces(num) { 
+	    const numStr = num.toString();
+	    const decimalIndex = numStr.indexOf('.');
+	    if (decimalIndex === -1) {
+	        return 0; // 沒有小數部分
+	    }
+	    return numStr.length - decimalIndex - 1;
 	}
 	
 	// ========== lint chart ==========
