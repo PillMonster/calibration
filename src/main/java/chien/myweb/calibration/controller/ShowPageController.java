@@ -14,6 +14,11 @@ public class ShowPageController {
 		return "signPrep";
 	}
 	
+	@GetMapping("/sign/execute")
+	public String showSignExecute() {
+		return "signExecute";
+	}
+	
 	
 	@GetMapping("/instrument/result")
 	public String showCalibrationResult() {

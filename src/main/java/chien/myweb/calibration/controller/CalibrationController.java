@@ -1,5 +1,6 @@
 package chien.myweb.calibration.controller;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -126,5 +127,28 @@ public class CalibrationController {
 		}
 	}
 	
-
+	// ===== 校驗簽核 (主管簽核) =====
+	@GetMapping("/prepSign")  
+	public ResponseEntity<?> executeSign(Long id){
+		
+		List<Instrument> instrumentDB = instrumentService.findInstrumentById(id);	 // 透過前端得到儀器id, 並取得該儀器的物件
+		
+		Optional<Instrument> instrumentOp = instrumentDB.stream() 
+				.filter(p -> p.getId().equals(id))
+				.findFirst();
+		
+		if(instrumentOp.isPresent()){
+			
+			Instrument updateInstrument = instrumentOp.get(); // 取得當前id的儀器
+			updateInstrument.setIs_sign("Y");
+			
+			return ResponseEntity.ok().body(instrumentService.updateInstrumentBySign(updateInstrument)); // 這裡使用 save 進行更新)
+		}
+		else{
+			System.out.println("未進行簽核。"); 	
+			return ResponseEntity.ok().body("未進行簽核。");
+	    }
+		 		
+	}
+	
 }

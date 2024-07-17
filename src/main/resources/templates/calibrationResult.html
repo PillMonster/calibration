@@ -71,20 +71,20 @@
 		    success:function (data) {//接收後端來的資料
 		    	console.log(data);
 		    	
-		    	updateInfo(data);
+		    	updateInfo(data); // 渲染器具校驗資訊
 		 	
-		    	var dateLen = data.calibrationResult.length;
-		    	var specLen = data.calibrationResult[0].length;
+		    	var dateLen = data.calibrationResult.length; // 取得該器具校驗次數
+		    	var specLen = data.calibrationResult[0].length; // 取得該器具校驗規格數量
 				console.log("dateLen: " + dateLen);
 				console.log("specLen: " + specLen);
 				
 		    	for(var i = 0; i < dateLen; i++){
-		    		updateData(data, i); // i 為不同校驗日期批次
+		    		updateData(data, i); // 渲染該器具校驗結果於表格上，i 為不同校驗日期批次 
 		    		
 		    	}	
 		    	
 		    	for(var i = 0; i < specLen; i++){
-		    		updateChart(data, dateLen, i); // i 為不同規格
+		    		updateChart(data, dateLen, i); // 渲染該器具校驗結果於折線圖上，i 為不同規格
 		    	}
 		    	
 		    },

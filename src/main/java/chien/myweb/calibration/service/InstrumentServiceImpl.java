@@ -279,6 +279,12 @@ public class InstrumentServiceImpl implements InstrumentService{
 	    }
 	}
 	
+	// ========== 更新簽核 ==========
+	@Override
+	public Instrument updateInstrumentBySign(Instrument instrument) {
+		return instrumentDao.save(instrument); // 這裡使用 save 進行更新
+	}
+	
 	// ========== 刪除 ==========
 	@Override
 	public void deleteInstrumentById(Long id) {

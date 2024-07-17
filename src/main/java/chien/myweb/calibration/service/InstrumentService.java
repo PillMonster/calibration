@@ -16,6 +16,9 @@ public interface InstrumentService {
 	// 修改
 	Instrument updateInstrument(Long id, RequestData request);
 	
+	// 更新簽核
+	Instrument updateInstrumentBySign(Instrument instrument);
+	
 	// 刪除
 	void deleteInstrumentById(Long id);
 		
@@ -36,5 +39,7 @@ public interface InstrumentService {
 	
 	// 多項條件查詢
 	List<Instrument> findByMultiple(List<String> monthList, List<String> cycleList, List<String> typeList, List<String> personList, List<String> localationList);
+
+	
 
 }

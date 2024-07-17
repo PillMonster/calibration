@@ -128,3 +128,42 @@ body {
     width: 100%;
     text-align: center;
 }
+
+/* ===== 按鈕的容器 ===== */
+.button-container{
+	/*border: 1px solid #868687;*/
+    margin-left: auto;  /* 自動對齊 */
+    margin-right: auto; /* 自動對齊 */
+	text-align: center; /* 將表頭置中 */
+}
+
+/* ===== 按鈕的樣式 ===== */
+.submit-button {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.back-button {
+    padding: 8px 16px;
+    background-color: #95a5a6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* ===== 滑鼠移到按鈕改變的樣式 ===== */
+.submit-button:hover,
+.back-button:hover {
+    background-color: #2980b9;
+    outline: none;
+}
+
+.submit-button:focus,
+.back-button:focus,
