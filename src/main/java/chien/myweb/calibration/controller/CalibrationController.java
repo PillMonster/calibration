@@ -128,8 +128,8 @@ public class CalibrationController {
 	}
 	
 	// ===== 校驗簽核 (主管簽核) =====
-	@GetMapping("/prepSign")  
-	public ResponseEntity<?> executeSign(Long id){
+	@PostMapping("/prepSign/{id}")   
+	public ResponseEntity<?> executeSign(@PathVariable("id") Long id){
 		
 		List<Instrument> instrumentDB = instrumentService.findInstrumentById(id);	 // 透過前端得到儀器id, 並取得該儀器的物件
 		

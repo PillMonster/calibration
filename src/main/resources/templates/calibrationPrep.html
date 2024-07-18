@@ -61,7 +61,13 @@
 			innerTable += "<td>" + data[i].last_calibrate_date + "</td>";
 			innerTable += "<td>" + data[i].mother_instrument_number + "</td>";
 			
-			innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='calibrationPage(this)'>校驗</button>" + "</td>";
+			if (data[i].calibrate_type == '內校'){
+				innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='calibrationPage(this)'>校驗</button>" + "</td>";
+			}
+			else{
+				innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='calibrationPage(this)'>上傳</button>" + "</td>";
+			}
+			
 		}
 		innerTable += "</tr>";
 		innerTable += "</tbody>";
