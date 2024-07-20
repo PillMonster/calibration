@@ -34,19 +34,19 @@
 			</div>
 
 			<div id="monthCheckBoxesDiv">
-				<label><input type="checkbox" id="monthSelectAll" value="全選" onchange="toggleCheckboxes('month', 'monthSelectAll'); submitForm();">全選</label><br>
+				<label><input type="checkbox" id="monthSelectAll" value="全選" onchange="toggleCheckboxes('month', 'monthSelectAll'); submitForm();" checked>全選</label><br>
 				<label><input type="checkbox" name="month" value="1" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>1</label><br>
-				<label><input type="checkbox" name="month" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">2</label><br>
-				<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">3</label><br>
-				<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">4</label><br>
-				<label><input type="checkbox" name="month" value="5" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">5</label><br>
-				<label><input type="checkbox" name="month" value="6" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">6</label><br>
-				<label><input type="checkbox" name="month" value="7" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">7</label><br>
-				<label><input type="checkbox" name="month" value="8" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">8</label><br>
-				<label><input type="checkbox" name="month" value="9" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">9</label><br>
-				<label><input type="checkbox" name="month" value="10" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">10</label><br>
-				<label><input type="checkbox" name="month" value="11" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">11</label><br>
-				<label><input type="checkbox" name="month" value="12" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();">12</label><br>
+				<label><input type="checkbox" name="month" value="2" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>2</label><br>
+				<label><input type="checkbox" name="month" value="3" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>3</label><br>
+				<label><input type="checkbox" name="month" value="4" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>4</label><br>
+				<label><input type="checkbox" name="month" value="5" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>5</label><br>
+				<label><input type="checkbox" name="month" value="6" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>6</label><br>
+				<label><input type="checkbox" name="month" value="7" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>7</label><br>
+				<label><input type="checkbox" name="month" value="8" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>8</label><br>
+				<label><input type="checkbox" name="month" value="9" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>9</label><br>
+				<label><input type="checkbox" name="month" value="10" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>10</label><br>
+				<label><input type="checkbox" name="month" value="11" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>11</label><br>
+				<label><input type="checkbox" name="month" value="12" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>12</label><br>
 			</div>
 		</div>
 		
@@ -61,10 +61,10 @@
 			</div>
 
 			<div id="cycleCheckBoxesDiv">
-				<label><input type="checkbox" id="cycleSelectAll" value="全選" onchange="toggleCheckboxes('cycle', 'cycleSelectAll'); submitForm();">全選</label><br>
+				<label><input type="checkbox" id="cycleSelectAll" value="全選" onchange="toggleCheckboxes('cycle', 'cycleSelectAll'); submitForm();" checked>全選</label><br>
 				<label><input type="checkbox" name="cycle" value="6" onchange="checkSelectAll('cycle', 'cycleSelectAll'); submitForm();" checked>6</label><br>
-				<label><input type="checkbox" name="cycle" value="12" onchange="checkSelectAll('cycle', 'cycleSelectAll'); submitForm();">12</label><br>
-				<label><input type="checkbox" name="cycle" value="24" onchange="checkSelectAll('cycle', 'cycleSelectAll'); submitForm();">24</label><br>
+				<label><input type="checkbox" name="cycle" value="12" onchange="checkSelectAll('cycle', 'cycleSelectAll'); submitForm();" checked>12</label><br>
+				<label><input type="checkbox" name="cycle" value="24" onchange="checkSelectAll('cycle', 'cycleSelectAll'); submitForm();" checked>24</label><br>
 			</div>
 		</div>
 		
@@ -79,10 +79,10 @@
 			</div>
 
 			<div id="typeCheckBoxesDiv">
-				<label><input type="checkbox" id="typeSelectAll" value="全選" onchange="toggleCheckboxes('type', 'typeSelectAll'); submitForm();">全選</label><br>
+				<label><input type="checkbox" id="typeSelectAll" value="全選" onchange="toggleCheckboxes('type', 'typeSelectAll'); submitForm();" checked>全選</label><br>
 				<label><input type="checkbox" name="type" value="內校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();" checked>內校</label><br>
-				<label><input type="checkbox" name="type" value="外校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();">外校</label><br>
-				<label><input type="checkbox" name="type" value="遊校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();">遊校</label><br>
+				<label><input type="checkbox" name="type" value="外校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();" checked>外校</label><br>
+				<label><input type="checkbox" name="type" value="遊校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();" checked>遊校</label><br>
 			</div>
 		</div>
 		
@@ -129,7 +129,16 @@
 </div>
 <div class="rightDiv">
 	<!--  <div class="createButtonDiv"><button type="submit" class="create-button">新增器具</button></div>-->
-	<div class="createButtonDiv"><a href="#" class="create-button" id="createLink">新增器具</a></div>
+
+	<div class="createButtonDiv">
+		<span>
+			<a href="#" class="create-button" id="createInnerLink">新增內校器具</a>
+		</span>
+		<span>
+			<a href="#" class="create-button" id="createOutsideLink">新增遊外校器具</a>
+		</span>
+	</div>
+	
 	<div class="instrumentTableDiv" id="instrumentTableDiv"></div>
 </div>
 <script type="text/javascript">
@@ -143,7 +152,7 @@
 	var identity = "";
 	
 	function ajaxMethod(){
-		//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
+		//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有器具資料)
 		$.ajax({
 		    type:"GET",//請求方式
 		    url:"/crud/instruments",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
@@ -158,10 +167,10 @@
 		    }
 		});
 		
-		//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得所有會員資料)
+		//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得人員資料(不重複))
 		$.ajax({
 		    type:"GET",//請求方式
-		    url:"/crud/instrumentNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
+		    url:"/crud/instrumentNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instrumentNoRepeat")的方法)
 		    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
 		    async:true,//true為非同步
 		    success:function (data) {//接收後端來的資料
@@ -174,7 +183,7 @@
 		});
 	}
 	
-	// ===== 取得文字表單的內容 =====
+	// ===== 搜尋器具號碼或名稱來取得器具資訊 =====
 	document.getElementById("textForm").addEventListener("submit", function(event) {
 		// 防止表單的預設提交行為
 	    event.preventDefault();
@@ -258,14 +267,27 @@
 		}); // ajax method end	 
 	 }
 	
-	// 點擊的連結需要根據條件決定是否跳轉或者顯示警告
-    document.getElementById("createLink").addEventListener("click", function() {
+	// 點擊新增器具的連結，並加上身分驗證，決定是否跳轉下一個頁面或者返回登入頁面
+    document.getElementById("createInnerLink").addEventListener("click", function() {
     	
     	getSessionValue(); 
     	console.log("identity: " + identity);
     	
     	if ( identity == "校驗人員") { 
-            window.location.href = "/calibration/instrument/create";
+            window.location.href = "/calibration/instrument/createInner";
+        } else {
+            alert("此功能需要校驗人員身分才可使用。");
+        }
+    });
+	
+ 	// 點擊新增器具的連結，並加上身分驗證，決定是否跳轉下一個頁面或者返回登入頁面
+    document.getElementById("createOutsideLink").addEventListener("click", function() {
+    	
+    	getSessionValue(); 
+    	console.log("identity: " + identity);
+    	
+    	if ( identity == "校驗人員") { 
+            window.location.href = "/calibration/instrument/createOutside";
         } else {
             alert("此功能需要校驗人員身分才可使用。");
         }
@@ -286,8 +308,15 @@
 		
 		if ( identity == "校驗人員") {
 			var id = $(button).data("id");
-			console.log(id);
-			window.location.href = "edit?id=" +id;
+			var calibrateType = $(button).data("type");
+			//console.log(id);
+			//console.log(calibrateType);
+			if ( calibrateType == "內校") {
+				window.location.href = "editInner?id=" +id;
+			}else {
+				window.location.href = "editOutside?id=" +id;
+			}
+			
 		}
 		else {
 			alert("此功能需要校驗人員身分才可使用。")
@@ -357,24 +386,27 @@
 	        checkboxInput.value = usernameList[i]; // 設置 checkbox 的值為特定的使用者名稱
 	           
 	        if (i == 0){
+	        	
 	        	checkboxInput.id = "personSelectAll"; // 設置 checkbox 的id
-	        	checkboxInput.onchange = function() { // 當 checkbox 的狀態改變時執行 toggleCheckboxes、submitForm 函數           
+	        	checkboxInput.onchange = function() { // 當 checkbox 的狀態改變時，執行toggleCheckboxes、submitForm 函數           
 		            toggleCheckboxes('person', 'personSelectAll');
 		            submitForm();
 		        };
+		        checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
 	        }
 	        
 	        if (i == 1){
-	        	checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
+	        	//checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
 	        	
 	        }
 	        
 	        if (i > 0 ){	
 	        	checkboxInput.name = "person"; // 設置 checkbox 的name
 		        checkboxInput.onchange = function() {
-		            checkSelectAll('person', 'personSelectAll'); // 當 checkbox 的狀態改變時執行 checkSelectAll、submitForm 函數
+		            checkSelectAll('person', 'personSelectAll'); // 當 checkbox 的狀態改變時，執行checkSelectAll、submitForm 函數
 		            submitForm();
 		        };
+		        checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
 	        }
 	        
 	        checkboxLabel.appendChild(checkboxInput); // 將 checkboxInput 添加至 checkboxLabel，形成完整的 checkbox
@@ -392,23 +424,26 @@
 	        checkboxInput.value = localationList[i]; // 設置 checkbox 的值為特定的使用者名稱
 	           
 	        if (i == 0){
+	        	
 	        	checkboxInput.id = "localationSelectAll"; // 設置 checkbox 的id
-	        	checkboxInput.onchange = function() { // 當 checkbox 的狀態改變時執行 toggleCheckboxes、submitForm 函數           
+	        	checkboxInput.onchange = function() { // 當 checkbox 的狀態改變時執行，toggleCheckboxes、submitForm 函數           
 		            toggleCheckboxes('localation', 'localationSelectAll');
 		            submitForm();
 		        };
+		        checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
 	        }
  
 	        if (i == 1){
-	        	checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
+	        	//checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
 	        }
 	        
 	        if (i > 0){
 	        	checkboxInput.name = "localation"; // 設置 checkbox 的name
 		        checkboxInput.onchange = function() {
-		            checkSelectAll('person', 'personSelectAll'); // 當 checkbox 的狀態改變時執行 checkSelectAll、submitForm 函數
+		            checkSelectAll('person', 'personSelectAll'); // 當 checkbox 的狀態改變時執行，checkSelectAll、submitForm 函數
 		            submitForm();
 		        };
+		        checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
 	        } 
 	        
 	        checkboxLabel.appendChild(checkboxInput); // 將 checkboxInput 添加至 checkboxLabel，形成完整的 checkbox
@@ -416,6 +451,32 @@
 	        localationContainer.appendChild(checkboxLabel); // usernameContainer 是一個容器元素，用於包含所有使用者名稱的 checkbox
 	        localationContainer.appendChild(document.createElement("br"));
 	    }
+		
+		// ========== 從person的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		//var personDiv = document.getElementById("personCheckBoxesDiv");
+
+		//var personChecks = personDiv.querySelectorAll("input[type='checkbox']");
+		//var checkboxes = document.querySelectorAll("input[type='checkbox']")
+		//console.log("校驗人員: " + personDiv);
+		/*for (var i = 1; i < personChecks.length; i++){ // 0為全選, 故重1開始
+        	if (personChecks[i].checked == true){
+        		personSelected.push(personChecks[i].value);
+
+        	}
+        }
+		console.log("選取的校驗人員: " + personSelected);
+		
+		// ========== 從local的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var localationDiv = document.getElementById("localationCheckBoxesDiv");
+		var localationChecks = localationDiv.querySelectorAll("input[type='checkbox']");
+		
+		for (var i = 1; i < localationChecks.length; i++){ // 0為全選, 故重1開始
+        	if (localationChecks[i].checked == true){
+        		localationSelected.push(localationChecks[i].value);
+
+        	}
+        }
+		console.log("選取的校驗地點or公司: " + localationSelected);*/
 	}
     
  	// 取得檢核方塊內所選取的值, 再存入Array, 並轉成json格式
@@ -529,8 +590,8 @@
 			innerTable += "<td>" + data[i].last_calibrate_date + "</td>";
 			innerTable += "<td>" + data[i].mother_instrument_number + "</td>";
 			
-			innerTable += "<td>" + "<button class='result-button' data-id=" + data[i].id + " onclick='redirectToResultPage(this)'>校驗結果</button>" + "</td>";
-			innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='redirectToEditPage(this)'>修改</button>" + "</td>";
+			innerTable += "<td>" + "<button class='result-button' data-id=" + data[i].id + " data-type=" + data[i].calibrate_type + " onclick='redirectToResultPage(this)'>校驗結果</button>" + "</td>";
+			innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " data-type=" + data[i].calibrate_type + " onclick='redirectToEditPage(this)'>修改</button>" + "</td>";
 			innerTable += "<td>" + "<button class='delete-button' data-id=" + data[i].id + " onclick='deleteFun(this)'>刪除</button>" + "</td>";
 		}
 		innerTable += "</tr>";

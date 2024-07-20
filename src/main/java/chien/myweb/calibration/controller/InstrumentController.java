@@ -46,7 +46,17 @@ public class InstrumentController {
 	public ResponseEntity<Instrument> createInstrument(@RequestBody RequestData request){
 			
 		System.out.println(request.toString());
-		Instrument instrument = instrumentService.addInstrument(request);
+		
+		Instrument instrument = new Instrument();
+		
+		String calibrateType = request.getCalibrate_type();
+		
+		if ("內校".equals(calibrateType)) {
+			instrument = instrumentService.addInnerInstrument(request);
+		}
+		else {
+			instrument = instrumentService.addOutsideInstrument(request);
+		}
 
 		return ResponseEntity.ok().body(instrument); 
 	}
@@ -55,8 +65,15 @@ public class InstrumentController {
 	public ResponseEntity<String> updateInstrument(@PathVariable("id") Long id, @RequestBody RequestData request){
 		
 		System.out.println(request.toString());
-		instrumentService.updateInstrument(id, request);	
 
+		String calibrateType = request.getCalibrate_type();
+		
+		if ("內校".equals(calibrateType)) {
+			instrumentService.updateInnerInstrument(id, request);	
+		}
+		else {
+			instrumentService.updateOutsideInstrument(id, request);	
+		}
 		return new ResponseEntity<String>("更新儀器資訊成功", HttpStatus.CREATED); 
 	}	
 	

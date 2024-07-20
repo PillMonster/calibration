@@ -41,14 +41,24 @@ public class ShowPageController {
 		return "crudInstrument";
 	}
 	
-	@GetMapping("/instrument/create")
-	public String showCreateInstrument() {
-		return "createInstrument";
+	@GetMapping("/instrument/createInner")
+	public String showCreateInnerInstrument() {
+		return "createInnerInstrument";
 	}
 	
-	@GetMapping("/instrument/edit")
-	public String showEditInstrument() {
-		return "editInstrument";
+	@GetMapping("/instrument/createOutside")
+	public String showCreateOutsideInstrument() {
+		return "createOutsideInstrument";
+	}
+	
+	@GetMapping("/instrument/editInner")
+	public String showEditInnerInstrument() {
+		return "editInnerInstrument";
+	}
+	
+	@GetMapping("/instrument/editOutside")
+	public String showEditOutsideInstrument() {
+		return "editOutsideInstrument";
 	}
 	
 	@GetMapping("/person/crud")

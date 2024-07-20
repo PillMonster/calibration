@@ -10,11 +10,17 @@ import chien.myweb.calibration.enity.Calibration;
 
 public interface InstrumentService {
 	
-	// 新增
-	Instrument addInstrument(RequestData request);
+	// 新增內校器具
+	Instrument addInnerInstrument(RequestData request);
 	
-	// 修改
-	Instrument updateInstrument(Long id, RequestData request);
+	// 新增遊外校器具
+	Instrument addOutsideInstrument(RequestData request);
+	
+	// 修改內校器具
+	Instrument updateInnerInstrument(Long id, RequestData request);
+	
+	// 修改遊外校器具
+	Instrument updateOutsideInstrument(Long id, RequestData request);
 	
 	// 更新簽核
 	Instrument updateInstrumentBySign(Instrument instrument);

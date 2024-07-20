@@ -15,7 +15,10 @@
 }
 
 .createButtonDiv{
-	text-align: right;
+	/*border: 1px solid #868687;*/
+	display: flex; /* 裡面每一個div可以上下左右排列 */
+	justify-content: flex-end;  /* 裡面每一個內容可以靠右對齊 */
+	align-items: center; /* 裡面每一個內容可以垂直置中 */
 	margin:0px 0px 5px 0px; /* 上 右 下 左 */
 }
 
@@ -40,16 +43,17 @@
 	width: 80px;*/
 	
 	display: inline-block;
-    padding: 3px 5px;
+	margin:2px 3px 2px 3px; /* 上 右 下 左 */
+    padding: 5px 5px; /* 上下 左右 */
     font-size: 16px;
     text-align: center;
     text-decoration: none;
-    background-color: #3498db;
+    background-color: #663399;
     color: #ffffff;
     border-radius: 5px;
     transition: background-color 0.3s;
     height:20px;
-	width: 70px;
+	width: 120px;
 
 }
 
