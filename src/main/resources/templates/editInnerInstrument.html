@@ -17,7 +17,7 @@
 	
 		<div style="text-align: center;"><h2 class="form-header">修改內校器具</h2></div>
 		
-		<div style="display: flex;"> 
+		<div class="form-container-view"> 
 			
 			<!-- 左半部為器具資訊輸入欄位的區塊 -->
 			<div class="form-container-left">
@@ -195,7 +195,7 @@
 	    type:"GET",//請求方式
 	    url:"/crud/instrumentNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
 	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
-	    async:true,//true為非同步
+	    async:false,//true為非同步
 	    success:function (data) {//接收後端來的資料
 	    	console.log(data);
 	    	populateDropdown(data);
@@ -212,7 +212,7 @@
 	    type:"GET",//請求方式
 	    url:"/crud/instrumentInfo/" + id,//url代表向後端發送請求 (後端需有標註@GetMapping("/instrument{id}")的方法)
 	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
-	    async:true,//true為非同步
+	    async:false,//true為非同步
 	    success:function (data) {//接收後端來的資料
 	    	
 			const instrumentList = data.instrument;

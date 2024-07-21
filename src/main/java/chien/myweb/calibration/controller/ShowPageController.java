@@ -19,6 +19,10 @@ public class ShowPageController {
 		return "signExecute";
 	}
 	
+	@GetMapping("instrument/upload")
+	public String showCalibrationReportUpload() {
+		return "reportUpload";
+	}
 	
 	@GetMapping("/instrument/result")
 	public String showCalibrationResult() {

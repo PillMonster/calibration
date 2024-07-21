@@ -121,18 +121,33 @@ public class LoginController implements HttpSessionAttributeListener{
 	@GetMapping("/login/sessionAttributes")
 	public ResponseEntity<?> getSessionAttributes(HttpSession session) {
 	    
-		Map<String, Object> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>(); // 回應前端map的初始值
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 日期格式
+		
+		String userName = "";
+		Long id = 1234567890L;
+		String identity = "";
 		
 		PersonInfo personInfo = (PersonInfo)session.getAttribute("personInfo");
 		String msg = (String)session.getAttribute("msg");
 	
 		if (personInfo != null) {
 			
-			String userName = personService.findJobnumber(personInfo.getAccount()).get(0).getUsername();
-			Long id = personService.findPersonIdByUsername(userName);
-			String identity = personService.findIdentityByPersonId(id);
+			List<Person> personDB = personService.findJobnumber(personInfo.getAccount());
+			Optional<Person> personOp = personDB.stream()
+					.filter(p -> p.getIdentity().equals("校驗人員") || p.getIdentity().equals("校驗主管"))
+					.findFirst();
 			
+			if(personOp.isPresent()){
+				
+				Person person = personOp.get();
+				
+				userName = person.getUsername();
+				id = person.getId();
+				identity =  person.getIdentity();
+			}
+			
+			// 將參數以key-value方式存入map
 			response.put("id", id);
 			response.put("account", personInfo.getAccount());
 		    response.put("userName", userName);
@@ -140,8 +155,6 @@ public class LoginController implements HttpSessionAttributeListener{
 		    response.put("ip", personInfo.getIp());
 		    response.put("loginDate", df.format(personInfo.getLoginDate()));
 		    response.put("msg", msg);
-
-		    //System.out.println(personInfo.getAccount());
 		    
 		    return ResponseEntity.ok().body(response);
 		    

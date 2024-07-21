@@ -14,38 +14,49 @@ body {
 
 /* 表單容器 */
 .form-container {
+	/*border: 1px solid #868687;*/
+
 	display: flex; /* 裡面每一個div可以上下左右排列 */
-    justify-content: space-between;
-	
+    justify-content: space-between; /* 左右對齊 */
+    text-align: center; /* 將表頭置中*/
     width: 1220px;
-    margin: 20px auto;
+  
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    padding: 16px;
-	
+    margin: 20px auto; /* 上下 左右 */
+    padding: 16px; /* 上下 */
+}
+
+.form-container-view {
+	/*border: 1px solid #868687;*/
+	display: flex; /* 裡面每一個div可以上下左右排列 */
+    justify-content: space-between; /* 左右對齊 */
+    text-align: center; /* 將表頭置中*/
+    margin: 20px 30px; /* 上下 左右 */
 }
 
 .form-container-left {
-	/*border: 1px solid #868687;*/
+	border: 1px solid #868687;
 	float:left;
     width: 350px;
-    margin: 0px 10px;
+    text-align: left; /* 將表頭置中 */
+    /*margin: 0px 200px; /* 上下 左右 */
 }
 
 .form-container-center {
-	/*border: 1px solid #868687;*/
+	border: 1px solid #868687;
 	float:left;
     width: 550px;
-    margin: 0px 30px 10px 0px;  /* 上 右 下 左 */
-    text-align: center; /* 將表頭置中 */
+    margin: 0px 0px 0px 0px;  /* 上 右 下 左 */
+    text-align: left; /* 將表頭置中 */
 }
 
 .form-container-right {
-	/*border: 1px solid #868687;*/
+	border: 1px solid #868687;
 	float:right;
     width: 250px;
-    margin: 0px 20px;
+    text-align: right; /* 將表頭置中 */
 }
 
 /* ===== 按鈕的容器 ===== */

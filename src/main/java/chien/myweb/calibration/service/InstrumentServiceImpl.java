@@ -68,16 +68,56 @@ public class InstrumentServiceImpl implements InstrumentService{
 		instrument.setIs_sign("N");
 		
 		// ===== 設定人員資訊與建立關聯 =====
-		List<Person> custos = personDao.findByUsername(request.getCustos());
-		List<Person> custosLeader = personDao.findByUsername(request.getCustosLeader());
-		List<Person> checker = personDao.findByUsername(request.getChecker());
-		List<Person> checkerLeader = personDao.findByUsername(request.getCheckerLeader());
+		// 取得新增儀器保管人員id
+		List<Person> custoss = personDao.findByUsername(request.getCustos());
+		Optional<Person> custossOp = custoss.stream()
+				.filter(p -> p.getIdentity().equals("保管人員") )
+				.findFirst();
 		
-		instrument.getPersons().add(custos.get(0)); // 將儀器與現有人員建立關聯
+		if(custossOp.isPresent()){
+			Person person = custossOp.get();
+			instrument.getPersons().add(person); // 將儀器與保管人員建立關聯
+		}
+		
+		// 取得新增儀器保管主管id
+		List<Person> custosLeaders = personDao.findByUsername(request.getCustosLeader());
+		Optional<Person> custosLeadersOp = custosLeaders.stream()
+				.filter(p -> p.getIdentity().equals("保管主管") )
+				.findFirst();
+		
+		if(custosLeadersOp.isPresent()){
+			Person person = custosLeadersOp.get();
+			instrument.getPersons().add(person); // 將儀器與保管主管建立關聯
+		}
+		
+		// 取得新增儀器校驗人員id
+		List<Person> checkers = personDao.findByUsername(request.getChecker());
+		Optional<Person> checkersOp = checkers.stream()
+				.filter(p -> p.getIdentity().equals("校驗人員") )
+				.findFirst();
+		
+		if(checkersOp.isPresent()){
+			Person person = checkersOp.get();
+			instrument.getPersons().add(person); // 將儀器與校驗人員建立關聯
+		}
+		
+		// 取得新增儀器校驗主管id
+		List<Person> checkerLeaders = personDao.findByUsername(request.getCheckerLeader());
+		Optional<Person> checkerLeadersOp = checkerLeaders.stream()
+				.filter(p -> p.getIdentity().equals("校驗主管") )
+				.findFirst();
+		
+		if(checkerLeadersOp.isPresent()){
+			Person person = checkerLeadersOp.get();
+			instrument.getPersons().add(person); // 將儀器與校驗主管建立關聯
+		}
+
+		
+		/*instrument.getPersons().add(custos.get(0)); // 將儀器與現有人員建立關聯
 		instrument.getPersons().add(custosLeader.get(0)); // 將儀器與現有人員建立關聯
 		instrument.getPersons().add(checker.get(0)); // 將儀器與現有人員建立關聯
 		instrument.getPersons().add(checkerLeader.get(0)); // 將儀器與現有人員建立關聯
-		
+		*/
 		
 		// ===== 設定規格資訊與建立關聯 =====
 		List<Double> requestSpec = request.getSpecification(); // 先取得前端輸入的規格值
@@ -133,7 +173,53 @@ public class InstrumentServiceImpl implements InstrumentService{
 		instrument.setIs_calibration("N");
 		instrument.setIs_sign("N");
 		
-		List<Person> custos = personDao.findByUsername(request.getCustos());
+		// ===== 設定人員資訊與建立關聯 =====
+		// 取得新增儀器保管人員id
+		List<Person> custoss = personDao.findByUsername(request.getCustos());
+		Optional<Person> custossOp = custoss.stream()
+				.filter(p -> p.getIdentity().equals("保管人員") )
+				.findFirst();
+		
+		if(custossOp.isPresent()){
+			Person person = custossOp.get();
+			instrument.getPersons().add(person); // 將儀器與保管人員建立關聯
+		}
+		
+		// 取得新增儀器保管主管id
+		List<Person> custosLeaders = personDao.findByUsername(request.getCustosLeader());
+		Optional<Person> custosLeadersOp = custosLeaders.stream()
+				.filter(p -> p.getIdentity().equals("保管主管") )
+				.findFirst();
+		
+		if(custosLeadersOp.isPresent()){
+			Person person = custosLeadersOp.get();
+			instrument.getPersons().add(person); // 將儀器與保管主管建立關聯
+		}
+		
+		// 取得新增儀器校驗人員id
+		List<Person> checkers = personDao.findByUsername(request.getChecker());
+		Optional<Person> checkersOp = checkers.stream()
+				.filter(p -> p.getIdentity().equals("校驗人員") )
+				.findFirst();
+		
+		if(checkersOp.isPresent()){
+			Person person = checkersOp.get();
+			instrument.getPersons().add(person); // 將儀器與校驗人員建立關聯
+		}
+		
+		// 取得新增儀器校驗主管id
+		List<Person> checkerLeaders = personDao.findByUsername(request.getCheckerLeader());
+		Optional<Person> checkerLeadersOp = checkerLeaders.stream()
+				.filter(p -> p.getIdentity().equals("校驗主管") )
+				.findFirst();
+		
+		if(checkerLeadersOp.isPresent()){
+			Person person = checkerLeadersOp.get();
+			instrument.getPersons().add(person); // 將儀器與校驗主管建立關聯
+		}
+
+		
+		/*List<Person> custos = personDao.findByUsername(request.getCustos());
 		List<Person> custosLeader = personDao.findByUsername(request.getCustosLeader());
 		List<Person> checker = personDao.findByUsername(request.getChecker());
 		List<Person> checkerLeader = personDao.findByUsername(request.getCheckerLeader());
@@ -142,7 +228,9 @@ public class InstrumentServiceImpl implements InstrumentService{
 		instrument.getPersons().add(custosLeader.get(0)); // 將儀器與現有人員建立關聯
 		instrument.getPersons().add(checker.get(0)); // 將儀器與現有人員建立關聯
 		instrument.getPersons().add(checkerLeader.get(0)); // 將儀器與現有人員建立關聯
-
+		*/
+		
+		//return null;
 		return instrumentDao.save(instrument);
 	}
 	
@@ -209,15 +297,54 @@ public class InstrumentServiceImpl implements InstrumentService{
 						                .map(Person::getId)
 						                .collect(Collectors.toSet());
 			
-			// 取得該儀器更新後的person id
-			newPersonIds.add(personDao.findPersonIdByUsername(request.getCustos()));
-			newPersonIds.add(personDao.findPersonIdByUsername(request.getCustosLeader()));
-			newPersonIds.add(personDao.findPersonIdByUsername(request.getChecker()));
-			newPersonIds.add(personDao.findPersonIdByUsername(request.getCheckerLeader()));
+			// 取得該儀器更新後保管人員id
+			List<Person> custoss = personDao.findByUsername(request.getCustos());
+			Optional<Person> custossOp = custoss.stream()
+					.filter(p -> p.getIdentity().equals("保管人員") )
+					.findFirst();
 			
-			System.out.println("===== person service =====");
-			System.out.println("currentPersonIds: " + currentPersonIds);
-			System.out.println("newPersonIds: " + newPersonIds);
+			if(custossOp.isPresent()){
+				Person person = custossOp.get();
+				newPersonIds.add(person.getId());	
+			}
+			
+			// 取得該儀器更新後保管主管id
+			List<Person> custosLeaders = personDao.findByUsername(request.getCustosLeader());
+			Optional<Person> custosLeadersOp = custosLeaders.stream()
+					.filter(p -> p.getIdentity().equals("保管主管") )
+					.findFirst();
+			
+			if(custosLeadersOp.isPresent()){
+				Person person = custosLeadersOp.get();
+				newPersonIds.add(person.getId());	
+			}
+			
+			// 取得該儀器更新後校驗人員id
+			List<Person> checkers = personDao.findByUsername(request.getChecker());
+			Optional<Person> checkersOp = checkers.stream()
+					.filter(p -> p.getIdentity().equals("校驗人員") )
+					.findFirst();
+			
+			if(checkersOp.isPresent()){
+				Person person = checkersOp.get();
+				newPersonIds.add(person.getId());	
+			}
+			
+			// 取得該儀器更新後校驗主管id
+			List<Person> checkerLeaders = personDao.findByUsername(request.getCheckerLeader());
+			Optional<Person> checkerLeadersOp = checkerLeaders.stream()
+					.filter(p -> p.getIdentity().equals("校驗主管") )
+					.findFirst();
+			
+			if(checkerLeadersOp.isPresent()){
+				Person person = checkerLeadersOp.get();
+				newPersonIds.add(person.getId());	
+			}
+			
+			//newPersonIds.add(personDao.findPersonIdByUsername(request.getCustos()));
+			//newPersonIds.add(personDao.findPersonIdByUsername(request.getCustosLeader()));
+			//newPersonIds.add(personDao.findPersonIdByUsername(request.getChecker()));
+			//newPersonIds.add(personDao.findPersonIdByUsername(request.getCheckerLeader()));
 			
 			// 該儀器要新增的person id
 			Set<Long> personsToAdd = newPersonIds.stream()
@@ -229,6 +356,10 @@ public class InstrumentServiceImpl implements InstrumentService{
 			                           .filter(personId -> !newPersonIds.contains(personId))
 			                           .collect(Collectors.toSet());
 			
+			
+			System.out.println("===== person service =====");
+			System.out.println("currentPersonIds: " + currentPersonIds);
+			System.out.println("newPersonIds: " + newPersonIds);
 			System.out.println("personsToAdd: " + personsToAdd);
 			System.out.println("personToRemove: " + personsToRemove);
 			
@@ -273,14 +404,7 @@ public class InstrumentServiceImpl implements InstrumentService{
 					specObj.setSpecification(specification);
 					specObj.setUSL(USL);
 					specObj.setLSL(LSL);
-					specService.addSpec(specObj); // 新增一項規格至資料庫
-					// 從資料庫找出前端輸入的spec id，並存入newSpecIds集合中，即更新後的spec id
-					//newSpecIds.add(specDao.findSpedIdBySpecAndUSLAndLSL(specification, USL, LSL));
-					
-				}
-				else {	
-					// 從資料庫找出前端輸入的spec id，並存入newSpecIds集合中，即更新後的spec id
-					//newSpecIds.add(specDao.findSpedIdBySpecAndUSLAndLSL(specification, USL, LSL));		
+					specService.addSpec(specObj); // 新增一項規格至資料庫				
 				}
 				
 				// 從資料庫找出前端輸入的spec id，並存入newSpecIds集合中，即更新後的spec id
@@ -293,12 +417,12 @@ public class InstrumentServiceImpl implements InstrumentService{
 						                .map(Spec::getId)
 						                .collect(Collectors.toSet());
 			
-			// 該儀器要新增的spec id
+			// 該儀器要新增的spec id (過濾更新前的spec id)
 			Set<Long> specToAdd = newSpecIds.stream()
 				                    .filter(specId -> !currentSpecIds.contains(specId))
 				                    .collect(Collectors.toSet());
 			
-			// 該儀器要刪除的spec id
+			// 該儀器要刪除的spec id (過濾更新後的spec id)
 			Set<Long> specToRemove = currentSpecIds.stream()
 			                           .filter(specId -> !newSpecIds.contains(specId))
 			                           .collect(Collectors.toSet());
@@ -376,15 +500,49 @@ public class InstrumentServiceImpl implements InstrumentService{
 						                .map(Person::getId)
 						                .collect(Collectors.toSet());
 			
-			// 取得該儀器更新後的person id
-			newPersonIds.add(personDao.findPersonIdByUsername(request.getCustos()));
-			newPersonIds.add(personDao.findPersonIdByUsername(request.getCustosLeader()));
-			newPersonIds.add(personDao.findPersonIdByUsername(request.getChecker()));
-			newPersonIds.add(personDao.findPersonIdByUsername(request.getCheckerLeader()));
+			// 取得該儀器更新後保管人員id
+			List<Person> custoss = personDao.findByUsername(request.getCustos());
+			Optional<Person> custossOp = custoss.stream()
+					.filter(p -> p.getIdentity().equals("保管人員") )
+					.findFirst();
 			
-			System.out.println("===== person service =====");
-			System.out.println("currentPersonIds: " + currentPersonIds);
-			System.out.println("newPersonIds: " + newPersonIds);
+			if(custossOp.isPresent()){
+				Person person = custossOp.get();
+				newPersonIds.add(person.getId());	
+			}
+			
+			// 取得該儀器更新後保管主管id
+			List<Person> custosLeaders = personDao.findByUsername(request.getCustosLeader());
+			Optional<Person> custosLeadersOp = custosLeaders.stream()
+					.filter(p -> p.getIdentity().equals("保管主管") )
+					.findFirst();
+			
+			if(custosLeadersOp.isPresent()){
+				Person person = custosLeadersOp.get();
+				newPersonIds.add(person.getId());	
+			}
+			
+			// 取得該儀器更新後校驗人員id
+			List<Person> checkers = personDao.findByUsername(request.getChecker());
+			Optional<Person> checkersOp = checkers.stream()
+					.filter(p -> p.getIdentity().equals("校驗人員") )
+					.findFirst();
+			
+			if(checkersOp.isPresent()){
+				Person person = checkersOp.get();
+				newPersonIds.add(person.getId());	
+			}
+			
+			// 取得該儀器更新後校驗主管id
+			List<Person> checkerLeaders = personDao.findByUsername(request.getCheckerLeader());
+			Optional<Person> checkerLeadersOp = checkerLeaders.stream()
+					.filter(p -> p.getIdentity().equals("校驗主管") )
+					.findFirst();
+			
+			if(checkerLeadersOp.isPresent()){
+				Person person = checkerLeadersOp.get();
+				newPersonIds.add(person.getId());	
+			}
 			
 			// 該儀器要新增的person id
 			Set<Long> personsToAdd = newPersonIds.stream()
@@ -396,6 +554,9 @@ public class InstrumentServiceImpl implements InstrumentService{
 			                           .filter(personId -> !newPersonIds.contains(personId))
 			                           .collect(Collectors.toSet());
 			
+			System.out.println("===== person service =====");
+			System.out.println("currentPersonIds: " + currentPersonIds);
+			System.out.println("newPersonIds: " + newPersonIds);	
 			System.out.println("personsToAdd: " + personsToAdd);
 			System.out.println("personToRemove: " + personsToRemove);
 			

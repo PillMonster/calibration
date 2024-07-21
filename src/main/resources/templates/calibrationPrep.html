@@ -65,7 +65,7 @@
 				innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='calibrationPage(this)'>校驗</button>" + "</td>";
 			}
 			else{
-				innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='calibrationPage(this)'>上傳</button>" + "</td>";
+				innerTable += "<td>" + "<button class='edit-button' data-id=" + data[i].id + " onclick='uploadPage(this)'>上傳</button>" + "</td>";
 			}
 			
 		}
@@ -105,6 +105,22 @@
     		var id = $(button).data("id");
     		console.log(id);
     		window.location.href = "execute?id=" +id;
+        } else {
+            alert("此功能需要校驗人員身分才可使用。");
+            window.location.href = "/calibration/instrument/prep";
+        }
+		
+		
+    };
+    
+	function uploadPage(button) {
+		
+		getSessionValue(); 
+    	
+    	if ( identity == "校驗人員") { 
+    		var id = $(button).data("id");
+    		console.log(id);
+    		window.location.href = "upload?id=" +id;
         } else {
             alert("此功能需要校驗人員身分才可使用。");
             window.location.href = "/calibration/instrument/prep";
