@@ -1,5 +1,7 @@
 package chien.myweb.calibration.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
@@ -34,6 +38,61 @@ public class CalibrationController {
 	InstrumentService instrumentService;
 	@Autowired
 	InstrumentPersonService instrumentPersonService;
+	
+	@PostMapping("/upload")
+    public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file) {
+		
+		
+		//String product = request;
+		String filePath = "";
+		
+		
+		if (file.isEmpty()) {
+			String message = "請選擇一個檔案來上傳";
+			
+            return ResponseEntity.ok().body(message);
+        }else {
+        	String message = "上傳成功";
+        	return ResponseEntity.ok().body(message);
+        }
+		
+		// 確認檔案名是否正確，這裡示例檔案名應為 "example.txt"
+        /*String expectedFileName = "掃Barcode廠商對應代號.xlsx";
+        if (!file.getOriginalFilename().equals(expectedFileName)) {
+            String message = "檔案名稱不正確，應為 " + expectedFileName;
+            return ResponseEntity.ok().body(message);
+        }*/
+
+        /*try {
+            // 設定上傳檔案的儲存路徑
+        	if (product.equals("MS")) {
+        		filePath = "D:/PythonTest/動態表/monthReport(MS)/" + file.getOriginalFilename();
+        	}
+        	else if (product.equals("NF")) {
+        		filePath = "D:/PythonTest/動態表/monthReport(NF)/" + file.getOriginalFilename();
+        	}
+        	else if (product.equals("BH")) {
+        		filePath = "D:/PythonTest/動態表/monthReport(BH)/" + file.getOriginalFilename();
+        	}
+            
+            File dest = new File(filePath);
+            
+            // 如果目錄不存在，則創建目錄
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+
+            // 將檔案寫入目的地
+            file.transferTo(dest);
+            String message = "檔案上傳成功: " + file.getOriginalFilename();
+            return ResponseEntity.ok().body(message);
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            String message = "檔案上傳失敗: " + file.getOriginalFilename();
+            return ResponseEntity.ok().body(message);
+        }*/
+    }
 	
 	// ===== 新增數據 (執行校驗) =====
 	@PostMapping("/prepCalibrations") 

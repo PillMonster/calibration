@@ -144,6 +144,7 @@
 
 
 <script type="text/javascript">
+
 	$(document).ready(function(){
 	    $("#header").load("/instrument/header.html");
 	    
@@ -222,8 +223,7 @@
 	    			    if (selectElement.options[i].value === username) {
 	    			        selectElement.selectedIndex = i;
 	    			        break; // 找到匹配值后立即退出循环
-	    			    }
-	    			}
+	    			    }	    			}
 	    	        
 	    		}
 	    		else if (personList[i].identity === "保管主管"){
@@ -236,8 +236,7 @@
 	    			        selectElement.selectedIndex = i;
 	    			        break; // 找到匹配值后立即退出循环
 	    			    }
-	    			}
-	    			
+	    			}	    			
 	    		}
 	    		else if (personList[i].identity === "校驗人員"){
 	    			
@@ -250,7 +249,6 @@
 	    			        break; // 找到匹配值后立即退出循环
 	    			    }
 	    			}
-	        
 	    		}
 	    		else {
 	    			
@@ -286,6 +284,41 @@
 	    }
 	});
 	
+	$("#uploadFileBtn").on("click", function () {
+		
+		// 取得選取按鈕的值
+        var selectedFileType = document.querySelector('input[name="radio"]:checked');  
+        if (!selectedFileType) {
+            alert("請選擇機種");
+            return;
+        }
+		
+		var product = $("[name='radio']:checked").val();
+		console.log(product);
+		
+        var formData = new FormData($("#instrumentForm")[0]);
+		
+        $.ajax({
+        	type: "POST",
+            url: '/bqc/upload',
+            contentType: false,
+            async: false, 
+            cache: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+            	// 顯示成功訊息
+            	console.log(data);
+                var message = document.getElementById("messageDiv");
+				message.innerHTML +=  data + "<br>";
+           },
+           error: function (xhr, status, error) {
+           		// 顯示錯誤訊息
+           		console.log(error);
+			}
+        });
+	});
+	
 	var identity = "";
 	
 	// 向後端取得session的值
@@ -308,58 +341,72 @@
 	
 	// ========= 監聽點擊按鈕後，要處理的方法 ==========
 	document.getElementById("instrumentForm").addEventListener("submit", function(event) {
-		
+
 		getSessionValue(); 
     	
     	if ( identity == "校驗人員") { 
 	        
 			event.preventDefault();// 如果需要阻止實際的表單提交，可以取消事件
-			
-			var valueList = new Array();
 	
-			var temperature = document.getElementById("temperature").value.trim();
-			var humidity = document.getElementById("humidity").value.trim();
+			var reportNo = document.getElementById("reportNo").value.trim();
+			var taf = document.getElementById("taf").value.trim();
 			var calibrate_date = document.getElementById("calibrate_date").value;	
-			var result = document.getElementById("msg").textContent.trim();
+			var result = document.getElementById("result").value.trim();
 			
-			for(let i=1; i<=specNum; i++){
-				
-				var value = document.getElementById("row" + i + "-6").value.trim();
-				
-				if ( temperature === "" || humidity === "" || value === "" ) { // 檢查去除空格後的值是否為空
-					console.log("輸入值不得為空值。");
-					alert("輸入值不得為空值。")
-					return; // 條件成立，則提前退出方法，下述方法內程式不執行
-			
-				} else if ( pattern.test(temperature) || pattern.test(humidity) || pattern2.test(value) ){
-					console.log("輸入值不是數字。");
-					alert("輸入值不是數字。")
-					return; // 條件成立，提前退出方法，下述方法內程式不執行
-					
-				}  else {
-					valueList.push(value);
-				}		
-			}
-			
+			var inputElement = document.getElementById('file');
+            var files = inputElement.files;   
+            
 			var calibrationData = {	
 		    	"id": id,
-		    	"specIdList": specIdList,
-		    	"valueList": valueList,
+		    	"reportNo": reportNo,
+		    	"taf": taf,
+		    	"calibrate_date": calibrate_date,
 		    	"result": result,
-		    	"temperature": temperature,
-		    	"humidity": humidity,
-		    	"calibrate_date": calibrate_date
+		    	"files": []
 			};
 	    
+			for (var i = 0; i < files.length; i++) {
+                calibrationData.files.push(files[i].name); // 仅存储文件名，可以根据需要存储其他文件信息
+            }
+			
 	 		jsonString = JSON.stringify(calibrationData) //轉成json格式
-	    	console.log(jsonString);
+	 		console.log(jsonString);
+	 		// 创建一个 FormData 对象来处理文件上传
+            var formData = new FormData();
+            formData.append("jsonString", jsonString);
+            for (var i = 0; i < files.length; i++) {
+                formData.append('file', files[i]);
+            }
+            
+            console.log(formData);
+
 		    
+            /*$.ajax({
+            	type: "POST",
+                url: '/bqc/upload',
+                contentType: false,
+                async: false, 
+                cache: false,
+                processData: false,
+                data: formData,
+                success: function (data) {
+                	// 顯示成功訊息
+                	console.log(data);
+                    var message = document.getElementById("messageDiv");
+    				message.innerHTML +=  data + "<br>";
+               },
+               error: function (xhr, status, error) {
+               		// 顯示錯誤訊息
+               		console.log(error);
+    			}
+            });*/
+            
 		    /*$.ajax({
 			    type: "POST", // 後端的要有標註PutMapping的方法
-			    url: "/calibration/prepCalibrations",
+			    url: "/calibration/upload",
 			    cache: false,
 			    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
-			    contentType: "application/json",
+			    //contentType: "application/json",
 			    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
 			    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
 			    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
@@ -375,9 +422,9 @@
             alert("此功能需要校驗人員身分才可使用。");
             window.location.href = "/calibration/instrument/prep";
         }
-	
-
   	});
+	
+	
 	
 	// 用於填充下拉選單的函數
 	function populateDropdown(data) {
