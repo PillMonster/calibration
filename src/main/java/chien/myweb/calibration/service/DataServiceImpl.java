@@ -39,7 +39,7 @@ public class DataServiceImpl implements DataService{
 		
 		int listLength = request.getValueList().size(); // 量測數據陣列長度大小
 		
-		int createResult = 0; // 創建結果初始職
+		int createResult = 0; // 創建結果初始值(新增儀器、規格、數據的關聯紀錄)
 		
 		// =====取得多個量測值 ====
 		for (int i=0;  i<listLength; i++) {	

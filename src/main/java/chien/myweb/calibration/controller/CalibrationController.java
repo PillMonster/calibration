@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,18 +19,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.Person;
+import chien.myweb.calibration.enity.Report;
 import chien.myweb.calibration.service.CalibrationService;
 import chien.myweb.calibration.service.DataService;
 import chien.myweb.calibration.service.InstrumentPersonService;
 import chien.myweb.calibration.service.InstrumentService;
+import chien.myweb.calibration.service.ReportService;
 
 @RestController
 @RequestMapping("/calibration")
 public class CalibrationController {
 	
+	@Autowired
+	ReportService reportService;
 	@Autowired
 	CalibrationService calibrationService;
 	@Autowired
@@ -39,62 +48,64 @@ public class CalibrationController {
 	@Autowired
 	InstrumentPersonService instrumentPersonService;
 	
+	// ===== 新增遊外校資訊 (檔案上傳) =====
 	@PostMapping("/upload")
-    public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> handleFileUpload(@RequestParam("jsonString") String request,
+            								  @RequestParam("file") MultipartFile file) throws JsonMappingException, JsonProcessingException {
 		
+		System.out.println("Received JSON: " + request);		
 		
-		//String product = request;
 		String filePath = "";
-		
-		
+        
 		if (file.isEmpty()) {
-			String message = "請選擇一個檔案來上傳";
-			
+			String message = "請選擇一個檔案來上傳";	
             return ResponseEntity.ok().body(message);
+            
         }else {
-        	String message = "上傳成功";
-        	return ResponseEntity.ok().body(message);
-        }
-		
-		// 確認檔案名是否正確，這裡示例檔案名應為 "example.txt"
-        /*String expectedFileName = "掃Barcode廠商對應代號.xlsx";
-        if (!file.getOriginalFilename().equals(expectedFileName)) {
-            String message = "檔案名稱不正確，應為 " + expectedFileName;
-            return ResponseEntity.ok().body(message);
-        }*/
+        	try {
+                // 設定上傳檔案的儲存路徑
+            	filePath = "I:/SpringBoot/uploadFiles/" + file.getOriginalFilename();
 
-        /*try {
-            // 設定上傳檔案的儲存路徑
-        	if (product.equals("MS")) {
-        		filePath = "D:/PythonTest/動態表/monthReport(MS)/" + file.getOriginalFilename();
-        	}
-        	else if (product.equals("NF")) {
-        		filePath = "D:/PythonTest/動態表/monthReport(NF)/" + file.getOriginalFilename();
-        	}
-        	else if (product.equals("BH")) {
-        		filePath = "D:/PythonTest/動態表/monthReport(BH)/" + file.getOriginalFilename();
-        	}
-            
-            File dest = new File(filePath);
-            
-            // 如果目錄不存在，則創建目錄
-            if (!dest.getParentFile().exists()) {
-                dest.getParentFile().mkdirs();
-            }
+                File dest = new File(filePath);
+                
+                // 如果目錄不存在，則創建目錄
+                if (!dest.getParentFile().exists()) {
+                    dest.getParentFile().mkdirs();
+                }
+                // 將檔案寫入目的地
+                file.transferTo(dest);
+                
+                System.out.println("test");
+                
+                ObjectMapper objectMapper = new ObjectMapper();
+                Report report = objectMapper.readValue(request, Report.class);
+                
+                System.out.println(report.getReport_name());
+                
+                List<Report> newReport = reportService.addReport(report);
+                Optional<Report> reportOp = newReport.stream().findAny();
+            		
+            	if (reportOp.isPresent()) {
+         
+        	    	String message = "檔案 " + file.getOriginalFilename() + " 上傳成功，已新增一筆校驗紀錄!";
+        	    	System.out.println(message);
+                
+        	    	return ResponseEntity.ok().body(reportOp);
+        		}
+        		else {
+        			String message = "資料庫沒有紀錄或資料輸入錯誤，請再重新確認。" ;
+        			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+        		}
 
-            // 將檔案寫入目的地
-            file.transferTo(dest);
-            String message = "檔案上傳成功: " + file.getOriginalFilename();
-            return ResponseEntity.ok().body(message);
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            String message = "檔案上傳失敗: " + file.getOriginalFilename();
-            return ResponseEntity.ok().body(message);
-        }*/
+            } catch (IOException e) {
+                e.printStackTrace();
+                String message = "檔案上傳失敗，請再重新確認。" ;
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+            }       	
+        }     
     }
 	
-	// ===== 新增數據 (執行校驗) =====
+	// ===== 新增內校數據 (執行校驗) =====
 	@PostMapping("/prepCalibrations") 
 	public ResponseEntity<?> executeCalibration(@RequestBody Data request){
 			

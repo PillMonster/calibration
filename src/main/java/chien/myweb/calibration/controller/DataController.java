@@ -43,7 +43,7 @@ public class DataController {
 	    }
 	}
 	
-	@GetMapping("/result/{result}")  
+	@GetMapping("/inner/result/{result}")  
 	public ResponseEntity<List<Data>> getResult(@PathVariable("result") String result){
 		
 		List<Data> dataDB = dataService.findByResult(result);	
@@ -62,7 +62,7 @@ public class DataController {
 	    }
 	}
 	
-	@GetMapping("/calibrateDate")  
+	@GetMapping("/inner/calibrateDate")  
 	public ResponseEntity<List<Data>> getCalibrateDate(@RequestBody Data request){
 		
 		List<Data> dataDB = dataService.findCalibrateDate(request);	
@@ -82,7 +82,7 @@ public class DataController {
 	}
 	
 	@GetMapping("/dataAll")  
-	public ResponseEntity<List<Data>> getResult(){
+	public ResponseEntity<List<Data>> getAllData(){
 		
 		List<Data> dataDB = dataService.findDataAll();	
 		

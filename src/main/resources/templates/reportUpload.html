@@ -171,12 +171,6 @@
 		}
 	});
 	
-	var specNum = "";
-	var specIdList = new Array();
-	
-	var pattern = /[a-zA-Z\u4e00-\u9fa5]/; // 定義正則表達式，匹配英文或中文字符
-	var pattern2 = /^[\da-zA-Z\u4e00-\u9fa5\W_]*[^\d.][\da-zA-Z\u4e00-\u9fa5\W_]*$/;
-	
 	$.ajax({
 	    type:"GET",//請求方式
 	    url:"/crud/instrumentNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
@@ -284,41 +278,6 @@
 	    }
 	});
 	
-	$("#uploadFileBtn").on("click", function () {
-		
-		// 取得選取按鈕的值
-        var selectedFileType = document.querySelector('input[name="radio"]:checked');  
-        if (!selectedFileType) {
-            alert("請選擇機種");
-            return;
-        }
-		
-		var product = $("[name='radio']:checked").val();
-		console.log(product);
-		
-        var formData = new FormData($("#instrumentForm")[0]);
-		
-        $.ajax({
-        	type: "POST",
-            url: '/bqc/upload',
-            contentType: false,
-            async: false, 
-            cache: false,
-            processData: false,
-            data: formData,
-            success: function (data) {
-            	// 顯示成功訊息
-            	console.log(data);
-                var message = document.getElementById("messageDiv");
-				message.innerHTML +=  data + "<br>";
-           },
-           error: function (xhr, status, error) {
-           		// 顯示錯誤訊息
-           		console.log(error);
-			}
-        });
-	});
-	
 	var identity = "";
 	
 	// 向後端取得session的值
@@ -349,6 +308,8 @@
 			event.preventDefault();// 如果需要阻止實際的表單提交，可以取消事件
 	
 			var reportNo = document.getElementById("reportNo").value.trim();
+			var instrumentNumber = document.getElementById("number").value.trim();
+			var instrumentName = document.getElementById("name").value.trim();
 			var taf = document.getElementById("taf").value.trim();
 			var calibrate_date = document.getElementById("calibrate_date").value;	
 			var result = document.getElementById("result").value.trim();
@@ -358,65 +319,39 @@
             
 			var calibrationData = {	
 		    	"id": id,
-		    	"reportNo": reportNo,
-		    	"taf": taf,
-		    	"calibrate_date": calibrate_date,
+		    	"report_no": reportNo,
+		    	"report_name": instrumentNumber + instrumentName,
 		    	"result": result,
-		    	"files": []
+		    	"calibrate_date": calibrate_date,
+		    	"is_taf": taf
 			};
-	    
-			for (var i = 0; i < files.length; i++) {
-                calibrationData.files.push(files[i].name); // 仅存储文件名，可以根据需要存储其他文件信息
-            }
 			
-	 		jsonString = JSON.stringify(calibrationData) //轉成json格式
-	 		console.log(jsonString);
-	 		// 创建一个 FormData 对象来处理文件上传
-            var formData = new FormData();
-            formData.append("jsonString", jsonString);
+	 		jsonString = JSON.stringify(calibrationData) // 轉成json格式
+	 		console.log("jsonString: " + jsonString);
+	 		 		
+            var formData = new FormData(); // 創建一個 FormData 物件来處理文件上傳
+            formData.append("jsonString", jsonString); // json資料存入FormData物件
+            
             for (var i = 0; i < files.length; i++) {
-                formData.append('file', files[i]);
-            }
+                formData.append("file", files[i]);
+            }    
+            console.log("formData: " +formData);
             
-            console.log(formData);
-
-		    
-            /*$.ajax({
-            	type: "POST",
-                url: '/bqc/upload',
-                contentType: false,
-                async: false, 
-                cache: false,
-                processData: false,
-                data: formData,
-                success: function (data) {
-                	// 顯示成功訊息
-                	console.log(data);
-                    var message = document.getElementById("messageDiv");
-    				message.innerHTML +=  data + "<br>";
-               },
-               error: function (xhr, status, error) {
-               		// 顯示錯誤訊息
-               		console.log(error);
-    			}
-            });*/
-            
-		    /*$.ajax({
+		    $.ajax({
 			    type: "POST", // 後端的要有標註PutMapping的方法
 			    url: "/calibration/upload",
-			    cache: false,
-			    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
-			    //contentType: "application/json",
-			    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
-			    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+			    async: false, 
+			    processData: false,
+                contentType: false,
+			    data: formData, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
 			    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
 			    	console.log(response)
-			    	alert("已新增一筆校驗紀錄!!");
+			    	alert("檔案 " + files[0].name + " 上傳成功，已新增一筆校驗紀錄!");
 			    },
 			    error: function(xhr, status, error) {
 			    	alert(xhr.responseText);
 			    }
-		  	});*/
+		  	});
 		    
     	} else {
             alert("此功能需要校驗人員身分才可使用。");
@@ -495,21 +430,19 @@
 	}
 	
 	// ========== 當下拉選單的月份checked時, 挑出放入下拉選單的文字內 ===========
-	function editCheckboxes(monthChecks){ // monthChecks為後端傳來的月份，此月份是創建儀器時當初設定的日期
+	function editCheckboxes(editChecks){ // monthChecks為後端傳來的月份，此月份是創建儀器時當初設定的日期
+		// 選擇下拉選單元素
+	  	const calibrate_month = document.getElementById("calibrate_month");
+	  	calibrate_month.innerHTML = ""; // 清空現有選項
+     	
+        // ========== 從month的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var monthDiv = document.getElementById("monthCheckBoxesDiv");
+		var monthChecks = monthDiv.querySelectorAll("input[type='checkbox']");
+		var option = document.createElement("option");
 
-	  	const calibrate_month = document.getElementById("calibrate_month"); // 取得下拉選單元素
-	  	calibrate_month.innerHTML = ""; // 清空現有選項    	
-   
-		var option = document.createElement("option");	// 創建<option>元素
-   
-   	 	calibrate_month.appendChild(option); // 將<option>元素添加至下拉選單
-   	 	option.text = monthChecks; // 後端傳來的月份，添加至下拉選單裡(框框內文字)
-   	 	
-   		// ========== 從month的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
-   	 	var checkSplit = monthChecks.split(",");
-		for (var i=0; i<checkSplit.length; i++){ // 取得每一個核選方塊
-			document.getElementById("month"+checkSplit[i]).checked = true; // 後端傳來的月份，讓它核選
-		}
+		option.text = editChecks;
+	
+   	 	calibrate_month.appendChild(option); // 將選項添加至下拉選單
 	}
 	
 	document.getElementById("calibrate_date").value = formatDate(new Date()); // 產生當前日期，轉換對應的日期格式(xxxx-xx-xx)，傳入日期選擇器的元素
