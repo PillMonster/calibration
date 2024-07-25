@@ -150,9 +150,32 @@ public class CalibrationController {
 	@GetMapping("/calibrationResult/{id}")  
 	public ResponseEntity<Map<String, Object>> getCalibrationResult(@PathVariable("id") Long id){
 		
-		Map<String, Object> cablibrationResultMap = calibrationService.findCalibrationResult(id);
+		List<Instrument> instrumentDB = instrumentService.findInstrumentById(id);	
 		
-		return ResponseEntity.ok().body(cablibrationResultMap);
+		Optional<Instrument> instrumentOp = instrumentDB.stream()
+				.filter(p -> p.getId().equals(id))
+				.findFirst();
+
+		if(instrumentOp.isPresent()){
+			Instrument instrument = instrumentOp.get();
+			
+			String calibrateType = instrument.getCalibrate_type();
+			
+			if ("內校".equals(calibrateType)) {
+				
+				Map<String, Object> cablibrationResultMap = calibrationService.findCalibrationResult(id); // 內校
+				return ResponseEntity.ok().body(cablibrationResultMap);
+			}
+			else {
+				
+				Map<String, Object> cablibrationResultMap = calibrationService.findOutsideCalibrationResult(id); //遊外校
+				return ResponseEntity.ok().body(cablibrationResultMap);
+			}		
+		}
+		else{
+			System.out.println("沒有此儀器或量具");
+	        return ResponseEntity.notFound().build();
+	    }	
 	}
 	
 	// ===== 透過器具id，取得對應的person =====

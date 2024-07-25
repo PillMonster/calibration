@@ -158,10 +158,14 @@
 
 
 <script type="text/javascript">
+
 	$(document).ready(function(){
+		
 	    $("#header").load("/instrument/header.html");
 	    
 		var identity = "";
+		var userName = "";
+		var checker = "";
 	    
 	 	// 向後端取得session的值
 	 	$.ajax({
@@ -172,11 +176,13 @@
 		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
 			success: function(response) {
 				identity = response.identity;
+				userName = response.userName;
 			},
 			error: function(xhr, status, error) {
 				    	//alert(xhr.responseText);
 			}
-		}); // ajax method end	 
+		}); // ajax method end
+	 	
 		console.log("identity: " + identity);
 		if ( identity != "校驗人員"){
 			alert("您沒有權限訪問此頁面，請重新登入。")
@@ -205,7 +211,7 @@
 	});
 	
 	var urlParams = new URLSearchParams(window.location.search); // 獲取當前頁面的URL中的查詢參數
-	var id = urlParams.get("id"); // 獲取ID參數的值
+	id = urlParams.get("id"); // 獲取ID參數的值
 	console.log("get execute'id: " + id);
 	
 	$.ajax({
@@ -257,9 +263,10 @@
 	    			
 	    			let selectElement = document.getElementById("checker");
 	    			let username = personList[i].username;
-	    		
+
 	    			for (let i = 0; i < selectElement.options.length; i++) {
 	    			    if (selectElement.options[i].value === username) {
+	    			    	checker = username; // 用於檢查登入者是否為校驗人員本人
 	    			        selectElement.selectedIndex = i;
 	    			        break; // 找到匹配值后立即退出循环
 	    			    }
@@ -326,7 +333,7 @@
 	    	
 	    },
 	    error :function(errorMsg) {
-	        alert("請求後端資料失敗！(personId)");
+	        alert("請求後端資料失敗！(/crud/instrumentInfo/)");
 	    }
 	});
 	
@@ -343,6 +350,7 @@
 		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
 			success: function(response) {
 				identity = response.identity;
+				userName = response.userName;
 			},
 			error: function(xhr, status, error) {
 				    	//alert(xhr.responseText);
@@ -355,76 +363,87 @@
 		
 		getSessionValue(); 
     	
-    	if ( identity == "校驗人員") { 
-	        
-			event.preventDefault();// 如果需要阻止實際的表單提交，可以取消事件
-			
-			var valueList = new Array();
-	
-			var temperature = document.getElementById("temperature").value.trim();
-			var humidity = document.getElementById("humidity").value.trim();
-			var calibrate_date = document.getElementById("calibrate_date").value;	
-			var result = document.getElementById("msg").textContent.trim();
-			
-			for(let i=1; i<=specNum; i++){
-				
-				var value = document.getElementById("row" + i + "-6").value.trim();
-				
-				if ( temperature === "" || humidity === "" || value === "" ) { // 檢查去除空格後的值是否為空
-					console.log("輸入值不得為空值。");
-					alert("輸入值不得為空值。")
-					return; // 條件成立，則提前退出方法，下述方法內程式不執行
-			
-				} else if ( pattern.test(temperature) || pattern.test(humidity) || pattern2.test(value) ){
-					console.log("輸入值不是數字。");
-					alert("輸入值不是數字。")
-					return; // 條件成立，提前退出方法，下述方法內程式不執行
-					
-				}  else {
-					valueList.push(value);
-				}		
-			}
-			
-			/*console.log("temperature: " + temperature + ", humidity: " + humidity + ", calibrate_date: " + calibrate_date);
-			console.log("valueList: " + valueList);
-			console.log("result: " + result);*/
-				
-			var calibrationData = {	
-		    	"id": id,
-		    	"specIdList": specIdList,
-		    	"valueList": valueList,
-		    	"result": result,
-		    	"temperature": temperature,
-		    	"humidity": humidity,
-		    	"calibrate_date": calibrate_date
-			};
-	    
-	 		jsonString = JSON.stringify(calibrationData) //轉成json格式
-	    	console.log(jsonString);
-		    
-		    $.ajax({
-			    type: "POST", // 後端的要有標註PutMapping的方法
-			    url: "/calibration/prepCalibrations",
-			    cache: false,
-			    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
-			    contentType: "application/json",
-			    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
-			    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
-			    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
-			    	console.log(response)
-			    	alert("已新增一筆校驗紀錄!!");
-			    },
-			    error: function(xhr, status, error) {
-			    	alert(xhr.responseText);
-			    }
-		  	});
-		    
+		if ( identity == "校驗人員") { 
+    		
+    		if ( userName == checker) { // 用於檢查登入者是否為校驗人員本人
+    			
+    			event.preventDefault();// 如果需要阻止實際的表單提交，可以取消事件
+    			
+    			var valueList = new Array();
+    	
+    			var temperature = document.getElementById("temperature").value.trim();
+    			var humidity = document.getElementById("humidity").value.trim();
+    			var calibrate_date = document.getElementById("calibrate_date").value;	
+    			var result = document.getElementById("msg").textContent.trim();
+    			
+    			for(let i=1; i<=specNum; i++){
+    				
+    				var value = document.getElementById("row" + i + "-6").value.trim();
+    				
+    				if ( temperature === "" || humidity === "" || value === "" ) { // 檢查去除空格後的值是否為空
+    					console.log("輸入值不得為空值。");
+    					alert("輸入值不得為空值。")
+    					return; // 條件成立，則提前退出方法，下述方法內程式不執行
+    			
+    				} else if ( pattern.test(temperature) || pattern.test(humidity) || pattern2.test(value) ){
+    					console.log("輸入值不是數字。");
+    					alert("輸入值不是數字。")
+    					return; // 條件成立，提前退出方法，下述方法內程式不執行
+    					
+    				}  else {
+    					valueList.push(value);
+    				}		
+    			}
+    			
+    			/*console.log("temperature: " + temperature + ", humidity: " + humidity + ", calibrate_date: " + calibrate_date);
+    			console.log("valueList: " + valueList);
+    			console.log("result: " + result);*/
+    				
+    			var calibrationData = {	
+    		    	"id": id,
+    		    	"specIdList": specIdList,
+    		    	"valueList": valueList,
+    		    	"result": result,
+    		    	"temperature": temperature,
+    		    	"humidity": humidity,
+    		    	"calibrate_date": calibrate_date
+    			};
+    	    
+    	 		jsonString = JSON.stringify(calibrationData) //轉成json格式
+    	    	console.log(jsonString);
+    		    
+    		    $.ajax({
+    			    type: "POST", // 後端的要有標註PutMapping的方法
+    			    url: "/calibration/prepCalibrations",
+    			    cache: false,
+    			    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
+    			    contentType: "application/json",
+    			    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
+    			    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+    			    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
+    			    	console.log(response)
+    			    	alert("已新增一筆校驗紀錄!!");
+    			    },
+    			    error: function(xhr, status, error) {
+    			    	alert(xhr.responseText);
+    			    }
+    		  	});
+
+    		} else {
+    			alert("您不是負責此器具的校驗人員。");
+
+                setTimeout(function() {
+                    window.location.href = "/calibration/instrument/prep"; 
+                }, 0); // 立即跳轉
+    		}
+   
     	} else {
             alert("此功能需要校驗人員身分才可使用。");
-            window.location.href = "/calibration/instrument/prep";
+            
+            setTimeout(function() {
+                window.location.href = "/calibration/instrument/prep"; 
+            }, 0); // 立即跳轉
         }
-	
-
   	});
 	
 	// 用於填充下拉選單的函數

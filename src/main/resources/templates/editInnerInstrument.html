@@ -326,7 +326,7 @@
 	        
 	    },
 	    error :function(errorMsg) {
-	        alert("請求後端資料失敗！(personId)");
+	        alert("請求後端資料失敗！(/crud/instrumentInfo/)");
 	    }
 	});
 	
@@ -448,7 +448,9 @@
             
         } else {
             alert("此功能需要校驗人員身分才可使用。");
-            window.location.href = "/calibration/instrument/crud";
+            setTimeout(function() {
+            	window.location.href = "/calibration/instrument/crud";
+            }, 0); // 立即跳轉 
         }
 
   	});

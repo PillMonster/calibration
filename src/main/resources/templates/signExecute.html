@@ -54,7 +54,9 @@
 	$(document).ready(function(){
 	    $("#header").load("/instrument/header.html");
 	    
-		var identity = "";
+	    var identity = "";
+		var userName = "";
+		var checker = "";
 	    
 	 	// 向後端取得session的值
 	 	$.ajax({
@@ -65,12 +67,15 @@
 		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
 			success: function(response) {
 				identity = response.identity;
+				userName = response.userName;
 			},
 			error: function(xhr, status, error) {
 				    	//alert(xhr.responseText);
 			}
-		}); // ajax method end	 
+		}); // ajax method end
+		
 		console.log("identity: " + identity);
+		
 		if ( identity != "校驗主管"){
 			alert("您沒有權限訪問此頁面，請重新登入。")
 			window.location.href = "/calibration/person/login";
@@ -84,7 +89,7 @@
 	
 	$.ajax({
 	    type:"GET",//請求方式
-	    url:"/calibration/calibrationResult/" + id,//url代表向後端發送請求 (後端需有標註@GetMapping("calibration/calibrationResult")的方法)
+	    url:"/calibration/calibrationResult/" + id,//url代表向後端發送請求 (後端需有標註@GetMapping("/calibration/calibrationResult")的方法)
 	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法，或回傳方法型態為ResponseEntity<?>)
 	    async:true,//true為非同步
 	    success:function (data) {//接收後端來的資料
@@ -94,13 +99,16 @@
 	 	
 	    	var dateLen = data.calibrationResult.length; // 取得該器具校驗次數
 	    	var specLen = data.calibrationResult[0].length; // 取得該器具校驗規格數量
+	    	var calibrate_type = data.instrumentInfo.calibrate_type; // 校驗型態
 			console.log("dateLen: " + dateLen);
-			console.log("specLen: " + specLen);
+			console.log("calibrate_type: " + calibrate_type);
 			
-	    	/*for(var i = 0; i < dateLen; i++){
-	    		updateData(data, dateLen); // 渲染該器具校驗結果，i 為不同校驗日期批次  		
-	    	}*/
-	    	updateData(data, dateLen-1); // 渲染該器具校驗結果，i 為不同校驗日期批次 
+			if (calibrate_type == "內校") {
+				updateData(data, dateLen-1); // 渲染該器具校驗結果，-1為最新的日期批次
+			}
+			else {
+				updateOutside(data, dateLen-1); // 渲染該器具校驗結果，-1為最新的日期批次
+			}
 	    	
 	    },
 	    error :function(errorMsg) {
@@ -129,7 +137,7 @@
     	//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得該儀器的校驗人員)
     	$.ajax({ 
     	    type:"GET", //請求方式
-    	    url:"/crud/instrumentInfo/" + id, //url代表向後端發送請求 (後端需有標註@GetMapping("/instrument{id}")的方法)
+    	    url:"/crud/instrumentInfo/" + id, //url代表向後端發送請求 (後端需有標註@GetMapping("/crud/instrumentInfo")的方法)
     	    dataType:"json", //接收資料格式 (後端需有標註@ResponseBody的方法)
     	    async:true, //true為非同步
     	    success:function (instrumentInfo) { //接收後端來的資料
@@ -146,7 +154,7 @@
 	    	    }
 	    	},
     		error :function(errorMsg) {
-            	alert("請求後端資料失敗！(personId)");
+            	alert("請求後端資料失敗！(/instrumentInfo{id})");
         	}
     	});
     	
@@ -163,9 +171,8 @@
 		const resultsContainer = document.getElementById("calibration-results"); // 父容器
 		
 		var innerTable = "";
-		
-		//<td>溫度 (°C)</td><td>濕度 (%)</td>
-		innerTable += "<div style='text-align: center;'>";
+
+		innerTable += "<div class='table-container-div'>";
 		//innerTable += "<div><span><h3 class='h3'>" + calibrate_date + " 校驗</h3></span><span><h3>溫度22.2,濕度58%</h3></span></div>";
 		innerTable += "<div class='title-div'>";
 		innerTable += "<span class='date-span'><h3>" +  calibrate_date + " 校驗</h3></span>";
@@ -196,6 +203,46 @@
 		innerTable += "</tr>";
 		innerTable += "</tbody>";
 		innerTable += "</table>";
+		innerTable += "</div>";
+		
+		const div = document.createElement("div");
+		div.className = "calibrationTableDiv";
+        div.id = "calibrationTableDiv" + dateLen;
+        div.innerHTML = innerTable; // 將數據插入到div中
+        resultsContainer.appendChild(div); // 將div插入到父容器中
+
+	}
+	
+	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的table上
+	function updateOutside(data, dateLen){
+		
+		// data[0].calibrationResult[0][0].calibrate_date; -> 第一把器具、第一次校驗日期、第一項規格、取得校驗日期
+
+		var calibrate_date = data.calibrationResult[dateLen][0].calibrate_date;
+		
+		const resultsContainer = document.getElementById("calibration-results"); // 父容器
+		
+		var innerTable = "";
+
+		innerTable += "<div class='table-container-div'>";
+		innerTable += "<div class='date2-div'><h3>" +  calibrate_date + " 校驗</h3></div>";
+
+		innerTable += "<table border='1' class='styled-table'>";
+		innerTable += "<thead bgcolor='#7FFFD4'>";
+		innerTable += "<tr><td>報告編號</td><td>校驗日期</td><td>校驗結果</td><td>TAF</td><td>報告查看</td><td>報告下載</td>";
+		innerTable += "</thead>";
+		innerTable += "<tbody>";
+		innerTable += "<tr class='active-row'>";
+		innerTable += "<td>" + data.calibrationResult[dateLen][0].report_no + "</td>";
+		innerTable += "<td>" + calibrate_date + "</td>";
+		innerTable += "<td>" + data.calibrationResult[dateLen][0].result + "</td>";
+		innerTable += "<td>" + data.calibrationResult[dateLen][0].is_taf + "</td>";
+		innerTable += "<td><a>報告查看</a></td>";
+		innerTable += "<td><a>報告下載</a></td>";
+		innerTable += "</tr>";
+		innerTable += "</tbody>";
+		innerTable += "</table>";
+
 		innerTable += "</div>";
 		
 		const div = document.createElement("div");
@@ -274,8 +321,6 @@
 	    }
 	    return numStr.length - decimalIndex - 1;
 	}
-	
-	
 
 </script>
 

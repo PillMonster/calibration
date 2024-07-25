@@ -40,10 +40,17 @@ body {
 	border: 1px solid #868687;
 }
 
+.table-container-div{
+	text-align: center; 
+	/*border: 1px solid #868687;*/
+	width: 100%;
+}
+
 .title-div{
 	width: 90%;
 	display: flex; /* 裡面每一個div可以上下左右排列 */
 	margin: 20px 40px 5px 40px;  /* 上 右 下 左 */
+	/*border: 1px solid #868687;*/
 }
 
 .date-span {
@@ -57,6 +64,15 @@ body {
 	text-align: right;
 	/*border: 1px solid #868687;*/
 }
+
+
+.date2-div{
+	width: 90%;
+	text-align: left;
+	/*border: 1px solid #9932CC;*/
+	margin: 20px 40px 5px 40px;  /* 上 右 下 左 */
+}
+
 
 .instrument-info, .calibration-results {
      margin-bottom: 20px;

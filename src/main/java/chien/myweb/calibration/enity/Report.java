@@ -39,11 +39,12 @@ public class Report {
 	public Report() {
 	}
 
-	public Report(String report_no, String report_name, String result, String calibrate_date, String is_taf) {
+	public Report(Long report_id ,String report_no, String report_name, String calibrate_date, String result, String is_taf) {
+		this.id = report_id;
 		this.report_no = report_no;
 		this.report_name = report_name;
-		this.result = result;
 		this.calibrate_date = calibrate_date;
+		this.result = result;
 		this.is_taf = is_taf;
 	}
 

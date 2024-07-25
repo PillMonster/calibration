@@ -214,7 +214,9 @@
 			
     	} else {
             alert("此功能需要校驗人員身分才可使用。");
-            window.location.href = "/calibration/person/crud";
+            setTimeout(function() {
+            	window.location.href = "/calibration/person/crud";
+            }, 0); // 立即跳轉     
         }
 			
     });

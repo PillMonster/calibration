@@ -148,7 +148,9 @@
 	$(document).ready(function(){
 	    $("#header").load("/instrument/header.html");
 	    
-		var identity = "";
+	    var identity = "";
+		var userName = "";
+		var checker = "";
 	    
 	 	// 向後端取得session的值
 	 	$.ajax({
@@ -159,12 +161,14 @@
 		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
 			success: function(response) {
 				identity = response.identity;
+				userName = response.userName;
 			},
 			error: function(xhr, status, error) {
 				    	//alert(xhr.responseText);
 			}
-		}); // ajax method end	 
+		}); // ajax method end
 		console.log("identity: " + identity);
+		
 		if ( identity != "校驗人員"){
 			alert("您沒有權限訪問此頁面，請重新登入。")
 			window.location.href = "/calibration/person/login";
@@ -239,6 +243,7 @@
 	    		
 	    			for (let i = 0; i < selectElement.options.length; i++) {
 	    			    if (selectElement.options[i].value === username) {
+	    			    	checker = username; // 用於檢查登入者是否為校驗人員本人
 	    			        selectElement.selectedIndex = i;
 	    			        break; // 找到匹配值后立即退出循环
 	    			    }
@@ -274,7 +279,7 @@
 	    	
 	    },
 	    error :function(errorMsg) {
-	        alert("請求後端資料失敗！(personId)");
+	        alert("請求後端資料失敗！(/crud/instrumentInfo/)");
 	    }
 	});
 	
@@ -304,58 +309,71 @@
 		getSessionValue(); 
     	
     	if ( identity == "校驗人員") { 
+    		
+    		if ( userName == checker) { // 用於檢查登入者是否為校驗人員本人
 	        
-			event.preventDefault();// 如果需要阻止實際的表單提交，可以取消事件
-	
-			var reportNo = document.getElementById("reportNo").value.trim();
-			var instrumentNumber = document.getElementById("number").value.trim();
-			var instrumentName = document.getElementById("name").value.trim();
-			var taf = document.getElementById("taf").value.trim();
-			var calibrate_date = document.getElementById("calibrate_date").value;	
-			var result = document.getElementById("result").value.trim();
-			
-			var inputElement = document.getElementById('file');
-            var files = inputElement.files;   
-            
-			var calibrationData = {	
-		    	"id": id,
-		    	"report_no": reportNo,
-		    	"report_name": instrumentNumber + instrumentName,
-		    	"result": result,
-		    	"calibrate_date": calibrate_date,
-		    	"is_taf": taf
-			};
-			
-	 		jsonString = JSON.stringify(calibrationData) // 轉成json格式
-	 		console.log("jsonString: " + jsonString);
-	 		 		
-            var formData = new FormData(); // 創建一個 FormData 物件来處理文件上傳
-            formData.append("jsonString", jsonString); // json資料存入FormData物件
-            
-            for (var i = 0; i < files.length; i++) {
-                formData.append("file", files[i]);
-            }    
-            console.log("formData: " +formData);
-            
-		    $.ajax({
-			    type: "POST", // 後端的要有標註PutMapping的方法
-			    url: "/calibration/upload",
-			    async: false, 
-			    processData: false,
-                contentType: false,
-			    data: formData, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
-			    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
-			    	console.log(response)
-			    	alert("檔案 " + files[0].name + " 上傳成功，已新增一筆校驗紀錄!");
-			    },
-			    error: function(xhr, status, error) {
-			    	alert(xhr.responseText);
-			    }
-		  	});
+				event.preventDefault();// 如果需要阻止實際的表單提交，可以取消事件
+		
+				var reportNo = document.getElementById("reportNo").value.trim();
+				var instrumentNumber = document.getElementById("number").value.trim();
+				var instrumentName = document.getElementById("name").value.trim();
+				var taf = document.getElementById("taf").value.trim();
+				var calibrate_date = document.getElementById("calibrate_date").value;	
+				var result = document.getElementById("result").value.trim();
+				
+				var inputElement = document.getElementById('file');
+	            var files = inputElement.files;   
+	            
+				var calibrationData = {	
+			    	"id": id,
+			    	"report_no": reportNo,
+			    	"report_name": instrumentNumber + instrumentName,
+			    	"result": result,
+			    	"calibrate_date": calibrate_date,
+			    	"is_taf": taf
+				};
+				
+		 		jsonString = JSON.stringify(calibrationData) // 轉成json格式
+		 		console.log("jsonString: " + jsonString);
+		 		 		
+	            var formData = new FormData(); // 創建一個 FormData 物件来處理文件上傳
+	            formData.append("jsonString", jsonString); // json資料存入FormData物件
+	            
+	            for (var i = 0; i < files.length; i++) {
+	                formData.append("file", files[i]);
+	            }    
+	            console.log("formData: " +formData);
+	            
+			    $.ajax({
+				    type: "POST", // 後端的要有標註PutMapping的方法
+				    url: "/calibration/upload",
+				    async: false, 
+				    processData: false,
+	                contentType: false,
+				    data: formData, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+				    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
+				    	console.log(response)
+				    	alert("檔案 " + files[0].name + " 上傳成功，已新增一筆校驗紀錄!");
+				    },
+				    error: function(xhr, status, error) {
+				    	alert(xhr.responseText);
+				    }
+			  	});
 		    
+    		} else {
+    			alert("您不是負責此器具的校驗人員。");
+
+                setTimeout(function() {
+                    window.location.href = "/calibration/instrument/prep"; 
+                }, 0); // 立即跳轉
+    		}
+   
     	} else {
             alert("此功能需要校驗人員身分才可使用。");
-            window.location.href = "/calibration/instrument/prep";
+            
+            setTimeout(function() {
+                window.location.href = "/calibration/instrument/prep"; 
+            }, 0); // 立即跳轉
         }
   	});
 	

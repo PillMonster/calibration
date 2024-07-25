@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.aop.IntroductionAdvisor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import chien.myweb.calibration.dao.InstrumentDao;
 import chien.myweb.calibration.dao.CalibrationDao;
 import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
+import chien.myweb.calibration.enity.Report;
 import chien.myweb.calibration.enity.Calibration;
 import chien.myweb.calibration.enity.Spec;
 
@@ -35,6 +37,69 @@ public class CalibrationServiceImpl implements CalibrationService{
 	@Autowired
 	CalibrationDao calibrationDao;
 	
+	
+	// ========== 查詢單一儀器外校結果 ==========
+	@Override
+	public Map<String, Object> findOutsideCalibrationResult(Long id) {  
+		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); // 日期格式
+		Instrument instrument = new Instrument();
+		
+		// ===== 取得儀器資訊 =====
+		List<Instrument> instrumentDB = instrumentDao.findByInstrumentId(id);
+
+		Optional<Instrument> instrumentOp = instrumentDB.stream()
+				.filter(p -> p.getId().equals(id))
+				.findFirst();
+
+		if(instrumentOp.isPresent()){
+			instrument = instrumentOp.get();
+		}
+		else{
+			System.out.println("沒有此儀器或量具");
+	    }
+        	
+		ArrayList calibrationDataByDateList = new ArrayList<>(); // List初始化，存放多個校驗日期之校驗結果
+		Map<String, Object> instrumentResultMap = new LinkedHashMap<>();	// Map初始化，存放一個器具的資訊及校驗結果，Linked為先進先出排列
+
+		List<Date> reponseDate = calibrationDao.findDistinctOutsideCalibrateDateByInstrumentId(id);
+		Collections.sort(reponseDate); 
+		
+        for (Date d : reponseDate) {
+        	
+        	String calibrateDate  = df.format(d); // date轉換為String
+        	
+        	// 取出資料庫的內容，存放在Object類別的reponseObject
+        	// Object[] -> 存放多個欄位
+        	// List<> -> 存放多個物件
+        	List<Object[]> reponseObject = calibrationDao.findDistinctOutsideByInstrumentIdAndCalibrateDate(id, calibrateDate);
+        		
+        	Report reportObj = new Report(); // 物件初始化，存放一個物件
+        	ArrayList calibrationDataList = new ArrayList<>(); // List初始化，存放多個物件
+        	
+            for (Object[] object : reponseObject ) {
+            	
+            	Integer report_id = (Integer)object[0];
+            	String report_no = (String)object[1];
+            	String report_name = (String)object[2];
+            	String calibrate_date  = df.format(object[3]);
+            	String result  = (String)object[4];
+            	String is_taf  = (String)object[5];
+            	
+            	Long Longid = Long.valueOf(report_id.longValue());
+            	
+            	reportObj = new Report(Longid, report_no, report_name, calibrate_date, result, is_taf);  // 注入建構元
+            	calibrationDataList.add(reportObj); // 多個物件(多個外校資訊)放入一個List(一個日期)
+            }
+            calibrationDataByDateList.add(calibrationDataList); // 多個List(多個日期)放入一個List
+	
+			instrumentResultMap.put("instrumentInfo", instrument); // 一個儀器資訊(Object)
+			instrumentResultMap.put("calibrationResult", calibrationDataByDateList); // 多個校驗結果
+		}
+		
+		return instrumentResultMap;	
+	}
+		
 	
 	// ========== 查詢單一儀器校驗結果 ==========
 	@Override
@@ -69,9 +134,10 @@ public class CalibrationServiceImpl implements CalibrationService{
         	String calibrateDate  = df.format(d); // date轉換為String
         	
         	// 取出資料庫的內容，存放在Object類別的reponseObject
+        	// Object[] -> 存放多個欄位
+        	// List<> -> 存放多個物件
         	List<Object[]> reponseObject = calibrationDao.findDistinctByInstrumentIdAndCalibrateDate(id, calibrateDate);
-        	
-        	
+        	   	
         	Calibration calibrationDataObj = new Calibration(); // 物件初始化，存放一個物件
         	ArrayList calibrationDataList = new ArrayList<>(); // List初始化，存放多個物件
         	
