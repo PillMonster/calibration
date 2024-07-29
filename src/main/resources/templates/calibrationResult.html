@@ -81,12 +81,10 @@
 		    	for(var i = 0; i < dateLen; i++){
 		    		updateData(data, i); // 渲染該器具校驗結果於表格上，i 為不同校驗日期批次 
 		    		
-		    	}	
-		    	
+		    	}		
 		    	for(var i = 0; i < specLen; i++){
 		    		updateChart(data, dateLen, i); // 渲染該器具校驗結果於折線圖上，i 為不同規格
-		    	}
-		    	
+		    	}	    	
 		    },
 		    error :function(errorMsg) {
 		        alert("資料庫沒有內容。");

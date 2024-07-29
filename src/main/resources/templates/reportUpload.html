@@ -149,7 +149,7 @@
 	
 	    $("#header").load("/instrument/header.html");
 	    
-		var identity = "";
+	    var identity = "";
 		var userName = "";
 		var checker = "";
 	    
@@ -159,17 +159,16 @@
 			url: "/calibration/login/sessionAttributes",
 			dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
 			contentType: "json",
-		 	async:true,//false為同步(需先取得session的值，再執行後續邏輯業務)
+		 	async:false,//false為同步(需先取得session的值，再執行後續邏輯業務)
 			success: function(response) {
 				identity = response.identity;
 				userName = response.userName;
-				
 			},
 			error: function(xhr, status, error) {
 				    	//alert(xhr.responseText);
 			}
 		}); // ajax method end
-		console.log("userName: " + userName);
+	 	
 		console.log("identity: " + identity);
 		if ( identity != "校驗人員"){
 			alert("您沒有權限訪問此頁面，請重新登入。")
@@ -244,7 +243,6 @@
 	    			for (let i = 0; i < selectElement.options.length; i++) {
 	    			    if (selectElement.options[i].value === username) {
 	    			    	checker = username; // 用於檢查登入者是否為校驗人員本人
-	    			    	
 	    		    		console.log("checker: " + checker);
 	    			    	selectElement.selectedIndex = i;
 	    			        break; // 找到匹配值后立即退出循环
@@ -309,18 +307,10 @@
 	
 	// ========= 監聽點擊按鈕後，要處理的方法 ==========
 	document.getElementById("instrumentForm").addEventListener("submit", function(event) {
-	
-		console.log("userName: " + userName);
-		console.log("checker: " + checker);
-		
-		getSessionValue(); 
+
+    	getSessionValue(); 
     	
-		/*console.log("userName: " + userName);
-		console.log("checker: " + checker);
-    	if ( identity == "校驗人員") { 
-    		
-    		console.log("userName: " + userName);
-    		console.log("checker: " + checker);
+		if ( identity == "校驗人員") { 
     		
     		if ( userName == checker) { // 用於檢查登入者是否為校驗人員本人
     			
@@ -389,10 +379,8 @@
             setTimeout(function() {
                 window.location.href = "/calibration/instrument/prep"; 
             }, 0); // 立即跳轉
-        }*/
+        }
   	});
-	
-	
 	
 	// 用於填充下拉選單的函數
 	function populateDropdown(data) {

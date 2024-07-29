@@ -1,14 +1,20 @@
 package chien.myweb.calibration.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +53,34 @@ public class CalibrationController {
 	InstrumentService instrumentService;
 	@Autowired
 	InstrumentPersonService instrumentPersonService;
+	
+	
+	@GetMapping("/view")
+    public ResponseEntity<InputStreamResource> viewPdf(@RequestParam String report) throws FileNotFoundException, UnsupportedEncodingException {
+		
+		System.out.println("report file name: " + report);
+		String fileName = report;
+		
+		String filePath = "I:/SpringBoot/uploadFiles/" + fileName + ".pdf";   
+
+        File file = new File(filePath);
+    
+        if (!file.exists()) {
+        	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    
+        FileInputStream fileInputStream = new FileInputStream(file);
+        InputStreamResource resource = new InputStreamResource(fileInputStream);
+
+        HttpHeaders headers = new HttpHeaders();
+        String encodedFileName = URLEncoder.encode(file.getName(), "UTF-8").replace("+", "%20");
+        headers.add("Content-Disposition", "inline;filename*=UTF-8''" + encodedFileName);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
+    }
 	
 	// ===== 新增遊外校資訊 (檔案上傳) =====
 	@PostMapping("/upload")
