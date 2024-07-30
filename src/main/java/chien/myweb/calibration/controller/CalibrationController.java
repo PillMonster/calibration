@@ -54,27 +54,66 @@ public class CalibrationController {
 	@Autowired
 	InstrumentPersonService instrumentPersonService;
 	
-	
+	//  ===== 在瀏覽器中查看pdf =====
 	@GetMapping("/view")
     public ResponseEntity<InputStreamResource> viewPdf(@RequestParam String report) throws FileNotFoundException, UnsupportedEncodingException {
 		
-		System.out.println("report file name: " + report);
+		System.out.println("view for report: " + report);
 		String fileName = report;
 		
 		String filePath = "I:/SpringBoot/uploadFiles/" + fileName + ".pdf";   
 
         File file = new File(filePath);
-    
+        
         if (!file.exists()) {
         	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    
+        
+        // FileInputStream是用來讀入(read)文件，以8-bit 的 bytes 來進行輸入輸出
+        // 創建了一個 FileInputStream 類別來讀取文件內容，file 是一個 File 類別，代表需要讀取的 PDF 文件。        
+        FileInputStream fileInputStream = new FileInputStream(file);
+
+        // Spring 提供了InputStreamResource 來存取二進位輸入流資源
+        // 創建了一個 InputStreamResource 對象，用於包裝 FileInputStream，以便稍後將其作為 HTTP 響應的主體（body）返回
+        InputStreamResource resource = new InputStreamResource(fileInputStream);
+
+        // 設置 HTTP 回應的標頭
+        HttpHeaders headers = new HttpHeaders();
+        
+        // 使用 URLEncoder.encode 方法對文件名進行 URL 編碼。URL 編碼可以將文件名中的特殊字符(如中文字符)轉換為在 HTTP 標頭中有效的格式
+        String encodedFileName = URLEncoder.encode(file.getName(), "UTF-8").replace("+", "%20");
+        
+        // 設置 Content-Disposition 標頭，告訴瀏覽器應該內部顯示文件
+        // 設置 inline，即在瀏覽器中打開而不是下載，並包含編碼後的文件名
+        // 設置 filename， 下載的文件名稱
+        headers.add("Content-Disposition", "inline; filename*=UTF-8''" + encodedFileName);
+
+        return ResponseEntity.ok()
+                .headers(headers) // 將前面設置的 HTTP 標頭添加到response中
+                .contentType(MediaType.APPLICATION_PDF) // 設置為 application/pdf 告訴瀏覽器響應內容是一個 PDF 文件。
+                .body(resource); // 將 InputStreamResource 物件作為響應的主體(body)返回，從而包含了 PDF 文件的內容。
+    }
+	
+	//  ===== 下載pdf =====
+	@GetMapping("/download")
+	public ResponseEntity<InputStreamResource> downloadPdf(@RequestParam String report) throws FileNotFoundException, UnsupportedEncodingException {
+        
+		System.out.println("download for report: " + report);
+		String fileName = report;
+
+        String filePath = "I:/SpringBoot/uploadFiles/" + fileName + ".pdf";  // 指定文件路径
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         FileInputStream fileInputStream = new FileInputStream(file);
         InputStreamResource resource = new InputStreamResource(fileInputStream);
 
         HttpHeaders headers = new HttpHeaders();
         String encodedFileName = URLEncoder.encode(file.getName(), "UTF-8").replace("+", "%20");
-        headers.add("Content-Disposition", "inline;filename*=UTF-8''" + encodedFileName);
+        headers.add("Content-Disposition", "attachment;filename*=UTF-8''" + encodedFileName);
 
         return ResponseEntity.ok()
                 .headers(headers)
@@ -111,8 +150,8 @@ public class CalibrationController {
                 
                 System.out.println("test");
                 
-                ObjectMapper objectMapper = new ObjectMapper();
-                Report report = objectMapper.readValue(request, Report.class);
+                ObjectMapper objectMapper = new ObjectMapper(); // 用於將 JSON 資料與 Java 物件之間進行相互轉換
+                Report report = objectMapper.readValue(request, Report.class); // request 中讀取 JSON 數據，指定了目標類型，即將 JSON 資料反序列化為 Report 類別的實例
                 
                 System.out.println(report.getReport_name());
                 
