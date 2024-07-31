@@ -26,4 +26,9 @@ public class InstrumentReportServiceImpl implements InstrumentReportService{
 			return createResult=0;
 		}
 	}
+	
+	@Override
+	public String findReportNameByInstrumentIdAndDate(Long instrumentId, String calibrateDate) { // 查詢報告名稱(透過器具id和校驗日期)
+		return instrumentReportDao.findReportNameByInstrumentIdAndDate(instrumentId, calibrateDate);
+	}
 }

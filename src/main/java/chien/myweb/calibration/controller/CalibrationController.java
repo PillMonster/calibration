@@ -36,6 +36,7 @@ import chien.myweb.calibration.enity.Report;
 import chien.myweb.calibration.service.CalibrationService;
 import chien.myweb.calibration.service.DataService;
 import chien.myweb.calibration.service.InstrumentPersonService;
+import chien.myweb.calibration.service.InstrumentReportService;
 import chien.myweb.calibration.service.InstrumentService;
 import chien.myweb.calibration.service.ReportService;
 
@@ -53,15 +54,19 @@ public class CalibrationController {
 	InstrumentService instrumentService;
 	@Autowired
 	InstrumentPersonService instrumentPersonService;
+	@Autowired
+	InstrumentReportService instrumentReportService;
 	
 	//  ===== 在瀏覽器中查看pdf =====
 	@GetMapping("/view")
-    public ResponseEntity<InputStreamResource> viewPdf(@RequestParam String report) throws FileNotFoundException, UnsupportedEncodingException {
+    public ResponseEntity<InputStreamResource> viewPdf(@RequestParam Long id, @RequestParam String date) 
+    		throws FileNotFoundException, UnsupportedEncodingException {
 		
-		System.out.println("view for report: " + report);
-		String fileName = report;
+		System.out.println("view pdf for instrumentId: " + id + ", calibrateDate: " + date);
 		
-		String filePath = "I:/SpringBoot/uploadFiles/" + fileName + ".pdf";   
+		String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 查詢報告名稱(透過器具id和校驗日期)
+	
+		String filePath = "I:/SpringBoot/uploadFiles/" + fileName;   
 
         File file = new File(filePath);
         
@@ -96,12 +101,15 @@ public class CalibrationController {
 	
 	//  ===== 下載pdf =====
 	@GetMapping("/download")
-	public ResponseEntity<InputStreamResource> downloadPdf(@RequestParam String report) throws FileNotFoundException, UnsupportedEncodingException {
+	public ResponseEntity<InputStreamResource> downloadPdf(@RequestParam Long id, @RequestParam String date) 
+			throws FileNotFoundException, UnsupportedEncodingException {
         
-		System.out.println("download for report: " + report);
-		String fileName = report;
-
-        String filePath = "I:/SpringBoot/uploadFiles/" + fileName + ".pdf";  // 指定文件路径
+		System.out.println("download pdf for instrumentId: " + id + ", calibrateDate: " + date);
+		
+		String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 查詢報告名稱(透過器具id和校驗日期)
+		
+		String filePath = "I:/SpringBoot/uploadFiles/" + fileName; // 指定文件路径
+       
         File file = new File(filePath);
 
         if (!file.exists()) {
@@ -127,6 +135,7 @@ public class CalibrationController {
             								  @RequestParam("file") MultipartFile file) throws JsonMappingException, JsonProcessingException {
 		
 		System.out.println("Received JSON: " + request);		
+		System.out.println("file name:" + file.getOriginalFilename());
 		
 		String filePath = "";
         
@@ -148,12 +157,8 @@ public class CalibrationController {
                 // 將檔案寫入目的地
                 file.transferTo(dest);
                 
-                System.out.println("test");
-                
                 ObjectMapper objectMapper = new ObjectMapper(); // 用於將 JSON 資料與 Java 物件之間進行相互轉換
                 Report report = objectMapper.readValue(request, Report.class); // request 中讀取 JSON 數據，指定了目標類型，即將 JSON 資料反序列化為 Report 類別的實例
-                
-                System.out.println(report.getReport_name());
                 
                 List<Report> newReport = reportService.addReport(report);
                 Optional<Report> reportOp = newReport.stream().findAny();
@@ -169,6 +174,10 @@ public class CalibrationController {
         			String message = "資料庫沒有紀錄或資料輸入錯誤，請再重新確認。" ;
         			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
         		}
+                
+                /*String message = "檔案 " + file.getOriginalFilename() + " 上傳成功，已新增一筆校驗紀錄!";
+    	    	System.out.println(message);
+    	    	return ResponseEntity.ok().body(message);*/
 
             } catch (IOException e) {
                 e.printStackTrace();

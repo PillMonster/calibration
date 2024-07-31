@@ -217,9 +217,10 @@
 	function updateOutside(data, dateLen){
 		
 		// data[0].calibrationResult[0][0].calibrate_date; -> 第一把器具、第一次校驗日期、第一項規格、取得校驗日期
-	
+		var instrumentId = data.instrumentInfo.id;
 		var calibrate_date = data.calibrationResult[dateLen][0].calibrate_date;
 		var report_name = data.calibrationResult[dateLen][0].report_name;
+		
 		
 		const resultsContainer = document.getElementById("calibration-results"); // 父容器
 		
@@ -238,8 +239,8 @@
 		innerTable += "<td>" + calibrate_date + "</td>";
 		innerTable += "<td>" + data.calibrationResult[dateLen][0].result + "</td>";
 		innerTable += "<td>" + data.calibrationResult[dateLen][0].is_taf + "</td>";
-		innerTable += "<td><a href='/calibration/view?report=" + report_name + "' target='_blank'>報告查看</a></td>";
-		innerTable += "<td><a href='/calibration/download?report=" + report_name + "' target='_blank'>報告下載</a></td>";
+		innerTable += "<td><a href='/calibration/view?id=" + instrumentId + "&date=" + calibrate_date + "' target='_blank'>報告查看</a></td>";
+		innerTable += "<td><a href='/calibration/download?id=" + instrumentId + "&date=" + calibrate_date + "' target='_blank'>報告下載</a></td>";
 		innerTable += "</tr>";
 		innerTable += "</tbody>";
 		innerTable += "</table>";
