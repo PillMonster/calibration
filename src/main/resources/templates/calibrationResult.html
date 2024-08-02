@@ -90,7 +90,9 @@
 			    	}	
 				}
 				else {
-					updateOutside(data, dateLen-1); // 渲染該器具校驗結果，-1為最新的日期批次
+					for(var i = 0; i < dateLen; i++){
+						updateOutside(data, i); // 渲染該器具校驗結果， i 為不同校驗日期批次 
+					}
 				}
 		    	
 		    },

@@ -65,7 +65,7 @@ public class CalibrationController {
 		System.out.println("view pdf for instrumentId: " + id + ", calibrateDate: " + date);
 		String year = date.substring(0, 4); // 提取年份
         String month = date.substring(5, 7); // 提取月份
-        System.out.println("year:" + year + "  ,month: " + month);
+        //System.out.println("year:" + year + "  ,month: " + month);
 		
 		String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 查詢報告名稱(透過器具id和校驗日期)
 
@@ -110,7 +110,7 @@ public class CalibrationController {
 		System.out.println("download pdf for instrumentId: " + id + ", calibrateDate: " + date);
 		String year = date.substring(0, 4); // 提取年份
         String month = date.substring(5, 7); // 提取月份
-        System.out.println("year:" + year + "  ,month: " + month);
+        //System.out.println("year:" + year + "  ,month: " + month);
 		
 		String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 查詢報告名稱(透過器具id和校驗日期)
 
@@ -156,7 +156,7 @@ public class CalibrationController {
 			String calibrate_date = report.getCalibrate_date();
 	        year = calibrate_date.substring(0, 4); // 提取年份
 	        month = calibrate_date.substring(5, 7); // 提取月份
-	        System.out.println("year:" + year + "  ,month: " + month);
+	        //System.out.println("year:" + year + "  ,month: " + month);
 	        
 	        reportService.addReport(report); // 新增一筆報告紀錄
 		}
