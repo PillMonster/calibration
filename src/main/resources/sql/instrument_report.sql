@@ -19,4 +19,6 @@ CREATE TABLE instrument_report (
 ) ;
 
 INSERT INTO instrument_report VALUES 
-(5,1),(6,2);
+(5,1),(5,2),
+(6,3),(6,4),
+(10,5),(10,6)
