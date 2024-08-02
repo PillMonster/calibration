@@ -28,5 +28,8 @@ public interface ReportService {
 
     //查詢全部
     List<Report> findReportAll();
+    
+ // 查詢report的id，透過instrument id 與 instrument.last_calibrate_date = data.calibrate_date
+	List<Long> findReportIdByCalibrateDate(Long instrument_id, String last_calibrate_date);
 	
 }
