@@ -13,19 +13,18 @@
 
 	<form id="textForm" method="post">
 	 
-		  	<div class="textDiv">器具編號: </div>
-		  	<div><input type="text" class="input-text" id="number" name="number"></div>
-		  	<div class="textDiv">器具名稱: </div>
-		  	<div><input type="text" class="input-text" id="name" name="name"></div>
-		  	<div><button type="submit" class="query-button">查詢</button></div>
+	  	<div class="textDiv">器具編號: </div>
+	  	<div><input type="text" class="input-text" id="number" name="number"></div>
+	  	<div class="textDiv">器具名稱: </div>
+	  	<div><input type="text" class="input-text" id="name" name="name"></div>
+	  	<div><button type="submit" class="query-button">查詢</button></div>
 
-	</form>
-	
-	<br>	
+	</form><br>	
 
 	<form id="checkForm"  onsubmit="return false;" method="post">	
 	
 		<div class="multipleSelectionDiv">
+		
 			<div class="selectBoxDiv" onclick="showCheckboxes('monthCheckBoxesDiv')">
 				<select class="customSelect">
 					<option>校驗月份</option>
@@ -48,11 +47,10 @@
 				<label><input type="checkbox" name="month" value="11" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>11</label><br>
 				<label><input type="checkbox" name="month" value="12" onchange="checkSelectAll('month', 'monthSelectAll'); submitForm();" checked>12</label><br>
 			</div>
-		</div>
-		
-		<br>
+		</div><br>
 		
 		<div class="multipleSelectionDiv">
+		
 			<div class="selectBoxDiv" onclick="showCheckboxes('cycleCheckBoxesDiv')">
 				<select>
 					<option>校驗週期</option>
@@ -66,11 +64,11 @@
 				<label><input type="checkbox" name="cycle" value="12" onchange="checkSelectAll('cycle', 'cycleSelectAll'); submitForm();" checked>12</label><br>
 				<label><input type="checkbox" name="cycle" value="24" onchange="checkSelectAll('cycle', 'cycleSelectAll'); submitForm();" checked>24</label><br>
 			</div>
-		</div>
-		
-		<br>
+			
+		</div><br>
 		
 		<div class="multipleSelectionDiv">
+		
 			<div class="selectBoxDiv" onclick="showCheckboxes('typeCheckBoxesDiv')">
 				<select>
 					<option>校驗類型</option>
@@ -84,11 +82,11 @@
 				<label><input type="checkbox" name="type" value="外校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();" checked>外校</label><br>
 				<label><input type="checkbox" name="type" value="遊校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();" checked>遊校</label><br>
 			</div>
-		</div>
-		
-		<br>
+			
+		</div><br>
 		
 		<div class="multipleSelectionDiv">
+		
 			<div class="selectBoxDiv" onclick="showCheckboxes('personCheckBoxesDiv')">
 				<select>
 					<option>校驗人員</option>
@@ -96,18 +94,14 @@
 				<div class="overSelectDiv"></div>
 			</div>
 
-			<div id="personCheckBoxesDiv">	
-				<!--  <label><input type="checkbox" id="personSelectAll" value="全選" onchange="toggleCheckboxes('person', 'personSelectAll'); submitForm();">全選</label><br>
-				<label><input type="checkbox" name="person" value="簡茗家" onchange="checkSelectAll('person', 'personSelectAll'); submitForm();" checked>簡茗家</label><br>
-				<label><input type="checkbox" name="person" value="陳曉明" onchange="checkSelectAll('person', 'personSelectAll'); submitForm();">陳曉明</label><br>
-				<label><input type="checkbox" name="person" value="張皓程" onchange="checkSelectAll('person', 'personSelectAll'); submitForm();">張皓程</label><br>
-				-->
-			</div>
+			<div id="personCheckBoxesDiv"></div>
+			
 		</div>
 		
 		<br>
 		
 		<div class="multipleSelectionDiv">
+		
 			<div class="selectBoxDiv" onclick="showCheckboxes('localationCheckBoxesDiv')">
 				<select>
 					<option>校驗地點/公司</option>
@@ -115,18 +109,14 @@
 				<div class="overSelectDiv"></div>
 			</div>
 
-			<div id="localationCheckBoxesDiv">
-				<!--  <label><input type="checkbox" id="localationSelectAll" value="全選" onchange="toggleCheckboxes('localation', 'localationSelectAll'); submitForm();">全選</label><br>
-				<label><input type="checkbox" name="localation" value="BQC" onchange="checkSelectAll('localation', 'localationSelectAll'); submitForm();" checked>BQC</label><br>
-				<label><input type="checkbox" name="localation" value="新竹商檢中心" onchange="checkSelectAll('localation', 'localationSelectAll'); submitForm();">新竹商檢中心</label><br>
-				<label><input type="checkbox" name="localation" value="百徑" onchange="checkSelectAll('localation', 'localationSelectAll'); submitForm();">百徑</label><br>
-				-->
-			</div>
+			<div id="localationCheckBoxesDiv"></div>
+			
 		</div>
 		
 	</form>
-	
+
 </div>
+
 <div class="rightDiv">
 	<!--  <div class="createButtonDiv"><button type="submit" class="create-button">新增器具</button></div>-->
 

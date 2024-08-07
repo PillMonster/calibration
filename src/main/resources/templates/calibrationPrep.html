@@ -9,8 +9,70 @@
 <body>
 <div id="header"></div>
 
+<div class="leftDiv">
+
+	<form id="textForm" method="post">
+	 
+	  	<div class="textDiv">器具編號: </div>
+	  	<div><input type="text" class="input-text" id="number" name="number"></div>
+	  	<div class="textDiv">器具名稱: </div>
+	  	<div><input type="text" class="input-text" id="name" name="name"></div>
+	  	<div><button type="submit" class="query-button">查詢</button></div>
+
+	</form><br>	
+
+	<form id="checkForm"  onsubmit="return false;" method="post">	
+		
+		<div class="multipleSelectionDiv">
+		
+			<div class="selectBoxDiv" onclick="showCheckboxes('typeCheckBoxesDiv')">
+				<select>
+					<option>校驗類型</option>
+				</select>
+				<div class="overSelectDiv"></div>
+			</div>
+
+			<div id="typeCheckBoxesDiv">
+				<label><input type="checkbox" id="typeSelectAll" value="全選" onchange="toggleCheckboxes('type', 'typeSelectAll'); submitForm();" checked>全選</label><br>
+				<label><input type="checkbox" name="type" value="內校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();" checked>內校</label><br>
+				<label><input type="checkbox" name="type" value="外校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();" checked>外校</label><br>
+				<label><input type="checkbox" name="type" value="遊校" onchange="checkSelectAll('type', 'typeSelectAll'); submitForm();" checked>遊校</label><br>
+			</div>
+			
+		</div><br>
+		
+		<div class="multipleSelectionDiv">
+		
+			<div class="selectBoxDiv" onclick="showCheckboxes('personCheckBoxesDiv')">
+				<select>
+					<option>校驗人員</option>
+				</select>
+				<div class="overSelectDiv"></div>
+			</div>
+
+			<div id="personCheckBoxesDiv"></div>
+			
+		</div><br>
+		
+		<div class="multipleSelectionDiv">
+		
+			<div class="selectBoxDiv" onclick="showCheckboxes('localationCheckBoxesDiv')">
+				<select>
+					<option>校驗地點/公司</option>
+				</select>
+				<div class="overSelectDiv"></div>
+			</div>
+
+			<div id="localationCheckBoxesDiv"></div>
+			
+		</div>
+		
+	</form>
+	
+</div>
+
 <div class="rightDiv">
-	<div class="instrumentTableDiv" id="instrumentTableDiv"></div>
+	<br><br><div class="instrumentTableDiv" id="instrumentTableDiv"></div>
 </div>
 
 <script type="text/javascript">
@@ -35,6 +97,239 @@
 	    }
 	});
 	
+	//AJAX向後端發送請求及接收重後端來的資料(此ajax方法為取得人員資料(不重複))
+	$.ajax({
+	    type:"GET",//請求方式
+	    url:"/crud/instrumentNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instrumentNoRepeat")的方法)
+	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+	    async:true,//true為非同步
+	    success:function (data) {//接收後端來的資料
+	    	console.log(data);
+	    	populateDropdown(data);
+	    },
+	    error :function(errorMsg) {
+	        alert("請求後端資料失敗！(/crud/instruments)");
+	    }
+	});
+
+	// ===== 搜尋器具號碼或名稱來取得器具資訊 =====
+	document.getElementById("textForm").addEventListener("submit", function(event) {
+		// 防止表單的預設提交行為
+	    event.preventDefault();
+		
+		var number = document.getElementById("number").value;
+		var name = document.getElementById("name").value;
+		var url = ""
+		var request = false;
+
+		if (number !="" && name ==""){ 
+			url = "/crud/instrumentNo/" + number;
+			request = true;
+		}
+		else if(number =="" && name !=""){
+			url = "/crud/instrumentName/" + name;
+			request = true;
+		}
+		else if (number =="" && name ==""){
+			alert("請輸入任一內容");
+			request = false;
+		}
+		else {alert("請輸入任一內容");request = false;}
+		
+		if(request == true){
+			// Send the table data to the server
+			$.ajax({
+			    type: "GET",
+			    url: url,
+			    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
+			    contentType: "application/json",
+			    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
+			    //data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+			    success: function(data) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
+			    	console.log(data);
+			    	updateData(data);
+			    },
+			    error: function(xhr, status, error) {
+			    	alert("沒有此儀器或量具");
+			    }
+		  	}); // ajax method end	
+		}
+	}); // addEventListener method end
+	
+	// 自訂submitForm()方法, 使用者依條件選取，並搭配ajax將表單內容傳送到後端
+    function submitForm() {
+    	//var formData = $("#checkForm").serialize(); // $("#checkForm") ->取得表單元素id的值, serialize() ->並將其序列化轉為字串
+		
+		var jsonString = getChecked(); // 取得選取後的json資料
+		//console.log(jsonString);
+    	$.ajax({
+    		type: "POST", //請求方式
+    		url: "/crud/searchInstrument", //url代表向後端發送請求 (後端需有標註@GetMapping("/serchInstrument")的方法)
+    		contentType: "application/json;charset=UTF-8", // 後端如果要以List接收, 這行必須要開
+    	  	dataType:"json", // 前端接收資料格式 (後端需有標註@ResponseBody)
+    	  	//data: formData, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+    	  	data:  jsonString, // 指定資料傳到後端
+    	  	success: function(data) {
+    	  		console.log(data);
+    	  		updateData(data);
+    	  	},
+    	  	error: function(xhr, status, error) {
+    		}
+    	});	
+    }
+  
+	// 用於填充檢核方塊的函數
+	function populateDropdown(data) {
+		
+		// 添加至檢核方塊的資料
+		const usernameList = data.checker;
+		const localationList = data.localation;
+		
+		usernameList.unshift("全選");
+		localationList.unshift("全選");
+		
+		// 選擇檢核方塊元素
+	  	const usernameContainer = document.getElementById("personCheckBoxesDiv");
+	  	const localationContainer = document.getElementById("localationCheckBoxesDiv");
+			
+	  	// 清空現有選項
+	  	usernameContainer.innerHTML = "";
+	  	localationContainer.innerHTML = "";
+		
+	  	for (let i = 0; i < usernameList.length; i++) {
+	  		
+	        const checkboxLabel = document.createElement("label");  // 創建 label 元素，用於包裝 checkbox
+	        const checkboxInput = document.createElement("input");  // 創建 input 元素，類型為 checkbox
+	        
+	        checkboxInput.type = "checkbox";  // 設置 input 元素的類型為 checkbox
+	        checkboxInput.value = usernameList[i]; // 設置 checkbox 的值為特定的使用者名稱
+	           
+	        if (i == 0){
+	        	
+	        	checkboxInput.id = "personSelectAll"; // 設置 checkbox 的id
+	        	checkboxInput.onchange = function() { // 當 checkbox 的狀態改變時，執行toggleCheckboxes、submitForm 函數           
+		            toggleCheckboxes('person', 'personSelectAll');
+		            submitForm();
+		        };
+		        checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
+	        }
+	        
+	        if (i == 1){
+	        	//checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
+	        	
+	        }
+	        
+	        if (i > 0 ){	
+	        	checkboxInput.name = "person"; // 設置 checkbox 的name
+		        checkboxInput.onchange = function() {
+		            checkSelectAll('person', 'personSelectAll'); // 當 checkbox 的狀態改變時，執行checkSelectAll、submitForm 函數
+		            submitForm();
+		        };
+		        checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
+	        }
+	        
+	        checkboxLabel.appendChild(checkboxInput); // 將 checkboxInput 添加至 checkboxLabel，形成完整的 checkbox
+	        checkboxLabel.appendChild(document.createTextNode(usernameList[i])); // 創建文本節點，內容為使用者名稱
+	        usernameContainer.appendChild(checkboxLabel); // usernameContainer 是一個容器元素，用於包含所有使用者名稱的 checkbox
+	        usernameContainer.appendChild(document.createElement("br"));
+	    }
+
+		for (let i = 0; i < localationList.length; i++) {
+	  		
+	        const checkboxLabel = document.createElement("label");  // 創建 label 元素，用於包裝 checkbox
+	        const checkboxInput = document.createElement("input");  // 創建 input 元素，類型為 checkbox
+	        
+	        checkboxInput.type = "checkbox";  // 設置 input 元素的類型為 checkbox
+	        checkboxInput.value = localationList[i]; // 設置 checkbox 的值為特定的使用者名稱
+	           
+	        if (i == 0){
+	        	
+	        	checkboxInput.id = "localationSelectAll"; // 設置 checkbox 的id
+	        	checkboxInput.onchange = function() { // 當 checkbox 的狀態改變時執行，toggleCheckboxes、submitForm 函數           
+		            toggleCheckboxes('localation', 'localationSelectAll');
+		            submitForm();
+		        };
+		        checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
+	        }
+ 
+	        if (i == 1){
+	        	//checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
+	        }
+	        
+	        if (i > 0){
+	        	checkboxInput.name = "localation"; // 設置 checkbox 的name
+		        checkboxInput.onchange = function() {
+		            checkSelectAll('person', 'personSelectAll'); // 當 checkbox 的狀態改變時執行，checkSelectAll、submitForm 函數
+		            submitForm();
+		        };
+		        checkboxInput.checked = true; // 設置 checkbox 初始為選中狀態
+	        } 
+	        
+	        checkboxLabel.appendChild(checkboxInput); // 將 checkboxInput 添加至 checkboxLabel，形成完整的 checkbox
+	        checkboxLabel.appendChild(document.createTextNode(localationList[i])); // 創建文本節點，內容為使用者名稱
+	        localationContainer.appendChild(checkboxLabel); // usernameContainer 是一個容器元素，用於包含所有使用者名稱的 checkbox
+	        localationContainer.appendChild(document.createElement("br"));
+	    }
+	}
+	
+	// 取得檢核方塊內所選取的值, 再存入Array, 並轉成json格式
+	function getChecked(){
+
+		var typeSelected = new Array(); // 建立初始陣列, 存放選取後的校驗類型
+		var personSelected = new Array(); // 建立初始陣列, 存放選取後的校驗人員
+		var localationSelected = new Array(); // 建立初始陣列, 存放選取後的校驗地點or公司
+		
+		var jsonArray = new Array(); // 建立初始陣列, 存放待轉成 json 格式的Array
+		
+		// ========== 從type的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var typeDiv = document.getElementById("typeCheckBoxesDiv");
+		var typeChecks = typeDiv.querySelectorAll("input[type='checkbox']");
+
+        for (var i = 1; i < typeChecks.length; i++){ // 0為全選, 故重1開始
+        	if (typeChecks[i].checked == true){
+        		typeSelected.push(typeChecks[i].value);
+
+        	}
+        }
+		console.log("選取的校驗類型: " + typeSelected);
+		
+		// ========== 從person的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var personDiv = document.getElementById("personCheckBoxesDiv");
+		var personChecks = personDiv.querySelectorAll("input[type='checkbox']");
+		
+		for (var i = 1; i < personChecks.length; i++){ // 0為全選, 故重1開始
+        	if (personChecks[i].checked == true){
+        		personSelected.push(personChecks[i].value);
+
+        	}
+        }
+		console.log("選取的校驗人員: " + personSelected);
+		
+		// ========== 從local的檢核方塊取得元素, 如有前端有被checked, 則會將內容存到陣列裡 ==========
+		var localationDiv = document.getElementById("localationCheckBoxesDiv");
+		var localationChecks = localationDiv.querySelectorAll("input[type='checkbox']");
+		
+		for (var i = 1; i < localationChecks.length; i++){ // 0為全選, 故重1開始
+        	if (localationChecks[i].checked == true){
+        		localationSelected.push(localationChecks[i].value);
+
+        	}
+        }
+		console.log("選取的校驗地點or公司: " + localationSelected);
+		
+		// ========== 從將陣列資料,以key-value方式放入rowData ==========
+	  	var rowData = { // key開頭不能為大寫, 否則後端接收會為null
+  			'month': [1,2,3,4,5,6,7,8,9,10,11,12],
+			'cycle': [6,12,24],
+		    'type': typeSelected,
+		    'person': personSelected,
+		    'localation': localationSelected
+		};
+		jsonArray.push(rowData); // 將整理好的資料放入jsonArray
+		
+		var jsonString = JSON.stringify(jsonArray); // 轉成 json 格式
+		return jsonString;
+	}
 	
 	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的table上
 	function updateData(data){
@@ -77,6 +372,54 @@
 		
 	}
 	
+	// ========== 點選全選時,取得所有checkbox內容值 ==========
+	function toggleCheckboxes(selectCheckName, selectCheckAll) {
+		var checkboxes = document.getElementsByName(selectCheckName);
+        var selectAllCheckbox = document.getElementById(selectCheckAll);
+         
+        for (var i = 0; i < checkboxes.length; i++) {
+        	checkboxes[i].checked = selectAllCheckbox.checked;
+        }
+    }
+	 
+	// ========== 當全選checked時, 任一取消checkbox的內容值, 則全選也會被取消 ===========
+	function checkSelectAll(selectCheckName, selectCheckAll) {
+		var checkboxes = document.getElementsByName(selectCheckName);
+		var selectAllCheckbox = document.getElementById(selectCheckAll);
+		var allChecked = true;
+
+		for (var i = 0; i < checkboxes.length; i++) {
+			if (!checkboxes[i].checked) {
+				allChecked = false;
+				break;
+			}
+		}
+		selectAllCheckbox.checked = allChecked;
+	}
+		
+	var show = true;
+
+	function showCheckboxes(selectCheckBox) {
+		
+		let checkboxes = document.getElementById(selectCheckBox);
+		
+		if (checkboxes.style.display == "block"){
+			show = false;
+		}
+		else{
+			show = true;
+		}
+		
+		if (show) {
+			checkboxes.style.display = "block";	
+			show = false;
+		} else {
+			checkboxes.style.display = "none";
+			show = true;
+		}
+	}
+	
+	
 	var identity = "";
 	
 	// 向後端取得session的值
@@ -108,8 +451,7 @@
         } else {
             alert("此功能需要校驗人員身分才可使用。");
             window.location.href = "/calibration/instrument/prep";
-        }
-		
+        }	
 		
     };
     
@@ -124,9 +466,7 @@
         } else {
             alert("此功能需要校驗人員身分才可使用。");
             window.location.href = "/calibration/instrument/prep";
-        }
-		
-		
+        }	
     };
 
 </script>
