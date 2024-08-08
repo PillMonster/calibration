@@ -240,12 +240,27 @@ public class CalibrationServiceImpl implements CalibrationService{
 		return prepInstrument;	
 	}
 	
+	// ========== 查詢待校驗器具 + 前端選擇條件查詢 ==========
+
+	public List<Instrument> selectPrepInstruments(List<String> typeList, List<String> personList, List<String> localationList) {  
+		
+		List<Instrument> instrumentList = findPrepInstruments();
+		return null;
+		/*return instrumentList.stream()
+		        .filter(instrument -> typeList == null || typeList.isEmpty() || typeList.contains(instrument.getCalibrate_type()))
+		        .filter(instrument -> personList == null || personList.isEmpty() || personList.contains(instrument.getPersons())
+		        .filter(instrument -> localationList == null || localationList.isEmpty() || localationList.contains(instrument.getCalibrate_localation()))
+		        .collect(Collectors.toList());*/
+	}
+	
 	
 	// ========== 查詢待簽核器具 ==========
 	@Override
 	public List<Instrument> findPrepSignInstrument() {
 		return instrumentDao.findSignByInstruments();
 	}
+	
+	
 	
 	// ========== 新增儀器時，判斷器具是否過期 ==========
 	/*@Override
