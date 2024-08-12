@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +34,7 @@ import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.Person;
 import chien.myweb.calibration.enity.Report;
+import chien.myweb.calibration.enity.RequestChecked;
 import chien.myweb.calibration.service.CalibrationService;
 import chien.myweb.calibration.service.DataService;
 import chien.myweb.calibration.service.InstrumentPersonService;
@@ -197,7 +199,7 @@ public class CalibrationController {
     }
 	
 	// ===== 新增內校數據 (執行校驗) =====
-	@PostMapping("/prepCalibrations") 
+	@PostMapping("/executeCalibrations") 
 	public ResponseEntity<?> executeCalibration(@RequestBody Data request){
 			
 		System.out.println(request.toString());
@@ -217,6 +219,49 @@ public class CalibrationController {
 
 	}
 	
+	// 搜尋器具編號，並確認是否為待校驗器具
+	@GetMapping("/prepInstrumentNo/{number}")  
+	public ResponseEntity<List<Instrument>> getInstrumentByNumberd(@PathVariable("number") String number){
+		System.out.println("number: " + number);
+		List<Instrument> instrumentDB = instrumentService.findInstrumentByNumber(number);	
+		
+		Optional<Instrument> instrumentOp = instrumentDB.stream().findAny();
+		
+		if(instrumentOp.isPresent()){
+			
+			List<Instrument> responseInstruments = calibrationService.selectPrepInstruments(instrumentDB);
+			responseInstruments.forEach(item -> System.out.println(item.toString()));
+			
+			return ResponseEntity.ok().body(responseInstruments); 
+		}
+		else{
+			System.out.println("找不到此儀器或量具");
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+	
+	// 搜尋器具名稱，並確認是否為待校驗器具
+	@GetMapping("/prepInstrumentName/{name}")  
+	public ResponseEntity<List<Instrument>> getInstrumentById(@PathVariable("name") String name){
+		System.out.println("name: " + name);
+		List<Instrument> instrumentDB = instrumentService.findInstrumentByName(name);	
+		
+		Optional<Instrument> instrumentOp = instrumentDB.stream().findAny();
+
+		
+		if(instrumentOp.isPresent()){
+			
+			List<Instrument> responseInstruments = calibrationService.selectPrepInstruments(instrumentDB);
+			responseInstruments.forEach(item -> System.out.println(item.toString()));
+			
+			return ResponseEntity.ok().body(responseInstruments); 
+		}
+		else{
+			System.out.println("找不到此儀器或量具");
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+	
 	// ===== 取得待校驗器具 =====
 	@GetMapping("/prepCalibrations")  
 	public ResponseEntity<?> getPrepCalibration(){
@@ -232,8 +277,46 @@ public class CalibrationController {
 			return ResponseEntity.ok().body(instrumentDB);
 		}
 		else {
-			System.out.println("當月沒有要執行校驗的器具"); 	
-			return ResponseEntity.ok().body("當月沒有要執行校驗的器具");
+			System.out.println("當月沒有要執行校驗的器具");
+	        return ResponseEntity.notFound().build();
+		}
+	}
+	
+	// ===== 取得待校驗器具 =====
+	@PostMapping("/prepCalibrations")  
+	public ResponseEntity<?> getPrepCalibration(@RequestBody List<RequestChecked> requestChecked){
+		
+		List<String> typeList = new ArrayList<>();
+        List<String> personList = new ArrayList<>();
+        List<String> localationList = new ArrayList<>();
+        
+        for (RequestChecked jsonData : requestChecked) {
+            typeList = jsonData.getType();
+            personList = jsonData.getPerson();
+            localationList = jsonData.getLocalation();
+            
+            System.out.println("====== From 前端 ======");
+
+	    	System.out.println("校驗類型 from 前端: " +  typeList);
+	    	System.out.println("校驗人員 from 前端: " + personList);
+	    	System.out.println("校驗地點or公司 from 前端: " + localationList);
+	    	System.out.println("-----------------------");
+        }
+        
+        List<Instrument> instrumentDB = instrumentService.findByMultiple(typeList, personList, localationList); 
+        
+		Optional<Instrument> instrumentOp = instrumentDB.stream().findAny();
+		
+		if (instrumentOp.isPresent()) {
+			
+			 List<Instrument> responseInstruments = calibrationService.selectPrepInstruments(instrumentDB);
+			 responseInstruments.forEach(item -> System.out.println("選擇後待校驗的器具: " + item.toString()));
+			 
+			return ResponseEntity.ok().body(responseInstruments);
+		}
+		else {
+			System.out.println("當月沒有要執行校驗的器具");
+	        return ResponseEntity.notFound().build();
 		}
 	}
 	
@@ -264,7 +347,7 @@ public class CalibrationController {
 			}		
 		}
 		else{
-			System.out.println("沒有此儀器或量具");
+			System.out.println("找不到此儀器或量具");
 	        return ResponseEntity.notFound().build();
 	    }	
 	}

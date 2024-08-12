@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name="instrument")
@@ -176,6 +177,7 @@ public class Instrument {
 	public void setIs_sign(String is_sign) {
 		this.is_sign = is_sign;
 	}
+	
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JsonIgnore // 使用多對多要加上，阻止該方(person)的序列化

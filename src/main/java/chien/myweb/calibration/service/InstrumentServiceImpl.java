@@ -644,8 +644,6 @@ public class InstrumentServiceImpl implements InstrumentService{
 	        	}
 	        } 
 	        
-	        
- 
 			//return null;
 			return instrumentDao.save(updateInstrument); // 這裡使用 save 進行更新
 		}
@@ -704,6 +702,12 @@ public class InstrumentServiceImpl implements InstrumentService{
 		String monthRegex = "(" + String.join("|", monthList) + ")";
 		//System.out.println(monthRegex);
 		return instrumentDao.findByMultiple(monthRegex, cycleList, typeList, personList, localationList);
+	}
+	
+	@Override
+	public List<Instrument> findByMultiple(List<String> typeList, List<String> personList, List<String> localationList) {
+
+		return instrumentDao.findByMultiple(typeList, personList, localationList);
 	}
 	
 

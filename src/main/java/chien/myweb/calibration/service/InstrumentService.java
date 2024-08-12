@@ -47,4 +47,7 @@ public interface InstrumentService {
 	
 	// 多項條件查詢
 	List<Instrument> findByMultiple(List<String> monthList, List<String> cycleList, List<String> typeList, List<String> personList, List<String> localationList);
+	
+	// 多項條件查詢
+	List<Instrument> findByMultiple(List<String> typeList, List<String> personList, List<String> localationList);
 }

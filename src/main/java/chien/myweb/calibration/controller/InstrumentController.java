@@ -127,7 +127,7 @@ public class InstrumentController {
 		}
 		
 		else{
-			System.out.println("找不到此儀器資訊");
+			System.out.println("找不到此儀器或量具");
 	        return ResponseEntity.notFound().build();
 	    }
 		
@@ -135,6 +135,7 @@ public class InstrumentController {
 		//return ResponseEntity.ok().body(instrumentInfoMap); 
 	}
 	
+	// 搜尋器具編號
 	@GetMapping("/instrumentNo/{number}")  
 	public ResponseEntity<List<Instrument>> getInstrumentByNumberd(@PathVariable("number") String number){
 		System.out.println("number: " + number);
@@ -154,6 +155,7 @@ public class InstrumentController {
 	    }
 	}
 	
+	// 搜尋器具名稱
 	@GetMapping("/instrumentName/{name}")  
 	public ResponseEntity<List<Instrument>> getInstrumentById(@PathVariable("name") String name){
 		System.out.println("name: " + name);
@@ -203,7 +205,7 @@ public class InstrumentController {
 	}
 	
 	@PostMapping("/searchInstrument")
-	public ResponseEntity<List<Instrument>> getSerchResult(@RequestBody List<RequestChecked> requestChecked){
+	public ResponseEntity<List<Instrument>> getSearchResult(@RequestBody List<RequestChecked> requestChecked){
 		
 		List<String> monthList = new ArrayList<>();
         List<String> cycleList = new ArrayList<>();
