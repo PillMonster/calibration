@@ -151,14 +151,7 @@
 	// 點擊的連結需要根據條件決定是否跳轉或者顯示警告
     document.getElementById("createLink").addEventListener("click", function() {
     	
-    	getSessionValue(); 
-    	
-    	// 判斷身分是否為校驗人員
-    	if ( identity == "校驗人員") { 
-            window.location.href = "/calibration/person/create";
-        } else {
-            alert("此功能需要校驗人員身分才可使用。");
-        }
+    	window.location.href = "/calibration/person/create";
     });
 	
 	function redirectToEditPage(button) {

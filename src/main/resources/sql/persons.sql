@@ -16,13 +16,26 @@ CREATE TABLE persons (
 );
 INSERT INTO persons
 ( job_number, password, username, email, department, position, identity) VALUES
-( '14717', 'bob123456', '周美秀', 'aaabbbccc@gmail.com', 'BRS', '專員', '保管人員');
+( '10001', '', 'Candy', 'aaabbbccc@gmail.com', 'BRS', '專員', '保管人員');
 INSERT INTO persons
 ( job_number, password, username, email, department, position, identity) VALUES
-( '14505', 'candy123456', '林昭宏', 'abcabc123@gmail.com', 'BRS', '課長', '保管主管');
+( '10002', '', 'Bob', 'abcabc123@gmail.com', 'BRS', '課長', '保管主管');
 INSERT INTO persons
 ( job_number, password, username, email, department, position, identity) VALUES
-( '13234', 'dylan1234', '簡茗家', 'dylan9342@gmail.com', 'BQC1', '專員', '校驗人員');
+( '10003', 'dylan1234', 'Dylan', 'dylan9342@gmail.com', 'BQC1', '專員', '校驗人員');
 INSERT INTO persons
 ( job_number, password, username, email, department, position, identity) VALUES
-( '10256', 'davie123456', '李駿達', 'abcabc111@gmail.com', 'BQC3', '課長', '校驗主管');
+( '10004', 'david1234', 'David', 'abcabc111@gmail.com', 'BQC1', '課長', '校驗主管');
+
+INSERT INTO persons
+( job_number, password, username, email, department, position, identity) VALUES
+( '10005', '', 'Kevin', 'aaabbbccc@gmail.com', 'BQC1', '專員', '保管人員');
+INSERT INTO persons
+( job_number, password, username, email, department, position, identity) VALUES
+( '10006', '', 'Alan', 'abcabc123@gmail.com', 'BQC1', '課長', '保管主管');
+INSERT INTO persons
+( job_number, password, username, email, department, position, identity) VALUES
+( '10007', 'gordon1234', 'Gordon', 'dylan9342@gmail.com', 'BQC3', '專員', '校驗人員');
+INSERT INTO persons
+( job_number, password, username, email, department, position, identity) VALUES
+( '10004', '', 'David', 'abcabc111@gmail.com', 'BQC1', '課長', '保管主管');

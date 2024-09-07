@@ -71,7 +71,7 @@ public class CalibrationController {
 		
 		String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 查詢報告名稱(透過器具id和校驗日期)
 
-		String filePath = "I:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + fileName;  // 指定文件路径
+		String filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + fileName;  // 指定文件路径
 
         File file = new File(filePath);
         
@@ -116,7 +116,7 @@ public class CalibrationController {
 		
 		String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 查詢報告名稱(透過器具id和校驗日期)
 
-		String filePath = "I:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + fileName;  // 指定文件路径
+		String filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + fileName;  // 指定文件路径
        
         File file = new File(filePath);
 
@@ -175,7 +175,7 @@ public class CalibrationController {
         }else {
         	try {
                 // 設定上傳檔案的儲存路徑
-            	filePath = "I:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + file.getOriginalFilename(); // 指定文件路径
+            	filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + file.getOriginalFilename(); // 指定文件路径
             	System.out.println("filePath: " + filePath);
                 File dest = new File(filePath);
                 

@@ -60,8 +60,8 @@
 
 	 	// 取得表單更新後的內容
     	var rowData = { // key開頭不能為大寫, 否則後端接收會為null
-			'account': document.getElementById("account").value,
-			'password': document.getElementById("password").value,
+			"account": document.getElementById("account").value,
+			"password": document.getElementById("password").value,
 		};
     	console.log(rowData);
 		jsonString = JSON.stringify(rowData); //轉成json格式
@@ -77,13 +77,9 @@
 		    data: jsonString,
 		    success: function(data) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
 		    	
-		    	// 登录成功后跳转到成功页面
+		    	// 登入成功後，跳轉至成功頁面
                 window.location.href = "/calibration/person/login/success";
-		    	/*if (data.identity == "管理員") {
-                    window.location.href = "/welcome";
-                }else{
-                	window.location.href = "/home";
-                }*/
+
 		    },
 		    error: function(xhr, status, error) {
 		    	alert("登入失敗: " + xhr.responseText);
