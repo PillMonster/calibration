@@ -60,8 +60,11 @@ public interface PersonService {
 	// 查詢(透過工號和密碼)
 	List<Person> findPersonByJobNumberAbdPassword(String job_number, String password);
 	
-	//查詢身份 (by ID)
+	// 查詢身份 (by ID)
 	String findIdentityByPersonId(Long id);
+	
+	// 查詢該器具的校驗主管
+	String findCheckerLeaderByInstrumentId(Long id);
 	
 	// 查詢不重複的內容
 	Map<String, Set<String>>  findPersonAllNoRepeat();
