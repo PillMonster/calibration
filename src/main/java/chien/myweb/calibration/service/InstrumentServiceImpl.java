@@ -509,8 +509,8 @@ public class InstrumentServiceImpl implements InstrumentService{
 	        String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, befCalibrateDate); // 取得報告名稱(透過器具id和校驗日期)
 	        
             // 設定上傳檔案的儲存路徑
-	        String befPath = "I:/SpringBoot/uploadFiles/CalibrationReport/" + befYear + "/" + befMonth + "/" + fileName; // 指定文件路径
-        	String afferPath = "I:/SpringBoot/uploadFiles/CalibrationReport/" + afferYear + "/" + afferMonth + "/" + fileName; // 指定文件路径
+	        String befPath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + befYear + "/" + befMonth + "/" + fileName; // 指定文件路径
+        	String afferPath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + afferYear + "/" + afferMonth + "/" + fileName; // 指定文件路径
         	
         	File dest = new File(afferPath);
             
