@@ -3,6 +3,7 @@ package chien.myweb.calibration.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -526,21 +527,37 @@ public class InstrumentServiceImpl implements InstrumentService{
                 
             try {
             	Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING); // 複製文件
-                System.out.println("File copied successfully!");
+                System.out.println("檔案複製成功。");
+                
+                // ===== 日期更新 =====
+    			List<Long> reportIdByCalibrateDate = reportDao.findReportIdByCalibrateDate(id, befCalibrateDate); // 取得修改前日期下的data_id
+    			List<Report> reportList = reportDao.findByReportId(reportIdByCalibrateDate.get(0)); // 透過修改前的日期，取得該report物件
+    			Report reportObj = reportList.get(0);
+    		
+    			reportObj.setCalibrate_date(afferCalibrateDate); // 設定修改後日期的data object
+    			reportDao.save(reportObj); // 這裡使用 save 進行更新
+                
+            } catch (NoSuchFileException e) {
+                // 檔案不存在時的處理邏輯
+                System.out.println("校驗報告不存在，可能為新建儀器。");
+                
             } catch (Exception e) {
+                // 處理其他可能的錯誤
+                System.out.println("檔案複製失敗。");
                 e.printStackTrace();
             }
 			
 			
             // ===== 日期更新 =====
-			List<Long> reportIdByCalibrateDate = reportDao.findReportIdByCalibrateDate(id, befCalibrateDate); // 取得修改前日期下的data_id
+			/*List<Long> reportIdByCalibrateDate = reportDao.findReportIdByCalibrateDate(id, befCalibrateDate); // 取得修改前日期下的data_id
 	
 			List<Report> reportList = reportDao.findByReportId(reportIdByCalibrateDate.get(0)); // 透過修改前的日期，取得該report物件
 			Report reportObj = reportList.get(0);
 		
 			reportObj.setCalibrate_date(afferCalibrateDate); // 設定修改後日期的data object
 			reportDao.save(reportObj); // 這裡使用 save 進行更新
-		
+			*/
+            
 			// 取得前端所選擇的週期及校驗月份，並進行資料整理
 			String cycle = request.getCycle().replaceAll("[^0-9]", "");  // 正規表示式("想要替換的字元", "替換後的字元")，將字串中不是字母、數字的字元，更換為空白字元
 			List<String> calibrate_month_list = request.getCalibrate_month();
