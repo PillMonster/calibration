@@ -81,7 +81,7 @@
 					
 	           	</div>
 
-				<br><label for="last_calibrate_date">上次校驗日期：</label>
+				<br><label for="last_calibrate_date">&emsp;&emsp;校驗日期：</label>
 				<input type="date" class="datepicker" id="last_calibrate_date" name="last_calibrate_date" disabled><br>
 	           
 	           	<label for="mother_instrument_number">&emsp;&emsp;母儀編號：</label>
@@ -345,7 +345,6 @@
 	            for (var i = 0; i < files.length; i++) {
 	                formData.append("file", files[i]);
 	            }    
-	            console.log("formData: " +formData);
 	            
 			    $.ajax({
 				    type: "POST", // 後端的要有標註PutMapping的方法
@@ -355,8 +354,7 @@
 	                contentType: false,
 				    data: formData, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
 				    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
-				    	console.log(response)
-				    	alert("檔案 " + files[0].name + " 上傳成功，已新增一筆校驗紀錄!");
+				    	alert(respons); //  "檔案 " + file.getOriginalFilename() + " 上傳成功，已新增一筆校驗紀錄!";
 				    },
 				    error: function(xhr, status, error) {
 				    	alert(xhr.responseText);

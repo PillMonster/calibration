@@ -71,7 +71,7 @@ public class CalibrationController {
         //System.out.println("year:" + year + "  ,month: " + month);
 		
 		String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 查詢報告名稱(透過器具id和校驗日期)
-
+		System.out.println("file name: " + fileName);
 		String filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + fileName;  // 指定文件路径
 
         File file = new File(filePath);
@@ -144,8 +144,7 @@ public class CalibrationController {
             								  @RequestParam("file") MultipartFile file) throws JsonMappingException, JsonProcessingException {
 		
 		System.out.println("Received JSON: " + request);		
-		System.out.println("file name:" + file.getOriginalFilename());
-		
+
 		// ========== 前端取得資料前處理 ========
 		String year = "";
 		String month = "";
@@ -162,6 +161,7 @@ public class CalibrationController {
 	        //System.out.println("year:" + year + "  ,month: " + month);
 	        
 	        reportService.addReport(report); // 新增一筆報告紀錄
+	        
 		}
 		else {
 			String message = "資料庫沒有紀錄或資料輸入錯誤，請再重新確認。" ;
@@ -197,6 +197,7 @@ public class CalibrationController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
             }       	
         }     
+		//return null;
     }
 	
 	// ===== 新增內校數據 (執行校驗) =====

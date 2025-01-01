@@ -530,16 +530,28 @@ public class InstrumentServiceImpl implements InstrumentService{
                 System.out.println("檔案複製成功。");
                 
                 // ===== 日期更新 =====
-    			List<Long> reportIdByCalibrateDate = reportDao.findReportIdByCalibrateDate(id, befCalibrateDate); // 取得修改前日期下的data_id
-    			List<Report> reportList = reportDao.findByReportId(reportIdByCalibrateDate.get(0)); // 透過修改前的日期，取得該report物件
+    			//Optional<Long> reportId = reportDao.findReportIdByCalibrateDate(id, befCalibrateDate); // 取得修改前日期下的data_id
+                /*if (reportId.isPresent()) {
+				List<Report> reportList = reportDao.findByReportId(reportId.get()); // 透過修改前的日期，取得該report物件
     			Report reportObj = reportList.get(0);
     		
     			reportObj.setCalibrate_date(afferCalibrateDate); // 設定修改後日期的data object
     			reportDao.save(reportObj); // 這裡使用 save 進行更新
-                
+	        	}*/
+    			
+    			Optional<Report> reportOpt = reportDao.findReportObjectByInstumentAndDate(id, befCalibrateDate); // 透過修改前的日期，取得該report物件
+
+    	        if (reportOpt.isPresent()) {
+    	        	Report reportObj = reportOpt.get();
+    	        	
+    	        	reportObj.setCalibrate_date(afferCalibrateDate); // 設定修改後日期的data object
+        			reportDao.save(reportObj); // 這裡使用 save 進行更新
+    	        }
+	
+ 
             } catch (NoSuchFileException e) {
                 // 檔案不存在時的處理邏輯
-                System.out.println("校驗報告不存在，可能為新建儀器。");
+                System.out.println("未上傳校驗報告。");
                 
             } catch (Exception e) {
                 // 處理其他可能的錯誤
@@ -679,6 +691,15 @@ public class InstrumentServiceImpl implements InstrumentService{
 	// ========== 刪除 ==========
 	@Override
 	public void deleteInstrumentById(Long id) {
+		
+		List<Long> reportIds = reportDao.findReportIdByInstrumentId(id);
+		// 檢查 reportIds 是否為空或 null，再決定是否執行刪除操作
+		if (reportIds != null && !reportIds.isEmpty()) {
+		    for (Long reportId : reportIds) {
+		        reportDao.deleteById(reportId); // 逐一刪除
+		    }
+		}
+		
 		instrumentDao.deleteById(id);
 	}
 	
@@ -712,7 +733,7 @@ public class InstrumentServiceImpl implements InstrumentService{
 		// TODO Auto-generated method stub
 		return instrumentDao.findInstrumentByLocalation();
 	}
-
+	
 	@Override
 	public List<Instrument> findByMultiple(List<String> monthList, List<String> cycleList, List<String> typeList, List<String> personList, List<String> localationList) {
 		

@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.annotations.Instantiator;
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.InstrumentDao;
@@ -85,6 +87,60 @@ public class ReportServiceImpl implements ReportService{
 		
 		return newReport;
 	}
+
+	// ========== 更新 ==========
+	@Override
+	public boolean updataReport(Report request) {
+		
+		Long instrumentId = request.getId();
+		String calibrate_date = request.getCalibrate_date();
+		Optional<Report> reportOpt = reportDao.findReportObjectByInstumentAndDate(instrumentId, calibrate_date);
+		
+		if (reportOpt.isPresent()) {
+	
+			Report reportObj = reportOpt.get();
+			System.out.println("reportObj: " + reportObj);
+			System.out.println("修改前的日期: " + request.getCalibrate_date());
+			reportObj.setReport_no(request.getReport_no());
+			reportObj.setCalibrate_date(request.getCalibrate_date());
+			reportObj.setIs_taf(request.getIs_taf());
+			reportObj.setResult(request.getResult());
+			reportDao.save(reportObj); // 這裡使用 save 進行更新
+
+			return true;
+        }
+		else {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean updataReportFile(Report request) {
+		
+		Long instrumentId = request.getId();
+		String calibrate_date = request.getCalibrate_date();
+		Optional<Report> reportOpt = reportDao.findReportObjectByInstumentAndDate(instrumentId, calibrate_date);
+		
+		if (reportOpt.isPresent()) {
+	
+			Report reportObj = reportOpt.get();
+			System.out.println("reportObj: " + reportObj);
+			System.out.println("修改前的日期: " + request.getCalibrate_date());
+
+			reportObj.setReport_no(request.getReport_no());
+			reportObj.setReport_name(request.getReport_name());
+			reportObj.setResult(request.getResult());
+			reportObj.setCalibrate_date(request.getCalibrate_date());
+			reportObj.setIs_taf(request.getIs_taf());
+			reportDao.save(reportObj); // 這裡使用 save 進行更新
+			return true;
+
+		}else {
+			return false;
+		}
+	
+	}
+	
 	
 	@Override
 	public List<Report> findByReportId(Long id) {
@@ -122,9 +178,21 @@ public class ReportServiceImpl implements ReportService{
 	}
 	
 	@Override
-	public List<Long> findReportIdByCalibrateDate(Long instrument_id, String last_calibrate_date) {
+	public Optional<Long> findReportIdByCalibrateDate(Long instrument_id, String last_calibrate_date) {
 		// TODO Auto-generated method stub
 		return reportDao.findReportIdByCalibrateDate(instrument_id, last_calibrate_date);
+	}
+	
+	@Override
+    public Optional<Report> findReportObjectByInstumentAndDate(Long instrument_id, String last_calibrate_date){
+		// TODO Auto-generated method stub
+		return reportDao.findReportObjectByInstumentAndDate(instrument_id, last_calibrate_date);
+	}
+	
+	@Override
+	public List<Long> findReportIdByInstrumentId(Long instrument_id) {
+		// TODO Auto-generated method stub
+		return reportDao.findReportIdByInstrumentId(instrument_id);
 	}
 
 }
