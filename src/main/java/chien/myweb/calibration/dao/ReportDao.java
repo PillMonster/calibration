@@ -1,5 +1,6 @@
 package chien.myweb.calibration.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +56,5 @@ public interface ReportDao  extends JpaRepository<Report, Long>{
     			"JOIN instrument i ON ir.instrument_id = i.instrument_id " +
     			"WHERE ir.instrument_id = ?1", nativeQuery = true) 
     List<Long> findReportIdByInstrumentId(Long instrument_id);
-
 
 }

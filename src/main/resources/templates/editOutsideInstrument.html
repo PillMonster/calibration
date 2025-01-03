@@ -164,6 +164,7 @@
 		var identity = "";
 		var befCalibrationDate = "";
 		var afterCalibrationDate = "";
+		var isReport = ""
 	    
 	 	// 向後端取得session的值
 	 	$.ajax({
@@ -306,10 +307,12 @@
 			    	document.getElementById("reportNo").value = data.report_no;
 			    	document.getElementById("taf").value = data.is_taf;
 			    	document.getElementById("result").value = data.result;
+			    	isReport = "y";
     	
 			    },
 			    error :function(errorMsg) {
 			        console.log(instrumentList[0].number + " 無校驗報告。");
+			        isReport = "n";
 		    	}
 	    	});
 	        
@@ -401,6 +404,7 @@
     	    
      		jsonString = JSON.stringify(instrumentData) //轉成json格式
         	//console.log(jsonString);
+     		
     	    
     	    $.ajax({
     		    type: "PUT", // 後端的要有標註PutMapping的方法
@@ -448,10 +452,18 @@
      	// 判斷是否有內容
         if (files.length > 0) {
         	fileName = files[0].name;
-        	url = "/crud/updataReportFile";
+        	if (isReport === "n") {
+        		url = "/calibration/upload"; // 如果一開始沒有校驗報告，進行上傳檔案
+        		//console.log("如果一開始沒有校驗報告，進行上傳檔案");
+        	}
+        	else{
+        		url = "/crud/updataReportFile"; // 一開始有校驗報告檔案，上傳檔案進行更新(報告也更新)
+        		//console.log("一開始有校驗報告檔案，上傳檔案進行更新(報告也更新)");
+        	}
         }
         else {
-        	url = "/crud/updataReport";	
+        	url = "/crud/updataReport";	 // 一開始有校驗報告檔案，無上傳檔案進行更新
+        	//console.log("一開始有校驗報告檔案，無上傳檔案進行更新");
         }
         
 		var calibrationData = {	

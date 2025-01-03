@@ -65,7 +65,7 @@ public class ReportController {
 		System.out.println("request: " + request);
 		ObjectMapper objectMapper = new ObjectMapper(); // 用於將 JSON 資料與 Java 物件之間進行相互轉換
 		Report report = objectMapper.readValue(request, Report.class); // request 中讀取 JSON 數據，指定了目標類型，即將 JSON 資料反序列化為 Report 類別的實例
-		
+
 		if (report != null) { // 檢查 report 是否為空值
 			
 			String calibrate_date = report.getCalibrate_date();

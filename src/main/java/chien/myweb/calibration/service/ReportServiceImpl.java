@@ -1,5 +1,11 @@
 package chien.myweb.calibration.service;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -21,6 +27,7 @@ import chien.myweb.calibration.dao.ReportDao;
 import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.Report;
+import chien.myweb.calibration.enity.RequestData;
 
 @Service
 public class ReportServiceImpl implements ReportService{
@@ -31,6 +38,8 @@ public class ReportServiceImpl implements ReportService{
 	InstrumentDao instrumentDao;
 	@Autowired
 	InstrumentReportDao instrumentReportDao;
+	@Autowired
+	InstrumentReportService instrumentReportService;
 	
 	// ========== 新增 ==========
 	@Override
@@ -92,6 +101,7 @@ public class ReportServiceImpl implements ReportService{
 	@Override
 	public boolean updataReport(Report request) {
 		
+		System.out.println("updata 1");
 		Long instrumentId = request.getId();
 		String calibrate_date = request.getCalibrate_date();
 		Optional<Report> reportOpt = reportDao.findReportObjectByInstumentAndDate(instrumentId, calibrate_date);
@@ -110,10 +120,13 @@ public class ReportServiceImpl implements ReportService{
 			return true;
         }
 		else {
+			System.out.println("updata 2");
+			addReport(request);
 			return false;
 		}
 	}
 	
+	// ========== 更新 ==========
 	@Override
 	public boolean updataReportFile(Report request) {
 		
@@ -136,12 +149,86 @@ public class ReportServiceImpl implements ReportService{
 			return true;
 
 		}else {
+			
 			return false;
 		}
 	
 	}
 	
+	// ========== 複製 ==========
+	@Override
+	public void copyReportFile(Instrument instrument, RequestData request) {
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		// ===== instrument update service =====
+		// ===== 取得當前儀器對應的data id的進行日期更新 =====
+		String befCalibrateDate = instrument.getLast_calibrate_date().format(formatter); // 轉換字串格式
+		String afferCalibrateDate = request.getLast_calibrate_date().format(formatter);
+		
+		System.out.println("befCalibrateDate: " + befCalibrateDate);
+		System.out.println("afferCalibrateDate: " + afferCalibrateDate);
+		
+		// ========== 檔案處理 ==========
+	    String befYear = befCalibrateDate.substring(0, 4); // 提取年份
+	    String befMonth = befCalibrateDate.substring(5, 7); // 提取月份
+	    
+		String afferYear = afferCalibrateDate.substring(0, 4); // 提取年份
+	    String afferMonth = afferCalibrateDate.substring(5, 7); // 提取月份
+	    
+	    String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(instrument.getId(), befCalibrateDate); // 取得報告名稱(透過器具id和校驗日期)
+	    
+	    // 設定上傳檔案的儲存路徑
+	    String befPath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + befYear + "/" + befMonth + "/" + fileName; // 指定文件路径
+		String afferPath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + afferYear + "/" + afferMonth + "/" + fileName; // 指定文件路径
+		
+		File dest = new File(afferPath);
+	    
+	    // 如果目錄不存在，則創建目錄
+	    if (!dest.getParentFile().exists()) {
+	        dest.getParentFile().mkdirs();
+	    }
+		
+		// 源文件路徑
+	    Path sourcePath = Paths.get(befPath);
+	    // 目標文件路徑
+	    Path targetPath = Paths.get(afferPath);
+	        
+	    try {
+	    	Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING); // 複製文件
+	        System.out.println("檔案複製成功。");
+	        
+	        // ===== 日期更新 =====
+			//Optional<Long> reportId = reportDao.findReportIdByCalibrateDate(id, befCalibrateDate); // 取得修改前日期下的data_id
+	        /*if (reportId.isPresent()) {
+			List<Report> reportList = reportDao.findByReportId(reportId.get()); // 透過修改前的日期，取得該report物件
+			Report reportObj = reportList.get(0);
+		
+			reportObj.setCalibrate_date(afferCalibrateDate); // 設定修改後日期的data object
+			reportDao.save(reportObj); // 這裡使用 save 進行更新
+	    	}*/
+			
+			Optional<Report> reportOpt = reportDao.findReportObjectByInstumentAndDate(instrument.getId(), befCalibrateDate); // 透過修改前的日期，取得該report物件
+
+	        if (reportOpt.isPresent()) {
+	        	Report reportObj = reportOpt.get();
+	        	
+	        	reportObj.setCalibrate_date(afferCalibrateDate); // 設定修改後日期的data object
+				reportDao.save(reportObj); // 這裡使用 save 進行更新
+	        }
+
+	    } catch (NoSuchFileException e) {
+	        // 檔案不存在時的處理邏輯
+	        System.out.println("未上傳校驗報告。");
+	        
+	    } catch (Exception e) {
+	        // 處理其他可能的錯誤
+	        System.out.println("檔案複製失敗。");
+	        e.printStackTrace();
+	    }
 	
+	}
+	
+
 	@Override
 	public List<Report> findByReportId(Long id) {
 		// TODO Auto-generated method stub
