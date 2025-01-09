@@ -73,8 +73,8 @@
     		<button type="submit">新增</button>
 	    </div>
 	    <div class="button-container">
-	    	<!--  <input type='button' onclick="window.location.replace(document.referrer);" value="回上頁"-->
-	    	<input type='button' onclick="history.go(-1)" value="回上頁">
+	    	<input type='button' onclick="location.href='/calibration/person/crud'" value="回上頁">
+	    	<!-- <input type='button' onclick="history.go(-1)" value="回上頁">-->
   		</div>
   		
 	</form>
@@ -147,21 +147,35 @@
 		};
     	
 		jsonString = JSON.stringify(rowData); //轉成json格式
-		//console.log(jsonString);
-
-        $.ajax({
-		    type: "POST", // 後端的要有標註PostMapping的方法
-		    url: "/crud/person",
-		    cache: false,
-		    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
-		    contentType: "application/json",
-		    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
-		    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
-		    success: function(message) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
-		    	alert(message);
+		const job_number = document.getElementById("job_number").value;
+		
+		$.ajax({
+			type:"GET",//請求方式
+		    url:"/crud/personJobNumber/" + job_number, //url代表向後端發送請求 (後端需有標註@GetMapping("/crud/instrumentNo/{number}")的方法)
+		    async:false,//false為同步
+		    dataType:"json",// 前端接收資料格式 (後端需有標註@ResponseBody的方法)
+		    success:function (data) {//接收後端來的資料
+		    	alert("此員工工號已被建立。");
 		    },
-		    error: function(xhr, status, error) {
-		    	alert(xhr.responseText);
+		    error: function() {
+		    	//alert("員工工號尚未建立，可以使用。");
+		    	
+		    	$.ajax({
+				    type: "POST", // 後端的要有標註PostMapping的方法
+				    url: "/crud/person",
+				    async:false,//false為同步
+				    //cache: false,
+				    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
+				    contentType: "application/json",
+				    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
+				    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+				    success: function(message) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
+				    	alert(message);
+				    },
+				    error: function(xhr, status, error) {
+				    	alert(xhr.responseText);
+				    }
+			  	});
 		    }
 	  	});
 

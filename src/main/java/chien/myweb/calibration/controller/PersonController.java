@@ -127,19 +127,19 @@ public class PersonController {
 	public ResponseEntity<Person> getPersonJobNumber(@PathVariable("jobnumber") String jobnumber){
 		
 		List<Person> personDB = personService.findJobnumber(jobnumber);	
-
+		
 		Optional<Person> personOp = personDB.stream()
 				.filter(p -> p.getJob_number().equals(jobnumber))
 				.findFirst();
 		
 		if(personOp.isPresent()){
 			Person person = personOp.get();
-			System.out.println(person.toString());
+			System.out.println("員工工號已被建立: " + person.toString());
 			return ResponseEntity.ok().body(person); 
 		}
 		else{
-			System.out.println("查詢不到人員工號");
-	        return ResponseEntity.notFound().build();
+			System.out.println("員工工號尚未建立，可以建立。");
+			return ResponseEntity.ok(null);
 	    }
 	}
 	
