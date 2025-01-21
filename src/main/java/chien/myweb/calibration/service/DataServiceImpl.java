@@ -121,9 +121,9 @@ public class DataServiceImpl implements DataService{
 	}
 	
 	@Override
-	public List<Long> findDataIdForSomeDate(Long instrument_id, String last_calibrate_date) {
+	public List<Long> findDataIdByCalibrateDate(Long instrument_id, String last_calibrate_date) {
 		// TODO Auto-generated method stub
-		return dataDao.findDataIdForSomeDate(instrument_id, last_calibrate_date);
+		return dataDao.findDataIdByCalibrateDate(instrument_id, last_calibrate_date);
 	}
 
 }

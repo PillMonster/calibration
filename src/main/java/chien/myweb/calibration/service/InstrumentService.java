@@ -3,6 +3,8 @@ package chien.myweb.calibration.service;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.RequestData;
 import chien.myweb.calibration.enity.Calibration;
@@ -45,7 +47,7 @@ public interface InstrumentService {
 	
 	// 多項條件查詢
 	List<Instrument> findByMultiple(List<String> monthList, List<String> cycleList, List<String> typeList, List<String> personList, List<String> localationList);
-
 	
-
+	// 多項條件查詢
+	List<Instrument> findByMultiple(List<String> typeList, List<String> personList, List<String> localationList);
 }

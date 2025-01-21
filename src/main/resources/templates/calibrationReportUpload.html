@@ -151,7 +151,6 @@
 	    
 	    var identity = "";
 		var userName = "";
-		var checker = "";
 	    
 	 	// 向後端取得session的值
 	 	$.ajax({
@@ -169,19 +168,22 @@
 			}
 		}); // ajax method end
 	 	
-		console.log("identity: " + identity);
+		console.log("initialion identity: " + identity);
+		console.log("initialion userName: " + userName);
+		console.log("initialion checker: " + checker);
+		
 		if ( identity != "校驗人員"){
 			alert("您沒有權限訪問此頁面，請重新登入。")
 			window.location.href = "/calibration/person/login";
 		}
+		
 	});
-
 	
 	$.ajax({
 	    type:"GET",//請求方式
 	    url:"/crud/instrumentNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
 	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
-	    async:true,//true為非同步
+	    async:false,//true為非同步
 	    success:function (data) {//接收後端來的資料
 	    	console.log(data);
 	    	populateDropdown(data);
@@ -199,7 +201,7 @@
 	    type:"GET",//請求方式
 	    url:"/crud/instrumentInfo/" + id,//url代表向後端發送請求 (後端需有標註@GetMapping("/instrument{id}")的方法)
 	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
-	    async:true,//true為非同步
+	    async:false,//true為非同步
 	    success:function (data) {//接收後端來的資料
 	    	
 			const instrumentList = data.instrument;
@@ -243,7 +245,7 @@
 	    			for (let i = 0; i < selectElement.options.length; i++) {
 	    			    if (selectElement.options[i].value === username) {
 	    			    	checker = username; // 用於檢查登入者是否為校驗人員本人
-	    		    		console.log("checker: " + checker);
+	    		    		console.log("selelctedIndex checker: " + checker);
 	    			    	selectElement.selectedIndex = i;
 	    			        break; // 找到匹配值后立即退出循环
 	    			    }
@@ -301,9 +303,8 @@
 			error: function(xhr, status, error) {
 				    	//alert(xhr.responseText);
 			}
-		}); // ajax method end	 
+		}); // ajax method end	
 	 }
-	
 	
 	// ========= 監聽點擊按鈕後，要處理的方法 ==========
 	document.getElementById("instrumentForm").addEventListener("submit", function(event) {
@@ -313,9 +314,6 @@
 		if ( identity == "校驗人員") { 
     		
     		if ( userName == checker) { // 用於檢查登入者是否為校驗人員本人
-    			
-    			console.log("userName: " + userName);
-    			console.log("checker: " + checker);
 	        
 				event.preventDefault();// 如果需要阻止實際的表單提交，可以取消事件
 		
@@ -372,7 +370,7 @@
                     window.location.href = "/calibration/instrument/prep"; 
                 }, 0); // 立即跳轉
     		}
-   
+
     	} else {
             alert("此功能需要校驗人員身分才可使用。");
             

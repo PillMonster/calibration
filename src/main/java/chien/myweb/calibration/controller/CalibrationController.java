@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +34,7 @@ import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.Person;
 import chien.myweb.calibration.enity.Report;
+import chien.myweb.calibration.enity.RequestChecked;
 import chien.myweb.calibration.service.CalibrationService;
 import chien.myweb.calibration.service.DataService;
 import chien.myweb.calibration.service.InstrumentPersonService;
@@ -63,10 +65,13 @@ public class CalibrationController {
     		throws FileNotFoundException, UnsupportedEncodingException {
 		
 		System.out.println("view pdf for instrumentId: " + id + ", calibrateDate: " + date);
+		String year = date.substring(0, 4); // 提取年份
+        String month = date.substring(5, 7); // 提取月份
+        //System.out.println("year:" + year + "  ,month: " + month);
 		
 		String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 查詢報告名稱(透過器具id和校驗日期)
-	
-		String filePath = "I:/SpringBoot/uploadFiles/" + fileName;   
+
+		String filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + fileName;  // 指定文件路径
 
         File file = new File(filePath);
         
@@ -105,10 +110,13 @@ public class CalibrationController {
 			throws FileNotFoundException, UnsupportedEncodingException {
         
 		System.out.println("download pdf for instrumentId: " + id + ", calibrateDate: " + date);
+		String year = date.substring(0, 4); // 提取年份
+        String month = date.substring(5, 7); // 提取月份
+        //System.out.println("year:" + year + "  ,month: " + month);
 		
 		String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 查詢報告名稱(透過器具id和校驗日期)
-		
-		String filePath = "I:/SpringBoot/uploadFiles/" + fileName; // 指定文件路径
+
+		String filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + fileName;  // 指定文件路径
        
         File file = new File(filePath);
 
@@ -137,17 +145,38 @@ public class CalibrationController {
 		System.out.println("Received JSON: " + request);		
 		System.out.println("file name:" + file.getOriginalFilename());
 		
+		// ========== 前端取得資料前處理 ========
+		String year = "";
+		String month = "";
 		String filePath = "";
-        
-		if (file.isEmpty()) {
+		
+		ObjectMapper objectMapper = new ObjectMapper(); // 用於將 JSON 資料與 Java 物件之間進行相互轉換
+		Report report = objectMapper.readValue(request, Report.class); // request 中讀取 JSON 數據，指定了目標類型，即將 JSON 資料反序列化為 Report 類別的實例
+		
+		if (report != null) { // 檢查 report 是否為空值
+			
+			String calibrate_date = report.getCalibrate_date();
+	        year = calibrate_date.substring(0, 4); // 提取年份
+	        month = calibrate_date.substring(5, 7); // 提取月份
+	        //System.out.println("year:" + year + "  ,month: " + month);
+	        
+	        reportService.addReport(report); // 新增一筆報告紀錄
+		}
+		else {
+			String message = "資料庫沒有紀錄或資料輸入錯誤，請再重新確認。" ;
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+		}
+		
+		// ========== 檔案處理 ========
+		if (file.isEmpty()) { // 如果檔案不存在
 			String message = "請選擇一個檔案來上傳";	
             return ResponseEntity.ok().body(message);
             
         }else {
         	try {
                 // 設定上傳檔案的儲存路徑
-            	filePath = "I:/SpringBoot/uploadFiles/" + file.getOriginalFilename();
-
+            	filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + file.getOriginalFilename(); // 指定文件路径
+            	System.out.println("filePath: " + filePath);
                 File dest = new File(filePath);
                 
                 // 如果目錄不存在，則創建目錄
@@ -156,28 +185,10 @@ public class CalibrationController {
                 }
                 // 將檔案寫入目的地
                 file.transferTo(dest);
-                
-                ObjectMapper objectMapper = new ObjectMapper(); // 用於將 JSON 資料與 Java 物件之間進行相互轉換
-                Report report = objectMapper.readValue(request, Report.class); // request 中讀取 JSON 數據，指定了目標類型，即將 JSON 資料反序列化為 Report 類別的實例
-                
-                List<Report> newReport = reportService.addReport(report);
-                Optional<Report> reportOp = newReport.stream().findAny();
-            		
-            	if (reportOp.isPresent()) {
-         
-        	    	String message = "檔案 " + file.getOriginalFilename() + " 上傳成功，已新增一筆校驗紀錄!";
-        	    	System.out.println(message);
-                
-        	    	return ResponseEntity.ok().body(reportOp);
-        		}
-        		else {
-        			String message = "資料庫沒有紀錄或資料輸入錯誤，請再重新確認。" ;
-        			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
-        		}
-                
-                /*String message = "檔案 " + file.getOriginalFilename() + " 上傳成功，已新增一筆校驗紀錄!";
+ 
+                String message = "檔案 " + file.getOriginalFilename() + " 上傳成功，已新增一筆校驗紀錄!";
     	    	System.out.println(message);
-    	    	return ResponseEntity.ok().body(message);*/
+    	    	return ResponseEntity.ok().body(message);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -188,7 +199,7 @@ public class CalibrationController {
     }
 	
 	// ===== 新增內校數據 (執行校驗) =====
-	@PostMapping("/prepCalibrations") 
+	@PostMapping("/executeCalibrations") 
 	public ResponseEntity<?> executeCalibration(@RequestBody Data request){
 			
 		System.out.println(request.toString());
@@ -208,6 +219,49 @@ public class CalibrationController {
 
 	}
 	
+	// 搜尋器具編號，並確認是否為待校驗器具
+	@GetMapping("/prepInstrumentNo/{number}")  
+	public ResponseEntity<List<Instrument>> getInstrumentByNumberd(@PathVariable("number") String number){
+		System.out.println("number: " + number);
+		List<Instrument> instrumentDB = instrumentService.findInstrumentByNumber(number);	
+		
+		Optional<Instrument> instrumentOp = instrumentDB.stream().findAny();
+		
+		if(instrumentOp.isPresent()){
+			
+			List<Instrument> responseInstruments = calibrationService.selectPrepInstruments(instrumentDB);
+			responseInstruments.forEach(item -> System.out.println(item.toString()));
+			
+			return ResponseEntity.ok().body(responseInstruments); 
+		}
+		else{
+			System.out.println("找不到此儀器或量具");
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+	
+	// 搜尋器具名稱，並確認是否為待校驗器具
+	@GetMapping("/prepInstrumentName/{name}")  
+	public ResponseEntity<List<Instrument>> getInstrumentById(@PathVariable("name") String name){
+		System.out.println("name: " + name);
+		List<Instrument> instrumentDB = instrumentService.findInstrumentByName(name);	
+		
+		Optional<Instrument> instrumentOp = instrumentDB.stream().findAny();
+
+		
+		if(instrumentOp.isPresent()){
+			
+			List<Instrument> responseInstruments = calibrationService.selectPrepInstruments(instrumentDB);
+			responseInstruments.forEach(item -> System.out.println(item.toString()));
+			
+			return ResponseEntity.ok().body(responseInstruments); 
+		}
+		else{
+			System.out.println("找不到此儀器或量具");
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+	
 	// ===== 取得待校驗器具 =====
 	@GetMapping("/prepCalibrations")  
 	public ResponseEntity<?> getPrepCalibration(){
@@ -223,8 +277,46 @@ public class CalibrationController {
 			return ResponseEntity.ok().body(instrumentDB);
 		}
 		else {
-			System.out.println("當月沒有要執行校驗的器具"); 	
-			return ResponseEntity.ok().body("當月沒有要執行校驗的器具");
+			System.out.println("當月沒有要執行校驗的器具");
+	        return ResponseEntity.notFound().build();
+		}
+	}
+	
+	// ===== 取得待校驗器具 =====
+	@PostMapping("/prepCalibrations")  
+	public ResponseEntity<?> getPrepCalibration(@RequestBody List<RequestChecked> requestChecked){
+		
+		List<String> typeList = new ArrayList<>();
+        List<String> personList = new ArrayList<>();
+        List<String> localationList = new ArrayList<>();
+        
+        for (RequestChecked jsonData : requestChecked) {
+            typeList = jsonData.getType();
+            personList = jsonData.getPerson();
+            localationList = jsonData.getLocalation();
+            
+            System.out.println("====== From 前端 ======");
+
+	    	System.out.println("校驗類型 from 前端: " +  typeList);
+	    	System.out.println("校驗人員 from 前端: " + personList);
+	    	System.out.println("校驗地點or公司 from 前端: " + localationList);
+	    	System.out.println("-----------------------");
+        }
+        
+        List<Instrument> instrumentDB = instrumentService.findByMultiple(typeList, personList, localationList); 
+        
+		Optional<Instrument> instrumentOp = instrumentDB.stream().findAny();
+		
+		if (instrumentOp.isPresent()) {
+			
+			 List<Instrument> responseInstruments = calibrationService.selectPrepInstruments(instrumentDB);
+			 responseInstruments.forEach(item -> System.out.println("選擇後待校驗的器具: " + item.toString()));
+			 
+			return ResponseEntity.ok().body(responseInstruments);
+		}
+		else {
+			System.out.println("當月沒有要執行校驗的器具");
+	        return ResponseEntity.notFound().build();
 		}
 	}
 	
@@ -255,7 +347,7 @@ public class CalibrationController {
 			}		
 		}
 		else{
-			System.out.println("沒有此儀器或量具");
+			System.out.println("找不到此儀器或量具");
 	        return ResponseEntity.notFound().build();
 	    }	
 	}

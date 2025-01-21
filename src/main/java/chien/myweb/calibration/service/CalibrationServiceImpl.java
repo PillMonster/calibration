@@ -166,13 +166,10 @@ public class CalibrationServiceImpl implements CalibrationService{
 	}
 	
 	
-	// ========== 查詢待校驗器具 ==========
 	@Override
-	public List<Instrument> findPrepInstruments() {  
+	public List<Instrument> calCalibrateDate(List<Instrument> instrumentDB) {  // 計算天數確認器具是否需要校驗
 		
-		List<Instrument> instrumentDB = instrumentDao.findInstruments();
-				
-        LocalDate currentDate = LocalDate.now(); // 獲取當前日期
+		LocalDate currentDate = LocalDate.now(); // 獲取當前日期
         Month currentMonth = currentDate.getMonth();
         int currentMonthValue = currentMonth.getValue();
         System.out.println("當前月份為: " + currentMonthValue);
@@ -219,7 +216,7 @@ public class CalibrationServiceImpl implements CalibrationService{
                 long daysBetween = ChronoUnit.DAYS.between(lastCalibrateDate, today);
                 long dayDifferenc = cycle - daysBetween ;
                 
-                System.out.println("編號: " + number + ", 週期: " + cycle + "天, 上次校驗日今日相差: " + daysBetween + "天, 兩者相減: " + dayDifferenc);
+                //System.out.println("編號: " + number + ", 週期: " + cycle + "天, 上次校驗日今日相差: " + daysBetween + "天, 兩者相減: " + dayDifferenc);
                 
                 // 檢查是否小於30天
                 boolean isOverdue = dayDifferenc <= 30 ;
@@ -236,16 +233,30 @@ public class CalibrationServiceImpl implements CalibrationService{
             				
             })
             .collect(Collectors.toList());	// 如果器具有超過週期，將結果轉換成集合資料
-		
 		return prepInstrument;	
 	}
 	
+	// ========== 查詢待校驗器具 ==========
+	@Override
+	public List<Instrument> findPrepInstruments() {  
+		
+		List<Instrument> instrumentDB = instrumentDao.findInstruments();	
+		return calCalibrateDate(instrumentDB);
+	}
 	
+	// ========== 查詢待校驗器具 + 前端選擇條件查詢 ==========
+	@Override
+	public List<Instrument> selectPrepInstruments(List<Instrument> instrumentDB) {  
+
+		return calCalibrateDate(instrumentDB);
+	}
+		
 	// ========== 查詢待簽核器具 ==========
 	@Override
 	public List<Instrument> findPrepSignInstrument() {
 		return instrumentDao.findSignByInstruments();
 	}
+	
 	
 	// ========== 新增儀器時，判斷器具是否過期 ==========
 	/*@Override

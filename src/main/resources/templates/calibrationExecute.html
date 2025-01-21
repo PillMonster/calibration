@@ -165,7 +165,6 @@
 	    
 		var identity = "";
 		var userName = "";
-		var checker = "";
 	    
 	 	// 向後端取得session的值
 	 	$.ajax({
@@ -183,7 +182,10 @@
 			}
 		}); // ajax method end
 	 	
-		console.log("identity: " + identity);
+		console.log("initialion identity: " + identity);
+		console.log("initialion userName: " + userName);
+		console.log("initialion checker: " + checker);
+		
 		if ( identity != "校驗人員"){
 			alert("您沒有權限訪問此頁面，請重新登入。")
 			window.location.href = "/calibration/person/login";
@@ -200,7 +202,7 @@
 	    type:"GET",//請求方式
 	    url:"/crud/instrumentNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
 	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
-	    async:true,//true為非同步
+	    async:false,//true為非同步
 	    success:function (data) {//接收後端來的資料
 	    	console.log(data);
 	    	populateDropdown(data);
@@ -267,6 +269,7 @@
 	    			for (let i = 0; i < selectElement.options.length; i++) {
 	    			    if (selectElement.options[i].value === username) {
 	    			    	checker = username; // 用於檢查登入者是否為校驗人員本人
+	    			    	console.log("selelctedIndex checker: " + checker);
 	    			        selectElement.selectedIndex = i;
 	    			        break; // 找到匹配值后立即退出循环
 	    			    }
@@ -414,7 +417,7 @@
     		    
     		    $.ajax({
     			    type: "POST", // 後端的要有標註PutMapping的方法
-    			    url: "/calibration/prepCalibrations",
+    			    url: "/calibration/executeCalibrations",
     			    cache: false,
     			    //contentType: 'application/json;charset=UTF-8', // 後端如果要以List接收, 這行必須要開
     			    contentType: "application/json",

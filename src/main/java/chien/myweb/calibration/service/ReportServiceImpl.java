@@ -120,5 +120,11 @@ public class ReportServiceImpl implements ReportService{
 		// TODO Auto-generated method stub
 		return reportDao.findReportAll();
 	}
+	
+	@Override
+	public List<Long> findReportIdByCalibrateDate(Long instrument_id, String last_calibrate_date) {
+		// TODO Auto-generated method stub
+		return reportDao.findReportIdByCalibrateDate(instrument_id, last_calibrate_date);
+	}
 
 }

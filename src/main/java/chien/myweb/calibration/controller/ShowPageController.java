@@ -21,7 +21,7 @@ public class ShowPageController {
 	
 	@GetMapping("instrument/upload")
 	public String showCalibrationReportUpload() {
-		return "reportUpload";
+		return "calibrationReportUpload";
 	}
 	
 	@GetMapping("/instrument/result")
