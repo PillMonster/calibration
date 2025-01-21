@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -77,6 +78,7 @@ public class CalibrationController {
         File file = new File(filePath);
         
         if (!file.exists()) {
+        	System.out.println(fileName + " 檔案不存在。");
         	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         
@@ -122,6 +124,7 @@ public class CalibrationController {
         File file = new File(filePath);
 
         if (!file.exists()) {
+        	System.out.println(fileName + " 檔案不存在。");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -202,9 +205,10 @@ public class CalibrationController {
 	
 	// ===== 新增內校數據 (執行校驗) =====
 	@PostMapping("/executeCalibrations") 
-	public ResponseEntity<?> executeCalibration(@RequestBody Data request){
+	public ResponseEntity<?> executeCalibration(@RequestParam Long id, @RequestBody Data request){
 			
 		System.out.println(request.toString());
+
 		List<Data> newData = dataService.addData(request);
 		
 		Optional<Data> dataOp = newData.stream().findAny();
