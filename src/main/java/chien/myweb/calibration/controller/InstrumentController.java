@@ -150,8 +150,8 @@ public class InstrumentController {
 			return ResponseEntity.ok().body(instrumentDB); 
 		}
 		else{
-			System.out.println("沒有此儀器或量具");
-	        return ResponseEntity.notFound().build();
+			System.out.println("器具編號未建立，可以使用");
+	        return ResponseEntity.ok(null);
 	    }
 	}
 	
@@ -259,4 +259,5 @@ public class InstrumentController {
 	        return ResponseEntity.notFound().build();
 	    }
 	}
+	
 }

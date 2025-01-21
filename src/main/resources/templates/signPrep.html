@@ -25,7 +25,7 @@
 	    type:"GET",//請求方式
 	    url:"/calibration/prepSign",//url代表向後端發送請求 (後端需有標註@GetMapping("calibration/prepCalibrations")的方法)
 	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法，或回傳方法型態為ResponseEntity<?>)
-	    async:true,//true為非同步
+	    async:false,//true為非同步
 	    success:function (data) {//接收後端來的資料
 	    	console.log(data);
 	    	updateData(data);	
@@ -35,7 +35,6 @@
 	    }
 	});
 	
-	
 	//自訂更新資料的函式, 可從後端接收來的數據, 渲染到html的table上
 	function updateData(data){
 		var innerTable = "";
@@ -44,7 +43,7 @@
 		//table title
 		innerTable += "<thead>";
 		innerTable += "<tr><td>器具編號</td><td>器具名稱</td><td>廠牌型式</td><td>校驗特性</td><td>校驗單位</td>" +
-						"<td>校驗週期</td><td>校驗類型</td><td>校驗地點</td><td>校驗月份</td><td>上次校驗時間</td><td>母儀編號</td><td>操作</td>";
+						"<td>校驗週期</td><td>校驗類型</td><td>校驗地點</td><td>校驗月份</td><td>校驗日期</td><td>母儀編號</td><td>操作</td>";
 		innerTable += "</thead>";
 		innerTable += "<tbody>";
 		for (var i = 0; i < data.length; i++) {

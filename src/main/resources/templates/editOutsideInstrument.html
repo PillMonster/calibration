@@ -11,13 +11,13 @@
 <div id="header"></div>
 
 
-<div class="form-container" style="width: 800px;">	
+<div class="form-container">	
 
 	<form id="instrumentForm">
 	
 		<div style="text-align: center;"><h2 class="form-header">修改遊外校器具</h2></div>
 		
-		<div class="form-container-view" style="margin: 20px 100px; /* 上下 左右 */"> 
+		<div class="form-container-view"> 
 			
 			<!-- 左半部為器具資訊輸入欄位的區塊 -->
 			<div class="form-container-left">
@@ -90,13 +90,42 @@
 					<option>7月</option>	<option>8月</option><option>9月</option><option>10月</option><option>11月</option><option>12月</option>
 	           	</select><br>-->
 	           	    
-				<br><label for="last_calibrate_date">上次校驗日期：</label>
+				<br><label for="last_calibrate_date">&emsp;&emsp;校驗日期：</label>
 				<input type="date" class="datepicker" id="last_calibrate_date" name="last_calibrate_date" required><br>
 	           
 	           	<label for="mother_instrument_number">&emsp;&emsp;母儀編號：</label>
 	           	<input type="text" class="input-instrument" id="mother_instrument_number" name="mother_instrument_number" required>	 <br>    		
 			
 			</div>
+			
+			<!-- 中間為上傳報告欄位的區塊 -->
+			<div class="form-container-center">
+				
+				&emsp;<label for="file">更新檔案：</label>
+				<input type="file" class="input-instrument" id="file" name="file" multiple><br>
+
+				&emsp;<label for="reportNo">報告編號：</label>
+	           	<input type="text" class="input-instrument" id="reportNo" name="reportNo"><br>
+	           	
+	           	<label for="taf">是否有TAF：</label>
+	           	<select class="select-instrument" name="taf" id="taf">
+	           		<option></option>
+	           		<option>有</option>
+				    <option>無</option>
+	           	</select><br>
+	           	
+	           	<!-- &emsp;<label for="last_calibrate_date">校驗日期：</label>
+				<input type="date" class="datepicker" id="calibrate_date" name="calibrate_date" required><br> -->
+				
+				&emsp;<label for="result">校驗結果：</label>
+	           	<select class="select-instrument" name="result" id="result">
+	           		<option></option>
+	           		<option>合格</option>
+				    <option>不合格</option>
+	           	</select><br>
+
+			</div>
+			
 
 			<!-- 右邊為選擇人員欄位的區塊 -->
 			<div class="form-container-right">
@@ -133,6 +162,9 @@
 	    $("#header").load("/instrument/header.html");
 	    
 		var identity = "";
+		var befCalibrationDate = "";
+		var afterCalibrationDate = "";
+		var isReport = ""
 	    
 	 	// 向後端取得session的值
 	 	$.ajax({
@@ -163,7 +195,7 @@
 	    type:"GET",//請求方式
 	    url:"/crud/instrumentNoRepeat",//url代表向後端發送請求 (後端需有標註@GetMapping("crud/instruments")的方法)
 	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
-	    async:false,//true為非同步
+	    async:false,//false為同步
 	    success:function (data) {//接收後端來的資料
 	    	console.log(data);
 	    	populateDropdown(data);
@@ -176,11 +208,12 @@
 	var urlParams = new URLSearchParams(window.location.search); // 獲取當前頁面的URL中的查詢參數
 	var id = urlParams.get("id"); // 獲取ID參數的值
 	console.log("get edit'id: " + id);
+	// 向後端查詢該器具資訊
 	$.ajax({
 	    type:"GET",//請求方式
 	    url:"/crud/instrumentInfo/" + id,//url代表向後端發送請求 (後端需有標註@GetMapping("/instrument{id}")的方法)
 	    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
-	    async:false,//true為非同步
+	    async:false,//false為同步
 	    success:function (data) {//接收後端來的資料
 	    	
 			const instrumentList = data.instrument;
@@ -257,9 +290,31 @@
 	    	//document.getElementById("calibrate_month").value = instrumentList[0].calibrate_month + "月";
 	    	document.getElementById("last_calibrate_date").value = instrumentList[0].last_calibrate_date;
 	    	document.getElementById("mother_instrument_number").value = instrumentList[0].mother_instrument_number;
-			
+	    	
 	    	editCheckboxes(instrumentList[0].calibrate_month); 
 	    	//console.log(instrumentList[0].calibrate_month);
+	    	
+	    	befCalibrationDate = instrumentList[0].last_calibrate_date;
+	    	
+	    	// 向後端查詢器具外校報告資訊
+	    	$.ajax({
+			    type:"GET",//請求方式
+			    url:"/crud/instrument/" + id + "/calibrationDate/" + instrumentList[0].last_calibrate_date, //url代表向後端發送請求 (後端需有標註@GetMapping("/crud/instrument/{id}/calibrationDate/{calibration_date}")的方法)
+			    dataType:"json",//接收資料格式 (後端需有標註@ResponseBody的方法)
+			    async:false,//false為同步
+			    success:function (data) {//接收後端來的資料
+			    	console.log(data);
+			    	document.getElementById("reportNo").value = data.report_no;
+			    	document.getElementById("taf").value = data.is_taf;
+			    	document.getElementById("result").value = data.result;
+			    	isReport = "y";
+    	
+			    },
+			    error :function(errorMsg) {
+			        console.log(instrumentList[0].number + " 無校驗報告。");
+			        isReport = "n";
+		    	}
+	    	});
 	        
 	    },
 	    error :function(errorMsg) {
@@ -349,6 +404,7 @@
     	    
      		jsonString = JSON.stringify(instrumentData) //轉成json格式
         	//console.log(jsonString);
+     		
     	    
     	    $.ajax({
     		    type: "PUT", // 後端的要有標註PutMapping的方法
@@ -360,6 +416,7 @@
     		    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
     		    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
     		    	console.log(response)
+    		    	updataReport(); // 更新校驗報告
     		    	alert("器具更新成功!!");
     		    },
     		    error: function(xhr, status, error) {
@@ -375,6 +432,74 @@
         }
 
   	});
+	
+	function updataReport(){
+		
+		var reportNo = document.getElementById("reportNo").value.trim();
+		var instrumentNumber = document.getElementById("number").value.trim();
+		var instrumentName = document.getElementById("name").value.trim();
+		var taf = document.getElementById("taf").value.trim();
+		var calibrate_date = document.getElementById("last_calibrate_date").value;	
+		var result = document.getElementById("result").value.trim();
+		
+		var inputElement = document.getElementById('file');
+        var files = inputElement.files;   
+        var fileName = "";
+        var url = "";
+        
+        afterCalibrationDate = document.getElementById("last_calibrate_date").value;	
+        
+     	// 判斷是否有內容
+        if (files.length > 0) {
+        	fileName = files[0].name;
+        	if (isReport === "n") {
+        		url = "/calibration/upload"; // 如果一開始沒有校驗報告，進行上傳檔案
+        		//console.log("如果一開始沒有校驗報告，進行上傳檔案");
+        	}
+        	else{
+        		url = "/crud/updataReportFile"; // 一開始有校驗報告檔案，上傳檔案進行更新(報告也更新)
+        		//console.log("一開始有校驗報告檔案，上傳檔案進行更新(報告也更新)");
+        	}
+        }
+        else {
+        	url = "/crud/updataReport";	 // 一開始有校驗報告檔案，無上傳檔案進行更新
+        	//console.log("一開始有校驗報告檔案，無上傳檔案進行更新");
+        }
+        
+		var calibrationData = {	
+	    	"id": id,
+	    	"report_no": reportNo,
+	    	"report_name": fileName,
+	    	"result": result,
+	    	"calibrate_date": calibrate_date,
+	    	"is_taf": taf
+		};
+		
+ 		jsonString = JSON.stringify(calibrationData) // 轉成json格式
+ 		console.log("jsonString: " + jsonString);
+ 		 		
+        var formData = new FormData(); // 創建一個 FormData 物件来處理文件上傳
+        formData.append("jsonString", jsonString); // json資料存入FormData物件
+        
+        for (var i = 0; i < files.length; i++) {
+            formData.append("file", files[i]);
+        }    
+
+	    $.ajax({
+		    type: "POST", // 後端的要有標註POSTMapping的方法
+		    url: url,
+		    async: false, 
+		    processData: false,
+            contentType: false,
+		    data: formData, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
+		    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
+		    	console.log(response)
+		    },
+		    error: function(xhr, status, error) {
+		
+		    }
+	  	});
+	}
 	
 	// 用於填充下拉選單的函數
 	function populateDropdown(data) {

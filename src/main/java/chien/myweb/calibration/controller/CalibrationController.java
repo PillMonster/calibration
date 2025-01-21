@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -40,6 +41,7 @@ import chien.myweb.calibration.service.DataService;
 import chien.myweb.calibration.service.InstrumentPersonService;
 import chien.myweb.calibration.service.InstrumentReportService;
 import chien.myweb.calibration.service.InstrumentService;
+import chien.myweb.calibration.service.PersonService;
 import chien.myweb.calibration.service.ReportService;
 
 @RestController
@@ -70,12 +72,13 @@ public class CalibrationController {
         //System.out.println("year:" + year + "  ,month: " + month);
 		
 		String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 查詢報告名稱(透過器具id和校驗日期)
-
+		System.out.println("file name: " + fileName);
 		String filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + fileName;  // 指定文件路径
 
         File file = new File(filePath);
         
         if (!file.exists()) {
+        	System.out.println(fileName + " 檔案不存在。");
         	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         
@@ -121,6 +124,7 @@ public class CalibrationController {
         File file = new File(filePath);
 
         if (!file.exists()) {
+        	System.out.println(fileName + " 檔案不存在。");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -143,8 +147,7 @@ public class CalibrationController {
             								  @RequestParam("file") MultipartFile file) throws JsonMappingException, JsonProcessingException {
 		
 		System.out.println("Received JSON: " + request);		
-		System.out.println("file name:" + file.getOriginalFilename());
-		
+
 		// ========== 前端取得資料前處理 ========
 		String year = "";
 		String month = "";
@@ -161,6 +164,7 @@ public class CalibrationController {
 	        //System.out.println("year:" + year + "  ,month: " + month);
 	        
 	        reportService.addReport(report); // 新增一筆報告紀錄
+	        
 		}
 		else {
 			String message = "資料庫沒有紀錄或資料輸入錯誤，請再重新確認。" ;
@@ -196,13 +200,15 @@ public class CalibrationController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
             }       	
         }     
+		//return null;
     }
 	
 	// ===== 新增內校數據 (執行校驗) =====
 	@PostMapping("/executeCalibrations") 
-	public ResponseEntity<?> executeCalibration(@RequestBody Data request){
+	public ResponseEntity<?> executeCalibration(@RequestParam Long id, @RequestBody Data request){
 			
 		System.out.println(request.toString());
+
 		List<Data> newData = dataService.addData(request);
 		
 		Optional<Data> dataOp = newData.stream().findAny();

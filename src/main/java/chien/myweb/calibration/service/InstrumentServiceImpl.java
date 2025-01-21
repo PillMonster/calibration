@@ -3,6 +3,7 @@ package chien.myweb.calibration.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -57,6 +58,8 @@ public class InstrumentServiceImpl implements InstrumentService{
 	ReportDao reportDao;
 	@Autowired
 	InstrumentReportService instrumentReportService;
+	@Autowired
+	ReportService reportService;
 	
 	// ========== 新增內校器具 ==========
 	@Override
@@ -482,7 +485,6 @@ public class InstrumentServiceImpl implements InstrumentService{
 
 		Set<Long> newPersonIds = new TreeSet<>(); // 宣告Set集合: 存放更新後人員的id
 		List<Instrument> instrumentDB = findInstrumentById(id);	 // 透過前端得到儀器id, 並取得該儀器的物件
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		
 		Optional<Instrument> instrumentOp = instrumentDB.stream() 
 				.filter(p -> p.getId().equals(id))
@@ -491,56 +493,9 @@ public class InstrumentServiceImpl implements InstrumentService{
 		if(instrumentOp.isPresent()){
 
 			Instrument updateInstrument = instrumentOp.get(); // 取得當前id的儀器
-			// ===== instrument update service =====
-			// ===== 取得當前儀器對應的data id的進行日期更新 =====
-			String befCalibrateDate = updateInstrument.getLast_calibrate_date().format(formatter); // 轉換字串格式
-			String afferCalibrateDate = request.getLast_calibrate_date().format(formatter);
 			
-			System.out.println("befCalibrateDate: " + befCalibrateDate);
-			System.out.println("afferCalibrateDate: " + afferCalibrateDate);
+			reportService.copyReportFile(updateInstrument, request); // 複製一份報告至更改後的日期
 			
-			// ========== 檔案處理 ==========
-	        String befYear = befCalibrateDate.substring(0, 4); // 提取年份
-	        String befMonth = befCalibrateDate.substring(5, 7); // 提取月份
-	        
-        	String afferYear = afferCalibrateDate.substring(0, 4); // 提取年份
-	        String afferMonth = afferCalibrateDate.substring(5, 7); // 提取月份
-	        
-	        String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, befCalibrateDate); // 取得報告名稱(透過器具id和校驗日期)
-	        
-            // 設定上傳檔案的儲存路徑
-	        String befPath = "I:/SpringBoot/uploadFiles/CalibrationReport/" + befYear + "/" + befMonth + "/" + fileName; // 指定文件路径
-        	String afferPath = "I:/SpringBoot/uploadFiles/CalibrationReport/" + afferYear + "/" + afferMonth + "/" + fileName; // 指定文件路径
-        	
-        	File dest = new File(afferPath);
-            
-            // 如果目錄不存在，則創建目錄
-            if (!dest.getParentFile().exists()) {
-                dest.getParentFile().mkdirs();
-            }
-        	
-        	// 源文件路徑
-            Path sourcePath = Paths.get(befPath);
-            // 目標文件路徑
-            Path targetPath = Paths.get(afferPath);
-                
-            try {
-            	Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING); // 複製文件
-                System.out.println("File copied successfully!");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-			
-			
-            // ===== 日期更新 =====
-			List<Long> reportIdByCalibrateDate = reportDao.findReportIdByCalibrateDate(id, befCalibrateDate); // 取得修改前日期下的data_id
-	
-			List<Report> reportList = reportDao.findByReportId(reportIdByCalibrateDate.get(0)); // 透過修改前的日期，取得該report物件
-			Report reportObj = reportList.get(0);
-		
-			reportObj.setCalibrate_date(afferCalibrateDate); // 設定修改後日期的data object
-			reportDao.save(reportObj); // 這裡使用 save 進行更新
-		
 			// 取得前端所選擇的週期及校驗月份，並進行資料整理
 			String cycle = request.getCycle().replaceAll("[^0-9]", "");  // 正規表示式("想要替換的字元", "替換後的字元")，將字串中不是字母、數字的字元，更換為空白字元
 			List<String> calibrate_month_list = request.getCalibrate_month();
@@ -662,6 +617,15 @@ public class InstrumentServiceImpl implements InstrumentService{
 	// ========== 刪除 ==========
 	@Override
 	public void deleteInstrumentById(Long id) {
+		
+		List<Long> reportIds = reportDao.findReportIdByInstrumentId(id);
+		// 檢查 reportIds 是否為空或 null，再決定是否執行刪除操作
+		if (reportIds != null && !reportIds.isEmpty()) {
+		    for (Long reportId : reportIds) {
+		        reportDao.deleteById(reportId); // 逐一刪除
+		    }
+		}
+		
 		instrumentDao.deleteById(id);
 	}
 	
@@ -695,7 +659,7 @@ public class InstrumentServiceImpl implements InstrumentService{
 		// TODO Auto-generated method stub
 		return instrumentDao.findInstrumentByLocalation();
 	}
-
+	
 	@Override
 	public List<Instrument> findByMultiple(List<String> monthList, List<String> cycleList, List<String> typeList, List<String> personList, List<String> localationList) {
 		

@@ -23,6 +23,7 @@ public interface InstrumentReportDao  extends JpaRepository<Report, Long>{
 	@Query(value = "SELECT DISTINCT r.report_name FROM instrument i " +
             "JOIN instrument_report ir ON i.instrument_id = ir.instrument_id " +
             "JOIN report r ON r.report_id = ir.report_id " +
-            "WHERE i.instrument_id = ?1 AND r.calibrate_date = ?2",  nativeQuery = true) 
+            "WHERE i.instrument_id = ?1 AND r.calibrate_date = ?2 " +
+            "ORDER BY r.report_id DESC LIMIT 1",  nativeQuery = true) 
 	String findReportNameByInstrumentIdAndDate(Long instrumentId, String calibrateDate); // 查詢報告名稱(透過器具id和校驗日期)
 }

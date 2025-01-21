@@ -1,5 +1,6 @@
 package chien.myweb.calibration.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -126,19 +127,19 @@ public class PersonController {
 	public ResponseEntity<Person> getPersonJobNumber(@PathVariable("jobnumber") String jobnumber){
 		
 		List<Person> personDB = personService.findJobnumber(jobnumber);	
-
+		
 		Optional<Person> personOp = personDB.stream()
 				.filter(p -> p.getJob_number().equals(jobnumber))
 				.findFirst();
 		
 		if(personOp.isPresent()){
 			Person person = personOp.get();
-			System.out.println(person.toString());
+			System.out.println("員工工號已被建立: " + person.toString());
 			return ResponseEntity.ok().body(person); 
 		}
 		else{
-			System.out.println("查詢不到人員工號");
-	        return ResponseEntity.notFound().build();
+			System.out.println("員工工號尚未建立，可以建立。");
+			return ResponseEntity.ok(null);
 	    }
 	}
 	
@@ -213,4 +214,23 @@ public class PersonController {
 	        return ResponseEntity.notFound().build();
 	    }
 	}
+	
+	@GetMapping("/person/checkLeader/{id}")  // 查詢該器具的校驗主管
+	public ResponseEntity<Map<String, String>> getCheckerLeaderName(@PathVariable("id") Long id) {
+		
+		Map<String, String> response = new HashMap<>(); // 前端如ajax如有設置dataType:"json"，必須包在Map裡面才是JSON結構
+		
+		String checkerLeader = personService.findCheckerLeaderByInstrumentId(id);
+		System.out.println("checkerLeader: " + checkerLeader);
+		if(checkerLeader != null && !checkerLeader.trim().isEmpty()){
+			response.put("checkerLeader", checkerLeader);
+			return ResponseEntity.ok().body(response); 
+		}
+		else{
+			System.out.println("沒有資料");
+			response.put("error", "沒有資料");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response); // httpstatus=500
+	    }
+	}
+	
 }

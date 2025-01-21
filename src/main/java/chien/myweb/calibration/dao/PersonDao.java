@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import chien.myweb.calibration.enity.Person;
 
@@ -61,5 +62,12 @@ public interface PersonDao extends JpaRepository<Person, Long>{
     
     @Query(value = "SELECT identity FROM persons WHERE person_id = ?1", nativeQuery = true)  //查詢身份 (by ID)
     String findIdentityByPersonId(Long id);
+    
+	@Query(value = "SELECT DISTINCT persons.username FROM persons " +
+            "JOIN instrument_person ON persons.person_id = instrument_person.person_id " +
+            "JOIN instrument ON instrument_person.instrument_id = instrument.instrument_id " +
+            "WHERE persons.identity = '校驗主管' AND instrument.instrument_id = ?1", 
+    nativeQuery = true) // 查詢該器具的校驗主管
+	String findCheckerLeaderByInstrumentId(Long id);
     
 }

@@ -152,12 +152,17 @@ public class PersonServiceImpl implements PersonService{
 	}
 	
 	@Override
+	public String findCheckerLeaderByInstrumentId(Long id) {
+		return personDao.findCheckerLeaderByInstrumentId(id);
+	}
+	
+	@Override
 	public Map<String, Set<String>> findPersonAllNoRepeat() {
 		
 		Map<String, Set<String>> personMap = new HashMap<>();
 		Set<String> usernameSet = new TreeSet<>(); // TreeSet: 不重複, 排序
 		Set<String> departmentSet = new TreeSet<>();
-		Set<String> identitySet = new HashSet<>(); // HasgSet: 不重複, 不排序
+		Set<String> identitySet = new HashSet<>(); // HashSet: 不重複, 不排序
 		
 		List<Person> persons = findPersonAll();
 		

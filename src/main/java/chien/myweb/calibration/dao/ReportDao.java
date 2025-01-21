@@ -1,6 +1,8 @@
 package chien.myweb.calibration.dao;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,6 +41,20 @@ public interface ReportDao  extends JpaRepository<Report, Long>{
     			"JOIN instrument_report ir ON r.report_id = ir.report_id " +
     			"JOIN instrument i ON ir.instrument_id = i.instrument_id " +
     			"WHERE ir.instrument_id = ?1 AND r.calibrate_date = ?2", nativeQuery = true) 
-    List<Long> findReportIdByCalibrateDate(Long instrument_id, String last_calibrate_date);
+    Optional<Long> findReportIdByCalibrateDate(Long instrument_id, String last_calibrate_date);
+    
+    // 查詢report object，透過instrument id 與 instrument.last_calibrate_date = data.calibrate_date
+    @Query(value = "SELECT r.* FROM report r " +
+    			"JOIN instrument_report ir ON r.report_id = ir.report_id " +
+    			"JOIN instrument i ON ir.instrument_id = i.instrument_id " +
+    			"WHERE ir.instrument_id = ?1 AND r.calibrate_date = ?2", nativeQuery = true) 
+    Optional<Report> findReportObjectByInstumentAndDate(Long instrument_id, String last_calibrate_date);
+    
+    // 查詢report的id，透過instrument id
+    @Query(value = "SELECT r.report_id FROM report r " +
+    			"JOIN instrument_report ir ON r.report_id = ir.report_id " +
+    			"JOIN instrument i ON ir.instrument_id = i.instrument_id " +
+    			"WHERE ir.instrument_id = ?1", nativeQuery = true) 
+    List<Long> findReportIdByInstrumentId(Long instrument_id);
 
 }

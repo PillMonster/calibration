@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: Dylanchien9342
+      MYSQL_DATABASE: calibration
+      MYSQL_USER: dylan
+      MYSQL_PASSWORD: Dylanchien9342
+    ports:
+      - "3307:3306"            # 将容器的3306端口映射到主机的3307端口
+    volumes:
+      - D:/mydata/mysql:/var/lib/mysql
+      - D:/mydata/mysql-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - my_network
+
+  springboot:
+    build:
+      context: .               # Dockerfile所在的上下文目录
+    container_name: calibration-container
+    ports:
+      - "8080:8080"            # 映射主机的8080端口到容器的8080端口
+    networks:
+      - my_network             # 连接到my_network网络
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/calibration?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: dylan
+      SPRING_DATASOURCE_PASSWORD: Dylanchien9342
+    depends_on:
+      - mysql                                  # 确保 MySQL 容器先启动
+
+networks:
+  my_network:
+    driver: bridge              # 使用bridge类型的网络
