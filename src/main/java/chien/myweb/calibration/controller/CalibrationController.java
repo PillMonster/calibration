@@ -205,7 +205,7 @@ public class CalibrationController {
 	
 	// ===== 新增內校數據 (執行校驗) =====
 	@PostMapping("/executeCalibrations") 
-	public ResponseEntity<?> executeCalibration(@RequestParam Long id, @RequestBody Data request){
+	public ResponseEntity<?> executeCalibration(@RequestBody Data request){
 			
 		System.out.println(request.toString());
 
