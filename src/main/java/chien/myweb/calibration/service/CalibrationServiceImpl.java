@@ -165,9 +165,9 @@ public class CalibrationServiceImpl implements CalibrationService{
 		return instrumentResultMap;	
 	}
 	
-	
+	// ========== 計算天數確認器具是否需要校驗 ==========
 	@Override
-	public List<Instrument> calCalibrateDate(List<Instrument> instrumentDB) {  // 計算天數確認器具是否需要校驗
+	public List<Instrument> calCalibrateDate(List<Instrument> instrumentDB) { 
 		
 		LocalDate currentDate = LocalDate.now(); // 獲取當前日期
         Month currentMonth = currentDate.getMonth();
@@ -216,24 +216,56 @@ public class CalibrationServiceImpl implements CalibrationService{
                 long daysBetween = ChronoUnit.DAYS.between(lastCalibrateDate, today);
                 long dayDifferenc = cycle - daysBetween ;
                 
-                //System.out.println("編號: " + number + ", 週期: " + cycle + "天, 上次校驗日今日相差: " + daysBetween + "天, 兩者相減: " + dayDifferenc);
+                System.out.println("編號: " + number + ", 週期: " + cycle + "天, 上次校驗日今日相差: " + daysBetween + "天, 兩者相減: " + dayDifferenc);
                 
                 // 檢查是否小於30天
                 boolean isOverdue = dayDifferenc <= 30 ;
                 
                 // 如果小於30天就回傳 true，否則回傳 false
                 if (isOverdue) {
-                	prep.setIs_calibration("N");
-                	prep.setIs_sign("N");
                     return isOverdue;
-                } else {
-                	
+                } else { 
                     return isOverdue;
                 }	
-            				
+            			
             })
             .collect(Collectors.toList());	// 如果器具有超過週期，將結果轉換成集合資料
 		return prepInstrument;	
+	}
+	
+	// ========== 查詢單一器具校驗天數是否小於30天，如果有代表需要校驗 ==========
+	@Override
+	public boolean is_calibrate(Instrument instrument) { 
+		
+		LocalDate currentDate = LocalDate.now(); // 獲取當前日期
+        Month currentMonth = currentDate.getMonth();
+        int currentMonthValue = currentMonth.getValue();
+        System.out.println("當前月份為: " + currentMonthValue);
+
+        	// ========== 方法2: 透過上次校驗日期與現在日期, 判斷相差是否大於週期 ==========	
+        	String number = instrument.getNumber(); // 取得此儀器的編號
+        	LocalDate lastCalibrateDate = instrument.getLast_calibrate_date(); // 取得此儀器的上次校驗日期
+        	Long cycle =  Long.parseLong(instrument.getCycle()) * 30; // 取得此儀器的校驗週期
+        	
+            // 計算日期相差的月份
+            //long monthsDifference = ChronoUnit.MONTHS.between(lastCalibrateDate, currentDate);
+            //System.out.println("儀器 " + number + " 的上次校驗日期與現在日期相差 " + monthsDifference + " 個月");
+            
+            LocalDate today = LocalDate.now();
+            long daysBetween = ChronoUnit.DAYS.between(lastCalibrateDate, today);
+            long dayDifferenc = cycle - daysBetween ;
+            
+            //System.out.println("編號: " + number + ", 週期: " + cycle + "天, 上次校驗日今日相差: " + daysBetween + "天, 兩者相減: " + dayDifferenc);
+            
+            // 檢查是否小於30天
+            boolean isOverdue = dayDifferenc <= 30 ;
+            
+            // 如果小於30天就回傳 true，否則回傳 false
+            if (isOverdue) {	
+                return isOverdue;
+            } else { 
+                return isOverdue;
+            }	
 	}
 	
 	// ========== 查詢待校驗器具 ==========

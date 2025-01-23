@@ -15,6 +15,8 @@ public interface CalibrationService{
 	List<Instrument> findPrepInstruments(); // 查詢待校驗器具
 	
 	List<Instrument> calCalibrateDate(List<Instrument> instrumentDB); // 計算天數確認器具是否需要校驗
+	
+	boolean is_calibrate(Instrument instrument);// ========== 查詢單一器具校驗天數是否小於30天，如果有代表需要校驗 ========== 
 
 	List<Instrument> findPrepSignInstrument(); // 查詢待簽核器具 
 

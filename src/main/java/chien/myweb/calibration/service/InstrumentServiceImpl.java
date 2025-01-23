@@ -308,7 +308,13 @@ public class InstrumentServiceImpl implements InstrumentService{
 			updateInstrument.setCalibrate_month(calibrate_month);
 			updateInstrument.setLast_calibrate_date(request.getLast_calibrate_date());
 			updateInstrument.setMother_instrument_number(request.getMother_instrument_number());
-		
+
+			// ===== 取得該器具校驗天數是否小於30天，將is_calibration和is_sign初始設定為"N" =====
+			boolean lessThan30Days = calibrationService.is_calibrate(updateInstrument);
+			if (lessThan30Days) {
+				updateInstrument.setIs_calibration("N");
+				updateInstrument.setIs_sign("N");
+			}
 			
 			// ===== person update service =====
 			// 取得該儀器當前的person id
@@ -513,7 +519,14 @@ public class InstrumentServiceImpl implements InstrumentService{
 			updateInstrument.setCalibrate_month(calibrate_month);
 			updateInstrument.setLast_calibrate_date(request.getLast_calibrate_date());
 			updateInstrument.setMother_instrument_number(request.getMother_instrument_number());
-	
+			
+			// ===== 取得該器具校驗天數是否小於30天，將is_calibration和is_sign初始設定為"N" =====
+			boolean lessThan30Days = calibrationService.is_calibrate(updateInstrument);
+			if (lessThan30Days) {
+				updateInstrument.setIs_calibration("N");
+				updateInstrument.setIs_sign("N");
+			}
+			
 			// ===== person update service =====
 			// 取得該儀器當前的person id
 			Set<Long> currentPersonIds = updateInstrument.getPersons().stream()

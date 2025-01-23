@@ -405,7 +405,7 @@ public class CalibrationController {
 	public ResponseEntity<?> executeSign(@PathVariable("id") Long id){
 		
 		List<Instrument> instrumentDB = instrumentService.findInstrumentById(id);	 // 透過前端得到儀器id, 並取得該儀器的物件
-		
+	
 		Optional<Instrument> instrumentOp = instrumentDB.stream() 
 				.filter(p -> p.getId().equals(id))
 				.findFirst();
