@@ -71,7 +71,9 @@ public class CalibrationController {
         String month = date.substring(5, 7); // 提取月份
         //System.out.println("year:" + year + "  ,month: " + month);
 		
-		String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 查詢報告名稱(透過器具id和校驗日期)
+        Report reportObj = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 取得該報告的物件(透過器具id和校驗日期)
+	    String fileName = reportObj.getReport_name(); // 取得報告名稱
+
 		System.out.println("file name: " + fileName);
 		String filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + fileName;  // 指定文件路径
 
@@ -117,8 +119,9 @@ public class CalibrationController {
         String month = date.substring(5, 7); // 提取月份
         //System.out.println("year:" + year + "  ,month: " + month);
 		
-		String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 查詢報告名稱(透過器具id和校驗日期)
-
+        Report reportObj = instrumentReportService.findReportNameByInstrumentIdAndDate(id, date); // 取得該報告的物件(透過器具id和校驗日期)
+	    String fileName = reportObj.getReport_name(); // 取得報告名稱
+	    
 		String filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + fileName;  // 指定文件路径
        
         File file = new File(filePath);

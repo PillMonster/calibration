@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import chien.myweb.calibration.dao.InstrumentReportDao;
 import chien.myweb.calibration.dao.InstrumentSpecDataDao;
+import chien.myweb.calibration.enity.Report;
 
 @Service
 public class InstrumentReportServiceImpl implements InstrumentReportService{
@@ -28,7 +29,7 @@ public class InstrumentReportServiceImpl implements InstrumentReportService{
 	}
 	
 	@Override
-	public String findReportNameByInstrumentIdAndDate(Long instrumentId, String calibrateDate) { // 查詢報告名稱(透過器具id和校驗日期)
+	public Report findReportNameByInstrumentIdAndDate(Long instrumentId, String calibrateDate) { // 查詢報告名稱(透過器具id和校驗日期)
 		return instrumentReportDao.findReportNameByInstrumentIdAndDate(instrumentId, calibrateDate);
 	}
 }

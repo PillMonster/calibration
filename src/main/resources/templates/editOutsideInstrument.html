@@ -415,7 +415,7 @@
     		    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
     		    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
     		    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
-    		    	console.log(response)
+    		    	console.log("11");
     		    	updataReport(); // 更新校驗報告
     		    	alert("器具更新成功!!");
     		    },
@@ -454,16 +454,17 @@
         	fileName = files[0].name;
         	if (isReport === "n") {
         		url = "/calibration/upload"; // 如果一開始沒有校驗報告，進行上傳檔案
-        		//console.log("如果一開始沒有校驗報告，進行上傳檔案");
+        		console.log("如果一開始沒有校驗報告，進行上傳檔案");
         	}
         	else{
         		url = "/crud/updataReportFile"; // 一開始有校驗報告檔案，上傳檔案進行更新(報告也更新)
-        		//console.log("一開始有校驗報告檔案，上傳檔案進行更新(報告也更新)");
+        		console.log("一開始有校驗報告檔案，上傳檔案進行更新(報告也更新)");
         	}
         }
         else {
+        	console.log("一開始有校驗報告檔案，無上傳檔案進行更新");
         	url = "/crud/updataReport";	 // 一開始有校驗報告檔案，無上傳檔案進行更新
-        	//console.log("一開始有校驗報告檔案，無上傳檔案進行更新");
+        	
         }
         
 		var calibrationData = {	
@@ -493,10 +494,10 @@
             contentType: false,
 		    data: formData, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
 		    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
-		    	console.log(response)
+		    	console.log("22");
 		    },
 		    error: function(xhr, status, error) {
-		
+		    	console.log("33");
 		    }
 	  	});
 	}

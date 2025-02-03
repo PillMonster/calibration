@@ -175,7 +175,8 @@ public class ReportServiceImpl implements ReportService{
 		String afferYear = afferCalibrateDate.substring(0, 4); // 提取年份
 	    String afferMonth = afferCalibrateDate.substring(5, 7); // 提取月份
 	    
-	    String fileName = instrumentReportService.findReportNameByInstrumentIdAndDate(instrument.getId(), befCalibrateDate); // 取得報告名稱(透過器具id和校驗日期)
+	    Report obj = instrumentReportService.findReportNameByInstrumentIdAndDate(instrument.getId(), befCalibrateDate); // 取得該報告的物件(透過器具id和校驗日期)
+	    String fileName = obj.getReport_name(); // 取得報告名稱
 	    
 	    // 設定上傳檔案的儲存路徑
 	    String befPath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + befYear + "/" + befMonth + "/" + fileName; // 指定文件路径
