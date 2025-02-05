@@ -31,6 +31,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import chien.myweb.calibration.dao.ReportDao;
 import chien.myweb.calibration.enity.Data;
 import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.Person;
@@ -60,6 +61,8 @@ public class CalibrationController {
 	InstrumentPersonService instrumentPersonService;
 	@Autowired
 	InstrumentReportService instrumentReportService;
+	@Autowired
+	ReportDao reportDao;
 	
 	//  ===== 在瀏覽器中查看pdf =====
 	@GetMapping("/view")
@@ -161,13 +164,19 @@ public class CalibrationController {
 		
 		if (report != null) { // 檢查 report 是否為空值
 			
-			String calibrate_date = report.getCalibrate_date();
+			String calibrate_date = report.getCalibrate_date(); // 取得器具校驗日期
 	        year = calibrate_date.substring(0, 4); // 提取年份
 	        month = calibrate_date.substring(5, 7); // 提取月份
 	        //System.out.println("year:" + year + "  ,month: " + month);
 	        
-	        reportService.addReport(report); // 新增一筆報告紀錄
+	        boolean isUpdated = reportService.updataReport(report);
 	        
+	        if (isUpdated) {
+				System.out.println("校驗報告已成功更新。");
+	        } else {
+	        	System.out.println("資料庫中找不到對應的報告資訊，新建一份報告資訊，存入資料庫。");
+	        }
+  
 		}
 		else {
 			String message = "資料庫沒有紀錄或資料輸入錯誤，請再重新確認。" ;
@@ -183,7 +192,7 @@ public class CalibrationController {
         	try {
                 // 設定上傳檔案的儲存路徑
             	filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + file.getOriginalFilename(); // 指定文件路径
-            	System.out.println("filePath: " + filePath);
+            	//System.out.println("filePath: " + filePath);
                 File dest = new File(filePath);
                 
                 // 如果目錄不存在，則創建目錄
@@ -281,7 +290,7 @@ public class CalibrationController {
 		
 		if (instrumentOp.isPresent()) {
 			
-			instrumentDB.forEach(item -> System.out.println(item.toString()));
+			//instrumentDB.forEach(item -> System.out.println(item.toString()));
 			
 			return ResponseEntity.ok().body(instrumentDB);
 		}

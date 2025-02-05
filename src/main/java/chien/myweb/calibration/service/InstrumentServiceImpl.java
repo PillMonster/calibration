@@ -498,10 +498,8 @@ public class InstrumentServiceImpl implements InstrumentService{
 		
 		if(instrumentOp.isPresent()){
 
-			Instrument updateInstrument = instrumentOp.get(); // 取得當前id的儀器
-			
-			reportService.copyReportFile(updateInstrument, request); // 複製一份報告至更改後的日期
-			
+			Instrument updateInstrument = instrumentOp.get(); // 取得當前id的儀器	
+
 			// 取得前端所選擇的週期及校驗月份，並進行資料整理
 			String cycle = request.getCycle().replaceAll("[^0-9]", "");  // 正規表示式("想要替換的字元", "替換後的字元")，將字串中不是字母、數字的字元，更換為空白字元
 			List<String> calibrate_month_list = request.getCalibrate_month();

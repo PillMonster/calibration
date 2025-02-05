@@ -164,7 +164,6 @@
 		var identity = "";
 		var befCalibrationDate = "";
 		var afterCalibrationDate = "";
-		var isReport = ""
 	    
 	 	// 向後端取得session的值
 	 	$.ajax({
@@ -307,12 +306,10 @@
 			    	document.getElementById("reportNo").value = data.report_no;
 			    	document.getElementById("taf").value = data.is_taf;
 			    	document.getElementById("result").value = data.result;
-			    	isReport = "y";
     	
 			    },
 			    error :function(errorMsg) {
 			        console.log(instrumentList[0].number + " 無校驗報告。");
-			        isReport = "n";
 		    	}
 	    	});
 	        
@@ -349,7 +346,7 @@
     	if ( identity == "校驗人員") { 
     		
     		event.preventDefault();// 如果需要阻止實際的表單提交，可以取消事件
-    		
+    		updataReport(); // 更新校驗報告
     		var jsonArray = new Array();
     		var calibrate_month = new Array(); // 建立初始陣列, 存放選取後的校驗月份
     	    var spec = new Array();
@@ -377,7 +374,7 @@
             		calibrate_month.push(monthChecks[i].value);
             	}
             }
-    		console.log("選取的校驗月份: " + calibrate_month);
+    		//console.log("選取的校驗月份: " + calibrate_month);
     	    
     	    var custos = document.getElementById("custos").value;
     	    var custosLeader = document.getElementById("custosLeader").value;
@@ -403,8 +400,7 @@
     		};
     	    
      		jsonString = JSON.stringify(instrumentData) //轉成json格式
-        	//console.log(jsonString);
-     		
+        	//console.log(jsonString);		
     	    
     	    $.ajax({
     		    type: "PUT", // 後端的要有標註PutMapping的方法
@@ -415,8 +411,7 @@
     		    dateType: "json", // 前端接收資料格式 (後端需有標註@ResponseBody)
     		    data: jsonString, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
     		    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
-    		    	console.log("11");
-    		    	updataReport(); // 更新校驗報告
+ 
     		    	alert("器具更新成功!!");
     		    },
     		    error: function(xhr, status, error) {
@@ -452,17 +447,11 @@
      	// 判斷是否有內容
         if (files.length > 0) {
         	fileName = files[0].name;
-        	if (isReport === "n") {
-        		url = "/calibration/upload"; // 如果一開始沒有校驗報告，進行上傳檔案
-        		console.log("如果一開始沒有校驗報告，進行上傳檔案");
-        	}
-        	else{
-        		url = "/crud/updataReportFile"; // 一開始有校驗報告檔案，上傳檔案進行更新(報告也更新)
-        		console.log("一開始有校驗報告檔案，上傳檔案進行更新(報告也更新)");
-        	}
+        	url = "/calibration/upload"; // 如果一開始沒有校驗報告，進行上傳檔案
+    		console.log("上傳檔案及更新檔案，且也更新器具資訊");
         }
         else {
-        	console.log("一開始有校驗報告檔案，無上傳檔案進行更新");
+        	console.log("一開始無校驗報告檔案，只更新器具及報告資訊");
         	url = "/crud/updataReport";	 // 一開始有校驗報告檔案，無上傳檔案進行更新
         	
         }
@@ -494,10 +483,10 @@
             contentType: false,
 		    data: formData, // 後端接收資料格式 (後端接收參數需有標註@RequestBody)
 		    success: function(response) { // 如果傳送成功或失敗，會接收後端傳來的訊息(訊息包含Exception)
-		    	console.log("22");
+		    	//console.log(response);
 		    },
 		    error: function(xhr, status, error) {
-		    	console.log("33");
+		    	console.log(xhr.responseText);
 		    }
 	  	});
 	}

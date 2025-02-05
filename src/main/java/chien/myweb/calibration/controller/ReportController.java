@@ -23,7 +23,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import chien.myweb.calibration.enity.Data;
+import chien.myweb.calibration.enity.Instrument;
 import chien.myweb.calibration.enity.Report;
+import chien.myweb.calibration.service.InstrumentService;
 import chien.myweb.calibration.service.ReportService;
 
 @RestController
@@ -32,6 +34,8 @@ public class ReportController {
 	
 	@Autowired
 	ReportService reportService;
+	@Autowired
+	InstrumentService instrumentService;
 	
 	
 	// ===== 更新校驗報告資訊 (檔案無上傳的情況下) =====
@@ -45,10 +49,10 @@ public class ReportController {
 		boolean isUpdated = reportService.updataReport(report);
 
 		if (isUpdated) {
-			System.out.println("校驗報告已成功更新。");
-            return ResponseEntity.status(HttpStatus.OK).body("校驗報告已成功更新。");
+			System.out.println("校驗報告資訊已成功更新。");
+            return ResponseEntity.status(HttpStatus.OK).body("校驗報告資訊已成功更新。");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("未找到對應的報告，更新失敗。");
+            return ResponseEntity.status(HttpStatus.OK).body("資料庫中找不到對應的報告資訊。");
         }
     }
 	
@@ -75,8 +79,9 @@ public class ReportController {
 	        isUpdated = reportService.updataReportFile(report);
 		}   
 
-		if (isUpdated) {
-			
+		if (isUpdated) { // true=資料庫內有該器具的報告資訊
+
+			// ===== 檔案上傳 =====
 			try {
                 // 設定上傳檔案的儲存路徑
             	filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + file.getOriginalFilename(); // 指定文件路径
@@ -90,17 +95,17 @@ public class ReportController {
                 // 將檔案寫入目的地
                 file.transferTo(dest);
  
-                String message = "校驗報告 " + file.getOriginalFilename() + " 已更新成功!。";
+                String message = "校驗報告 " + file.getOriginalFilename() + " 已上傳(更新)成功!。";
     	    	System.out.println(message);
     	    	return ResponseEntity.ok().body(message);
 
             } catch (IOException e) {
                 e.printStackTrace();
-                String message = "檔案上傳失敗，請再重新確認。" ;
+                String message = "檔案已上傳(更新)失敗，請再重新確認。" ;
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
             }       	
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("未找到對應的報告，更新失敗。");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("未找到對應的報告，更新失敗。");
         }
     }
 	

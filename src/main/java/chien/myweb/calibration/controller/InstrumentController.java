@@ -186,15 +186,18 @@ public class InstrumentController {
 		
 		if (instrumentOp.isPresent()) {
 			
-			instrumentDB.forEach(item -> System.out.println(item.toString()) );
+			//instrumentDB.forEach(item -> System.out.println(item.toString()) );
 			
+			// ===== 取得所有器具對應的規格 =====
 			/*for(Instrument instrument : instrumentDB) {
 				List<Spec> specObj = instrument.getSpec();
 				System.out.println("spec:" + specObj);
 			}*/
-			Instrument instrument = instrumentDB.get(0);
+			
+			// ===== 取得第一個器具對應的規格 =====
+			/*Instrument instrument = instrumentDB.get(0);
 			List<Spec> specObj = instrument.getSpec();
-			System.out.println("spec:" + specObj);
+			System.out.println("spec:" + specObj);*/
 			
 			return ResponseEntity.ok().body(instrumentDB);
 		}

@@ -49,7 +49,5 @@ public interface ReportService {
 	// 查詢report的id，透過instrument id
 	List<Long> findReportIdByInstrumentId(Long instrument_id);
 	
-	// 複製檔案
-	void copyReportFile(Instrument instrument, RequestData request);
 
 }

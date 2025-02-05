@@ -168,7 +168,7 @@ public class PersonController {
 		
 		if(personOp.isPresent()){
 			
-			personDB.forEach(item -> System.out.println(item.toString()));
+			//personDB.forEach(item -> System.out.println(item.toString()));
 			
 			return ResponseEntity.ok().body(personDB); 
 		}
