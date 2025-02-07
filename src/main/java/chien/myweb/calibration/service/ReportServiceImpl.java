@@ -97,8 +97,8 @@ public class ReportServiceImpl implements ReportService{
 		return newReport;
 	}
 
-	// ========== 更新 ==========
-	@Override
+	// ========== 行更新 ==========
+	/*@Override
 	public boolean updataReport(Report request) {
 		
 		String calibrate_date = "";
@@ -133,17 +133,18 @@ public class ReportServiceImpl implements ReportService{
 			return true;
         }
 		else {	
-			addReport(request);
+			//addReport(request);
 			return false;
 		}
-	}
+	}*/
 	
 	// ========== 更新 ==========
 	@Override
-	public boolean updataReportFile(Report request) {
+	public boolean updataReport(Report request, boolean isfile) {
 		
 		String calibrate_date = "";
-		
+		boolean isFile = isfile;
+		System.out.println("isFile: " + isFile);
 		Long instrumentId = request.getId();
 		List<Instrument> instrumentDB = instrumentDao.findByInstrumentId(instrumentId);
 		Optional<Instrument> instrumentOp = instrumentDB.stream() 
@@ -162,11 +163,16 @@ public class ReportServiceImpl implements ReportService{
 		if (reportOpt.isPresent()) {
 	
 			Report reportObj = reportOpt.get();
-			System.out.println("reportObj: " + reportObj);
-			//System.out.println("修改前的日期: " + request.getCalibrate_date());
-
 			reportObj.setReport_no(request.getReport_no());
-			reportObj.setReport_name(request.getReport_name());
+			
+			if (isFile == true) {
+				System.out.println("外校器具編輯下，有上傳報告");
+				reportObj.setReport_name(request.getReport_name());
+			}
+			else {
+				System.out.println("外校器具編輯下，無上傳報告");
+			}
+			
 			reportObj.setResult(request.getResult());
 			reportObj.setCalibrate_date(request.getCalibrate_date());
 			reportObj.setIs_taf(request.getIs_taf());
@@ -233,5 +239,4 @@ public class ReportServiceImpl implements ReportService{
 		// TODO Auto-generated method stub
 		return reportDao.findReportIdByInstrumentId(instrument_id);
 	}
-
 }

@@ -153,7 +153,6 @@ public class CalibrationController {
             								  @RequestParam("file") MultipartFile file) throws JsonMappingException, JsonProcessingException {
 		
 		System.out.println("Received JSON: " + request);		
-
 		// ========== 前端取得資料前處理 ========
 		String year = "";
 		String month = "";
@@ -169,12 +168,72 @@ public class CalibrationController {
 	        month = calibrate_date.substring(5, 7); // 提取月份
 	        //System.out.println("year:" + year + "  ,month: " + month);
 	        
-	        boolean isUpdated = reportService.updataReport(report);
+	        List<Report> newReport = reportService.addReport(report); // 新增一筆校驗報告
+
+		}
+		else {
+			String message = "資料庫沒有紀錄或資料輸入錯誤，請再重新確認。" ;
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+		}
+		
+		// ========== 檔案處理 ========
+		if (file.isEmpty()) { // 如果檔案不存在
+			String message = "請選擇一個檔案來上傳";	
+            return ResponseEntity.ok().body(message);
+            
+        }else {
+        	try {
+                // 設定上傳檔案的儲存路徑
+            	filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + file.getOriginalFilename(); // 指定文件路径
+            	//System.out.println("filePath: " + filePath);
+                File dest = new File(filePath);
+                
+                // 如果目錄不存在，則創建目錄
+                if (!dest.getParentFile().exists()) {
+                    dest.getParentFile().mkdirs();
+                }
+                // 將檔案寫入目的地
+                file.transferTo(dest);
+ 
+                String message = "檔案 " + file.getOriginalFilename() + " 上傳成功，已新增一筆校驗報告!";
+    	    	System.out.println(message);
+    	    	return ResponseEntity.ok().body(message);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                String message = "檔案上傳失敗，請再重新確認。" ;
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+            }       	
+        }     
+		//return null;
+    }
+	
+	/*@PostMapping("/upload/updata")
+    public ResponseEntity<?> handleFileUploadUpdata(@RequestParam("jsonString") String request,
+            								  @RequestParam("file") MultipartFile file) throws JsonMappingException, JsonProcessingException {
+		
+		System.out.println("Received JSON: " + request);		
+		// ========== 前端取得資料前處理 ========
+		String year = "";
+		String month = "";
+		String filePath = "";
+		
+		ObjectMapper objectMapper = new ObjectMapper(); // 用於將 JSON 資料與 Java 物件之間進行相互轉換
+		Report report = objectMapper.readValue(request, Report.class); // request 中讀取 JSON 數據，指定了目標類型，即將 JSON 資料反序列化為 Report 類別的實例
+		
+		if (report != null) { // 檢查 report 是否為空值
+			
+			String calibrate_date = report.getCalibrate_date(); // 取得器具校驗日期
+	        year = calibrate_date.substring(0, 4); // 提取年份
+	        month = calibrate_date.substring(5, 7); // 提取月份
+	        //System.out.println("year:" + year + "  ,month: " + month);
+	        
+	        //boolean isUpdated = reportService.updataReport(report); // 更新當前的校驗報告
 	        
 	        if (isUpdated) {
 				System.out.println("校驗報告已成功更新。");
 	        } else {
-	        	System.out.println("資料庫中找不到對應的報告資訊，新建一份報告資訊，存入資料庫。");
+	        	System.out.println("資料庫中找不到對應的報告資訊。幫您新建一份報告資訊，存入資料庫。");
 	        }
   
 		}
@@ -202,18 +261,18 @@ public class CalibrationController {
                 // 將檔案寫入目的地
                 file.transferTo(dest);
  
-                String message = "檔案 " + file.getOriginalFilename() + " 上傳成功，已新增一筆校驗紀錄!";
+                String message = "檔案 " + file.getOriginalFilename() + " 上傳成功，已更新一筆校驗報告!";
     	    	System.out.println(message);
     	    	return ResponseEntity.ok().body(message);
 
             } catch (IOException e) {
                 e.printStackTrace();
-                String message = "檔案上傳失敗，請再重新確認。" ;
+                String message = "檔案更新失敗，請再重新確認。" ;
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
             }       	
         }     
 		//return null;
-    }
+    }*/
 	
 	// ===== 新增內校數據 (執行校驗) =====
 	@PostMapping("/executeCalibrations") 

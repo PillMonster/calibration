@@ -41,12 +41,15 @@ public class ReportController {
 	// ===== 更新校驗報告資訊 (檔案無上傳的情況下) =====
 	@PostMapping("/updataReport")
     public ResponseEntity<String> updateReport(@RequestParam("jsonString") String request) throws JsonMappingException, JsonProcessingException {
+
+		boolean isFile = false;
 		
 		System.out.println("request: " + request);
 		ObjectMapper objectMapper = new ObjectMapper(); // 用於將 JSON 資料與 Java 物件之間進行相互轉換
 		Report report = objectMapper.readValue(request, Report.class); // request 中讀取 JSON 數據，指定了目標類型，即將 JSON 資料反序列化為 Report 類別的實例
 		
-		boolean isUpdated = reportService.updataReport(report);
+		
+		boolean isUpdated = reportService.updataReport(report, isFile);
 
 		if (isUpdated) {
 			System.out.println("校驗報告資訊已成功更新。");
@@ -64,7 +67,8 @@ public class ReportController {
 		String year = "";
 		String month = "";
 		String filePath = "";
-		boolean isUpdated = false;
+		boolean isUpdated = true;
+		boolean isFile = true;
 		
 		System.out.println("request: " + request);
 		ObjectMapper objectMapper = new ObjectMapper(); // 用於將 JSON 資料與 Java 物件之間進行相互轉換
@@ -76,7 +80,7 @@ public class ReportController {
 	        year = calibrate_date.substring(0, 4); // 提取年份
 	        month = calibrate_date.substring(5, 7); // 提取月份
 	        //System.out.println("year:" + year + "  ,month: " + month);
-	        isUpdated = reportService.updataReportFile(report);
+	        isUpdated = reportService.updataReport(report, isFile);
 		}   
 
 		if (isUpdated) { // true=資料庫內有該器具的報告資訊

@@ -17,10 +17,10 @@ public interface ReportService {
 	List<Report> addReport(Report request);
 	
 	// 更新(file)
-	boolean updataReportFile(Report request);
+	//boolean updataReportFile(Report request);
 	
 	// 更新
-	boolean updataReport(Report request);
+	boolean updataReport(Report request, boolean isfile);
 	
 	//單一查詢 (by ID)
     List<Report> findByReportId(Long id);
