@@ -448,10 +448,10 @@
         if (files.length > 0) {
         	fileName = files[0].name;
         	url = "/crud/updataReportFile"; // 如果一開始沒有校驗報告，進行上傳檔案
-    		console.log("上傳檔案及更新檔案，且也更新器具資訊");
+    		console.log("進行上傳或更新檔案，且也更新器具資訊。");
         }
         else {
-        	console.log("一開始無校驗報告檔案，只更新器具及報告資訊");
+        	console.log("只更新器具及報告資訊，無上傳檔案。");
         	url = "/crud/updataReport";	 // 一開始有校驗報告檔案，無上傳檔案進行更新
         	
         }

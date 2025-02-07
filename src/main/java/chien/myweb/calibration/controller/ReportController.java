@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,17 +38,18 @@ public class ReportController {
 	@Autowired
 	InstrumentService instrumentService;
 	
+	@Value("${spring.file.storage.base}")
+	private String storageBase;
 	
 	// ===== 更新校驗報告資訊 (檔案無上傳的情況下) =====
 	@PostMapping("/updataReport")
     public ResponseEntity<String> updateReport(@RequestParam("jsonString") String request) throws JsonMappingException, JsonProcessingException {
 
-		boolean isFile = false;
+		boolean isFile = false; // 沒有上傳檔案，設定為false
 		
-		System.out.println("request: " + request);
+		System.out.println("file request: " + request);
 		ObjectMapper objectMapper = new ObjectMapper(); // 用於將 JSON 資料與 Java 物件之間進行相互轉換
 		Report report = objectMapper.readValue(request, Report.class); // request 中讀取 JSON 數據，指定了目標類型，即將 JSON 資料反序列化為 Report 類別的實例
-		
 		
 		boolean isUpdated = reportService.updataReport(report, isFile);
 
@@ -67,10 +69,10 @@ public class ReportController {
 		String year = "";
 		String month = "";
 		String filePath = "";
-		boolean isUpdated = true;
-		boolean isFile = true;
+		boolean isUpdated = false; 
+		boolean isFile = true; // 上傳檔案，設定為true
 		
-		System.out.println("request: " + request);
+		System.out.println("file request: " + request);
 		ObjectMapper objectMapper = new ObjectMapper(); // 用於將 JSON 資料與 Java 物件之間進行相互轉換
 		Report report = objectMapper.readValue(request, Report.class); // request 中讀取 JSON 數據，指定了目標類型，即將 JSON 資料反序列化為 Report 類別的實例
 
@@ -88,8 +90,10 @@ public class ReportController {
 			// ===== 檔案上傳 =====
 			try {
                 // 設定上傳檔案的儲存路徑
-            	filePath = "D:/SpringBoot/uploadFiles/CalibrationReport/" + year + "/" + month + "/" + file.getOriginalFilename(); // 指定文件路径
-            	System.out.println("filePath: " + filePath);
+				String fileName = file.getOriginalFilename();
+				
+				filePath = storageBase + year + "/" + month + "/" + fileName; // 指定文件路径
+            	//System.out.println("filePath: " + filePath);
                 File dest = new File(filePath);
                 
                 // 如果目錄不存在，則創建目錄

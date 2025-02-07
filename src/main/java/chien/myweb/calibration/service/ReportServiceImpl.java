@@ -47,6 +47,7 @@ public class ReportServiceImpl implements ReportService{
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		
+		// ===== 新增報告至資料庫 =====
 		List<Report> newReport = new ArrayList<>();	// 用來存放更新後的數據初始List
 	
 		int createResult = 0; // 創建結果初始值(新增儀器、報告的關聯紀錄)	
@@ -59,12 +60,14 @@ public class ReportServiceImpl implements ReportService{
 		report.setResult(request.getResult());
 		
 		reportDao.save(report); // 存入資料庫
+		System.out.println("校驗報告已新增。");
+		
 		newReport.add(report); // 將物件傳入list，用來傳回前端
 		
+		// ===== 新增儀器、報告的關聯紀錄=====
 		Long instrumentId = request.getId(); 
 		Long reportId = report.getId();
-			
-		// 新增儀器、報告的關聯紀錄
+
 		createResult = instrumentReportDao.addInstrumentAndReport(instrumentId, reportId); 	
 
 		// ===== 更新上次校驗日期 =====
@@ -96,47 +99,6 @@ public class ReportServiceImpl implements ReportService{
 		
 		return newReport;
 	}
-
-	// ========== 行更新 ==========
-	/*@Override
-	public boolean updataReport(Report request) {
-		
-		String calibrate_date = "";
-		
-		Long instrumentId = request.getId();
-		List<Instrument> instrumentDB = instrumentDao.findByInstrumentId(instrumentId);
-		Optional<Instrument> instrumentOp = instrumentDB.stream() 
-				.filter(p -> p.getId().equals(instrumentId))
-				.findFirst();
-		
-		if(instrumentOp.isPresent()){
-			Instrument instrumentObj = instrumentOp.get(); // 取得當前id的儀器
-			
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			calibrate_date = instrumentObj.getLast_calibrate_date().format(formatter);
-		}	
-
-		Optional<Report> reportOpt = reportDao.findReportObjectByInstumentAndDate(instrumentId, calibrate_date);
-		
-		if (reportOpt.isPresent()) {
-	
-			Report reportObj = reportOpt.get();
-			System.out.println("reportObj: " + reportObj);
-			//System.out.println("修改前的日期: " + request.getCalibrate_date());
-			reportObj.setReport_no(request.getReport_no());
-			//reportObj.setReport_name(request.getReport_name());
-			reportObj.setCalibrate_date(request.getCalibrate_date());
-			reportObj.setIs_taf(request.getIs_taf());
-			reportObj.setResult(request.getResult());
-			
-			reportDao.save(reportObj); // 這裡使用 save 進行更新
-			return true;
-        }
-		else {	
-			//addReport(request);
-			return false;
-		}
-	}*/
 	
 	// ========== 更新 ==========
 	@Override
@@ -144,7 +106,7 @@ public class ReportServiceImpl implements ReportService{
 		
 		String calibrate_date = "";
 		boolean isFile = isfile;
-		System.out.println("isFile: " + isFile);
+	
 		Long instrumentId = request.getId();
 		List<Instrument> instrumentDB = instrumentDao.findByInstrumentId(instrumentId);
 		Optional<Instrument> instrumentOp = instrumentDB.stream() 
@@ -166,11 +128,11 @@ public class ReportServiceImpl implements ReportService{
 			reportObj.setReport_no(request.getReport_no());
 			
 			if (isFile == true) {
-				System.out.println("外校器具編輯下，有上傳報告");
+				System.out.println("進行外校器具編輯，有上傳報告");
 				reportObj.setReport_name(request.getReport_name());
 			}
 			else {
-				System.out.println("外校器具編輯下，無上傳報告");
+				System.out.println("進行外校器具編輯，無上傳報告");
 			}
 			
 			reportObj.setResult(request.getResult());
@@ -185,7 +147,6 @@ public class ReportServiceImpl implements ReportService{
 		}
 	
 	}
-
 
 	@Override
 	public List<Report> findByReportId(Long id) {
