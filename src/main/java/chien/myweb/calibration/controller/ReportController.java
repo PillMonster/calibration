@@ -117,7 +117,6 @@ public class ReportController {
         }
     }
 	
-	
 	@GetMapping("/report/{id}")  
 	public ResponseEntity<?> getReportById(@PathVariable("id") Long id){
 		
