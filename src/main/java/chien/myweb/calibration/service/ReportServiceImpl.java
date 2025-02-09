@@ -86,6 +86,7 @@ public class ReportServiceImpl implements ReportService{
 
 				updateInstrument.setLast_calibrate_date(calibrate_date); // 設定該物件的校驗日期
 				updateInstrument.setIs_calibration("Y"); // 設定該物件已校驗完成
+				updateInstrument.setIs_sign("N"); // 設定該物件待簽核
 				
 				instrumentDao.save(updateInstrument); // 更新資料庫			
 			}
